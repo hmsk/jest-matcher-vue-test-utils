@@ -4,6 +4,7 @@
   "description": "Jest matchers to test Vue components easily",
   "main": "index.js",
   "scripts": {
+    "build": "rollup -c",
     "test": "jest"
   },
   "repository": {
