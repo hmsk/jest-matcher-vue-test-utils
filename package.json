@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "rollup -c",
-    "test": "jest"
+    "test": "jest",
+    "test:watch": "jest -o"
   },
   "repository": {
     "type": "git",
