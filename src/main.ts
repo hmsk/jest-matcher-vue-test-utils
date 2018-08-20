@@ -2,6 +2,8 @@ const toBeRequiredProp = (actual, expected) => {
   console.warn("hello");
 }
 
-export default {
+const matchers = {
   toBeRequiredProp
 };
+
+export default matchers;

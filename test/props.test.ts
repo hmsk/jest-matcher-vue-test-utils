@@ -5,7 +5,7 @@ import Component from "./fixtures/props.vue";
 describe("props", () => {
   it("works", () => {
     const wrapper = mount(Component);
-    expect(wrapper.vm.internal).toBe("hi");
+    expect((wrapper.vm as any).internal).toBe("hi");
     expect(toBeRequiredProp).toBeTruthy();
   });
 });
