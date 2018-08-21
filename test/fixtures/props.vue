@@ -10,6 +10,12 @@ module.exports = {
     return {
       internal: "hi"
     }
+  },
+  props: {
+    name: {
+      type: String,
+      required: true
+    }
   }
 }
 </script>
