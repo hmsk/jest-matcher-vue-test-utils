@@ -18,8 +18,11 @@ props: {
 
 ```js
 import Component from "./name-require-component.vue";
-expect(Component).toRequireProp("name"); // Passes
-expect(Component).toRequireProp("birthday"); // Fails
+
+it("component requires name prop", () => {
+  expect(Component).toRequireProp("name"); // Passes
+  expect(Component).toRequireProp("birthday"); // Fails
+});
 ```
 
 ## Installation
