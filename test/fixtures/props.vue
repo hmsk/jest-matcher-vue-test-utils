@@ -1,6 +1,6 @@
 <template>
   <div class="props">
-    Matchers for Prop
+    Matchers for Prop {{ internal }}
   </div>
 </template>
 
@@ -15,6 +15,14 @@ module.exports = {
     name: {
       type: String,
       required: true
+    }
+  },
+  created () {
+    this.overwrite("created");
+  },
+  methods: {
+    overwrite (tag) {
+      this.internal = "overwritten by " + tag;
     }
   }
 }

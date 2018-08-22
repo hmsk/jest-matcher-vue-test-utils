@@ -1,7 +1,12 @@
-import { toRequireProp } from "@/main";
+import { toRequireProp, config } from "@/main";
 import Component from "./fixtures/props.vue";
+import { createLocalVue } from "@vue/test-utils";
 
 expect.extend({ toRequireProp });
+
+config({
+  mountOptions: { localVue: createLocalVue() }
+});
 
 describe("toRequireProp", () => {
   describe("matcher function", () => {
@@ -15,6 +20,13 @@ describe("toRequireProp", () => {
       const result = toRequireProp(Component, "none");
       expect(result.pass).toBe(false);
       expect(result.message()).toBe("'none' prop is not claimed as required");
+    });
+
+    it("accepts dynamic mount option", () => {
+      const mockMethod = jest.fn();
+      const result = toRequireProp(Component, "name", { methods: { overwrite (tag: string) { mockMethod(tag) } }});
+      expect(result.pass).toBe(true);
+      expect(mockMethod).toHaveBeenCalled();
     });
   });
 
