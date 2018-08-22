@@ -40,6 +40,19 @@ import vueTestUtilMatchers from "jest-matcher-vue-test-utils";
 expect.extend({ ...vueTestUtilMatchers });
 ```
 
+## Config
+
+We can configure the matchers. Currently accepting *mountOptions* property to give options for `shallowMount` which is running in inside of matchers.
+
+```js
+import vueTestUtilMatchers, { config } from "jest-matcher-vue-test-utils";
+import { createLocalVue } from "@vue/test-utils";
+
+config({
+  mountOptions: { localVue: createLocalVue() }
+});
+```
+
 ## License
 
 MIT, Copyright (c) 2018 Kengo Hamasaki
