@@ -41,7 +41,7 @@ describe("toRequireProp", () => {
 
     it("accepts dynamic mount option", () => {
       const mockMethod = jest.fn();
-      expect(Component).not.toRequireProp("name", { methods: { overwrite (tag: string) { mockMethod(tag) } }});
+      expect(Component).toRequireProp("name", { methods: { overwrite (tag: string) { mockMethod(tag) } }});
       expect(mockMethod).toHaveBeenCalled();
     });
   });
