@@ -20,6 +20,7 @@
     }
   },
   "include": [
+    "*.d.ts",
     "src/**/*.ts",
     "test/**/*.ts",
     "test/fixtures/*.vue"
