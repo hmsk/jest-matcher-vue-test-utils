@@ -38,6 +38,12 @@ describe("toRequireProp", () => {
     it("doesn't claim on incorrect expectation", () => {
       expect(Component).not.toRequireProp("none");
     });
+
+    it("accepts dynamic mount option", () => {
+      const mockMethod = jest.fn();
+      expect(Component).not.toRequireProp("name", { methods: { overwrite (tag: string) { mockMethod(tag) } }});
+      expect(mockMethod).toHaveBeenCalled();
+    });
   });
 });
 

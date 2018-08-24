@@ -1,8 +1,9 @@
+declare type ComponentOptions = import("./main").MatcherComponentOptions<import("vue").default>;
 declare namespace jest {
   interface Matchers<R> {
-    toRequireProp (prop: string): R;
-    toTypeProp (prop: string, type: any | any[]): R;
-    toHaveDefaultProp (prop: string, defaultValue: any): R;
-    toClaimProp (prop: string, sampleValue: any): R;
+    toRequireProp (prop: string, options?: ComponentOptions): R;
+    toHaveDefaultProp (prop: string, defaultValue: any, options?: ComponentOptions): R;
+    toTypeProp (prop: string, type: any | any[], options?: ComponentOptions): R;
+    toClaimProp (prop: string, sampleValue: any, options?: ComponentOptions): R;
   }
 }

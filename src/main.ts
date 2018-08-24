@@ -3,7 +3,7 @@ import Vue, { ComponentOptions, FunctionalComponentOptions } from "vue";
 import isEqual from "lodash.isequal";
 
 declare type MatcherComponent<V extends Vue> = VueClass<V> | ComponentOptions<V> | FunctionalComponentOptions;
-declare type MatcherComponentOptions<V extends Vue> = ThisTypedShallowMountOptions<V> | ShallowMountOptions<Vue>;
+export declare type MatcherComponentOptions<V extends Vue> = ThisTypedShallowMountOptions<V> | ShallowMountOptions<Vue>;
 declare type MatcherMountOptions<V extends Vue> = ThisTypedShallowMountOptions<V> | ShallowMountOptions<Vue>;
 declare interface MatcherDynamicConfig<V extends Vue> {
   mountOptions: MatcherMountOptions<V>;
