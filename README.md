@@ -1,5 +1,8 @@
 # jest-matcher-vue-test-utils
 
+[![npm](https://img.shields.io/npm/v/jest-matcher-vue-test-utils.svg?style=for-the-badge)](https://www.npmjs.com/package/jest-matcher-vue-test-utils)
+![CircleCI](https://img.shields.io/circleci/project/github/hmsk/jest-matcher-vue-test-utils.svg?style=for-the-badge)
+
 Cute matchers for [Jest](https://facebook.github.io/jest)  to test Vue components with `@vue/test-utils`.
 
 ## Matchers
