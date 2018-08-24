@@ -25,6 +25,28 @@ it("component requires name prop", () => {
 });
 ```
 
+### `toHaveDefaultProp`
+
+```js
+// default-address-component.vue
+props: {
+  address: {
+    type: String,
+    default: "Kitakyushu, Japan"
+  }
+}
+```
+
+```js
+import Component from "./default-address-component.vue";
+
+it("component gives default value for address prop", () => {
+  expect(Component).toHaveDefaultProp("address", "Kitakyushu, Japan"); // Passes
+  expect(Component).toHaveDefaultProp("address", "San Francisco, US"); // Fails
+});
+```
+
+
 ## Installation
 
 Get from npm:
