@@ -1,5 +1,6 @@
 import { shallowMount, VueClass, ThisTypedShallowMountOptions, ShallowMountOptions } from "@vue/test-utils";
 import Vue, { ComponentOptions, FunctionalComponentOptions } from "vue";
+import isEqual from "lodash.isequal";
 
 declare type MatcherComponent<V extends Vue> = VueClass<V> | ComponentOptions<V> | FunctionalComponentOptions;
 declare type MatcherComponentOptions<V extends Vue> = ThisTypedShallowMountOptions<V> | ShallowMountOptions<Vue>;
@@ -57,8 +58,36 @@ export function toRequireProp<V extends Vue> (
   };
 }
 
+export function toHaveDefaultProp<V extends Vue> (
+  received: MatcherComponent<V>,
+  propName: string,
+  defaultValue: any,
+  dynamicMountOptions?: MatcherComponentOptions<V>
+): MatcherResult {
+  const original = console.error;
+  console.error = jest.fn();
+
+  const mountOption = dynamicMountOptions ?
+    overwriteConfiguration<V>({ mountOptions: dynamicMountOptions }).mountOptions :
+    getConfiguration<V>().mountOptions;
+
+  const wrapper = shallowMount<V>(received, { ...mountOption });
+  const given = wrapper.props()[propName];
+  const matched = isEqual(given, defaultValue);
+
+  console.error = original;
+
+  return {
+    message: matched ?
+      () => `'${propName}' prop is given '${defaultValue}' as default` :
+      () => `'${propName}' prop is not given '${defaultValue}' as default (is given '${given}')`,
+    pass: matched
+  };
+}
+
 const matchers = {
-  toRequireProp
+  toRequireProp,
+  toHaveDefaultProp
 };
 
 export default matchers;

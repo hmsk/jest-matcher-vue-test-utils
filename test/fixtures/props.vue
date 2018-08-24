@@ -15,6 +15,10 @@ module.exports = {
     name: {
       type: String,
       required: true
+    },
+    address: {
+      type: String,
+      default: "Kitakyushu, Japan"
     }
   },
   created () {
