@@ -85,9 +85,41 @@ export function toHaveDefaultProp<V extends Vue> (
   };
 }
 
+export function toClaimPropWithCustomValidator<V extends Vue> (
+  received: MatcherComponent<V>,
+  propName: string,
+  value: any,
+  dynamicMountOptions?: MatcherComponentOptions<V>
+): MatcherResult {
+  const original = console.error;
+  console.error = jest.fn();
+
+  const mountOption = dynamicMountOptions ?
+    overwriteConfiguration<V>({ mountOptions: dynamicMountOptions }).mountOptions :
+    getConfiguration<V>().mountOptions;
+  const propsData = {};
+  propsData[propName] = value;
+
+  shallowMount<V>(received, { ...mountOption, propsData });
+
+  const found = (console.error as jest.Mock).mock && (console.error as jest.Mock).mock.calls.find((c) => {
+    return c.find((arg: string) => arg.includes(`Invalid prop: custom validator check failed for prop "${propName}".\n`));
+  });
+
+  console.error = original;
+
+  return {
+    message: !!!found ?
+      () => `'${propName}' prop is valid with '${value}'` :
+      () => `'${propName}' prop is invalid with '${value}'`,
+    pass: !!!found
+  };
+}
+
 const matchers = {
   toRequireProp,
-  toHaveDefaultProp
+  toHaveDefaultProp,
+  toClaimPropWithCustomValidator
 };
 
 export default matchers;

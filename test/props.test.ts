@@ -1,8 +1,8 @@
-import { toRequireProp, toHaveDefaultProp, config } from "@/main";
+import { toRequireProp, toHaveDefaultProp, toClaimPropWithCustomValidator, config } from "@/main";
 import Component from "./fixtures/props.vue";
 import { createLocalVue } from "@vue/test-utils";
 
-expect.extend({ toRequireProp, toHaveDefaultProp });
+expect.extend({ toRequireProp, toHaveDefaultProp, toClaimPropWithCustomValidator });
 
 config({
   mountOptions: { localVue: createLocalVue() }
@@ -69,6 +69,32 @@ describe("toHaveDefaultProp", () => {
 
     it("doesn't claim on incorrect expectation", () => {
       expect(Component).not.toRequireProp("Meguro, Japan");
+    });
+  });
+});
+
+describe("toClaimPropWithCustomValidator", () => {
+  describe("matcher function", () => {
+    it("returns true if passes custom validation", () => {
+      const result = toClaimPropWithCustomValidator(Component, "fullname", "Kengo Hamasaki");
+      expect(result.pass).toBe(true);
+      expect(result.message()).toBe("'fullname' prop is valid with 'Kengo Hamasaki'");
+    });
+
+    it("returns false if not passes custom validation", () => {
+      const result = toClaimPropWithCustomValidator(Component, "fullname", "NamikaHamasaki");
+      expect(result.pass).toBe(false);
+      expect(result.message()).toBe("'fullname' prop is invalid with 'NamikaHamasaki'");
+    });
+  });
+
+  describe("actual use", () => {
+    it("doesn't claim on correct expectation", () => {
+      expect(Component).toClaimPropWithCustomValidator("fullname", "Kengo Hamasaki");
+    });
+
+    it("doesn't claim on incorrect expectation", () => {
+      expect(Component).not.toClaimPropWithCustomValidator("fullname", "NamikaHamasaki");
     });
   });
 });

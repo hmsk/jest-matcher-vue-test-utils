@@ -19,6 +19,11 @@ module.exports = {
     address: {
       type: String,
       default: "Kitakyushu, Japan"
+    },
+    fullname: {
+      validator: function (val) {
+        return !!val && val.match(/.+\s.+/);
+      }
     }
   },
   created () {
