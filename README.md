@@ -49,7 +49,7 @@ it("component gives default value for address prop", () => {
 });
 ```
 
-### `toClaimPropWithCustomValidator`
+### `toBeValidPropWithCustomValidator`
 
 ```js
 // fullname-is-validated-component.vue
@@ -66,8 +66,8 @@ props: {
 import Component from "./fullname-is-validated-component.vue";
 
 it("component validates fullname prop", () => {
-  expect(Component).toClaimPropWithCustomValidator("fullname", "Kengo Hamasaki"); // Passes
-  expect(Component).toClaimPropWithCustomValidator("fullname", "Kengo"); // Fails
+  expect(Component).toBeValidPropWithCustomValidator("fullname", "Kengo Hamasaki"); // Passes
+  expect(Component).toBeValidPropWithCustomValidator("fullname", "Kengo"); // Fails
 });
 ```
 

@@ -85,7 +85,7 @@ export function toHaveDefaultProp<V extends Vue> (
   };
 }
 
-export function toClaimPropWithCustomValidator<V extends Vue> (
+export function toBeValidPropWithCustomValidator<V extends Vue> (
   received: MatcherComponent<V>,
   propName: string,
   value: any,
@@ -119,7 +119,7 @@ export function toClaimPropWithCustomValidator<V extends Vue> (
 const matchers = {
   toRequireProp,
   toHaveDefaultProp,
-  toClaimPropWithCustomValidator
+  toBeValidPropWithCustomValidator
 };
 
 export default matchers;
