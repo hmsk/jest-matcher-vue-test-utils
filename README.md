@@ -49,6 +49,27 @@ it("component gives default value for address prop", () => {
 });
 ```
 
+### `toBeValidPropWithTypeCheck`
+
+```js
+// takes-zipcode-component.vue
+props: {
+  zipcode: {
+    type: String
+  }
+}
+
+```
+
+```js
+import Component from "./takes-zipcode-component.vue";
+
+it("component validates zipcode prop", () => {
+  expect(Component).toBeValidPropWithTypeCheck("zipcode", "94103"); // Passes
+  expect(Component).toBeValidPropWithTypeCheck("zipcode", 94103); // Fails
+});
+```
+
 ### `toBeValidPropWithCustomValidator`
 
 ```js
