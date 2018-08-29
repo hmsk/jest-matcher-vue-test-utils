@@ -85,6 +85,38 @@ export function toHaveDefaultProp<V extends Vue> (
   };
 }
 
+export function toBeValidPropWithTypeCheck<V extends Vue> (
+  received: MatcherComponent<V>,
+  propName: string,
+  value: any,
+  dynamicMountOptions?: MatcherComponentOptions<V>
+): MatcherResult {
+  const original = console.error;
+  console.error = jest.fn();
+
+  const mountOption = dynamicMountOptions ?
+    overwriteConfiguration<V>({ mountOptions: dynamicMountOptions }).mountOptions :
+    getConfiguration<V>().mountOptions;
+  const propsData = {};
+  propsData[propName] = value;
+
+  shallowMount<V>(received, { ...mountOption, propsData });
+
+  const found = (console.error as jest.Mock).mock && (console.error as jest.Mock).mock.calls.find((c) => {
+    return c.find((arg: string) => arg.includes(`Invalid prop: type check failed for prop "${propName}".`));
+  });
+
+  console.error = original;
+
+  return {
+    message: !!!found ?
+      () => `'${propName}' prop is valid with '${value}'` :
+      () => `'${propName}' prop is invalid with '${value}'`,
+    pass: !!!found
+  };
+}
+
+
 export function toBeValidPropWithCustomValidator<V extends Vue> (
   received: MatcherComponent<V>,
   propName: string,
@@ -119,6 +151,7 @@ export function toBeValidPropWithCustomValidator<V extends Vue> (
 const matchers = {
   toRequireProp,
   toHaveDefaultProp,
+  toBeValidPropWithTypeCheck,
   toBeValidPropWithCustomValidator
 };
 

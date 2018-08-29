@@ -1,8 +1,19 @@
-import { toRequireProp, toHaveDefaultProp, toBeValidPropWithCustomValidator, config } from "@/main";
+import {
+  toRequireProp,
+  toHaveDefaultProp,
+  toBeValidPropWithTypeCheck,
+  toBeValidPropWithCustomValidator,
+  config
+} from "@/main";
 import Component from "./fixtures/props.vue";
 import { createLocalVue } from "@vue/test-utils";
 
-expect.extend({ toRequireProp, toHaveDefaultProp, toBeValidPropWithCustomValidator });
+expect.extend({
+  toRequireProp,
+  toHaveDefaultProp,
+  toBeValidPropWithTypeCheck,
+  toBeValidPropWithCustomValidator
+});
 
 config({
   mountOptions: { localVue: createLocalVue() }
@@ -69,6 +80,32 @@ describe("toHaveDefaultProp", () => {
 
     it("doesn't claim on incorrect expectation", () => {
       expect(Component).not.toRequireProp("Meguro, Japan");
+    });
+  });
+});
+
+describe("toBeValidPropWithTypeCheck", () => {
+  describe("matcher function", () => {
+    it("returns true if passes custom validation", () => {
+      const result = toBeValidPropWithTypeCheck(Component, "address", "1390");
+      expect(result.pass).toBe(true);
+      expect(result.message()).toBe("'address' prop is valid with '1390'");
+    });
+
+    it("returns false if not passes custom validation", () => {
+      const result = toBeValidPropWithTypeCheck(Component, "address", 1390);
+      expect(result.pass).toBe(false);
+      expect(result.message()).toBe("'address' prop is invalid with '1390'");
+    });
+  });
+
+  describe("actual use", () => {
+    it("doesn't claim on correct expectation", () => {
+      expect(Component).toBeValidPropWithTypeCheck("address", "935");
+    });
+
+    it("doesn't claim on incorrect expectation", () => {
+      expect(Component).not.toBeValidPropWithTypeCheck("address", 935);
     });
   });
 });
