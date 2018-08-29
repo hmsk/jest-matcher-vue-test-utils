@@ -1,6 +1,5 @@
 import { shallowMount, VueClass, ThisTypedShallowMountOptions, ShallowMountOptions } from "@vue/test-utils";
 import Vue, { ComponentOptions, FunctionalComponentOptions } from "vue";
-import isEqual from "lodash.isequal";
 
 declare type MatcherComponent<V extends Vue> = VueClass<V> | ComponentOptions<V> | FunctionalComponentOptions;
 export declare type MatcherComponentOptions<V extends Vue> = ThisTypedShallowMountOptions<V> | ShallowMountOptions<Vue>;
@@ -73,7 +72,7 @@ export function toHaveDefaultProp<V extends Vue> (
 
   const wrapper = shallowMount<V>(received, { ...mountOption });
   const given = wrapper.props()[propName];
-  const matched = isEqual(given, defaultValue);
+  const matched = (this as jest.MatcherUtils).equals(given, defaultValue);
 
   console.error = original;
 
