@@ -9,6 +9,9 @@ Cute matchers for [Jest](https://facebook.github.io/jest)  to test Vue component
 
 ### `toRequireProp`
 
+<details>
+  <summary>Assert that a component requires a prop</summary>
+  
 ```js
 // name-require-component.vue
 props: {
@@ -27,9 +30,13 @@ it("component requires name prop", () => {
   expect(Component).toRequireProp("birthday"); // Fails
 });
 ```
+</details>
 
 ### `toHaveDefaultProp`
 
+<details>
+  <summary>Assert that a component gives default to a prop</summary>
+  
 ```js
 // default-address-component.vue
 props: {
@@ -48,9 +55,13 @@ it("component gives default value for address prop", () => {
   expect(Component).toHaveDefaultProp("address", "San Francisco, US"); // Fails
 });
 ```
+</details>
 
 ### `toBeValidPropWithTypeCheck`
 
+<details>
+  <summary>Assert that a component validates a prop with type</summary>
+  
 ```js
 // takes-zipcode-component.vue
 props: {
@@ -69,9 +80,13 @@ it("component validates zipcode prop", () => {
   expect(Component).toBeValidPropWithTypeCheck("zipcode", 94103); // Fails
 });
 ```
+</details>
 
 ### `toBeValidPropWithCustomValidator`
 
+<details>
+  <summary>Assert that a component validates a prop with custom validator</summary>
+  
 ```js
 // fullname-is-validated-component.vue
 props: {
@@ -91,6 +106,7 @@ it("component validates fullname prop", () => {
   expect(Component).toBeValidPropWithCustomValidator("fullname", "Kengo"); // Fails
 });
 ```
+</details>
 
 ## Installation
 
