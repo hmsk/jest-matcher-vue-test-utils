@@ -93,25 +93,25 @@ describe("toHaveDefaultProp", () => {
 describe("toBeValidPropWithTypeCheck", () => {
   describe("matcher function", () => {
     it("returns true if passes custom validation", () => {
-      const result = toBeValidPropWithTypeCheck(Component, "address", "1390");
+      const result = toBeValidPropWithTypeCheck(Component, "zipcode", "1390");
       expect(result.pass).toBe(true);
-      expect(result.message()).toBe("'address' prop is valid with '1390'");
+      expect(result.message()).toBe("'zipcode' prop is valid with '1390'");
     });
 
     it("returns false if not passes custom validation", () => {
-      const result = toBeValidPropWithTypeCheck(Component, "address", 1390);
+      const result = toBeValidPropWithTypeCheck(Component, "zipcode", 1390);
       expect(result.pass).toBe(false);
-      expect(result.message()).toBe("'address' prop is invalid with '1390'");
+      expect(result.message()).toBe("'zipcode' prop is invalid with '1390'");
     });
   });
 
   describe("actual use", () => {
     it("doesn't claim on correct expectation", () => {
-      expect(Component).toBeValidPropWithTypeCheck("address", "935");
+      expect(Component).toBeValidPropWithTypeCheck("zipcode", "935");
     });
 
     it("doesn't claim on incorrect expectation", () => {
-      expect(Component).not.toBeValidPropWithTypeCheck("address", 935);
+      expect(Component).not.toBeValidPropWithTypeCheck("zipcode", 935);
     });
   });
 });

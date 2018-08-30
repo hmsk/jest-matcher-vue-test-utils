@@ -20,6 +20,9 @@ module.exports = {
       type: String,
       default: "Kitakyushu, Japan"
     },
+    zipcode: {
+      type: String
+    },
     fullname: {
       validator: function (val) {
         return !!val && val.match(/.+\s.+/);
