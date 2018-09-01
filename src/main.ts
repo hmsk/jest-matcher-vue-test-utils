@@ -4,7 +4,7 @@ import Vue, { ComponentOptions, FunctionalComponentOptions } from "vue";
 import { overwriteConfiguration, getConfiguration, setConfig } from "./config";
 export const config = setConfig;
 
-import { getWarningsByMount } from "./utils";
+import { withMockWarning, getWarningsByMount } from "./utils";
 
 export declare type MatcherComponent<V extends Vue> = VueClass<V> | ComponentOptions<V> | FunctionalComponentOptions;
 export declare type MatcherComponentOptions<V extends Vue> = ThisTypedShallowMountOptions<V> | ShallowMountOptions<Vue>;
@@ -35,18 +35,17 @@ export function toHaveDefaultProp<V extends Vue> (
   defaultValue: any,
   dynamicMountOptions?: MatcherComponentOptions<V>
 ): MatcherResult {
-  const original = console.error;
-  console.error = jest.fn();
-
   const mountOption = dynamicMountOptions ?
     overwriteConfiguration<V>({ mountOptions: dynamicMountOptions }).mountOptions :
     getConfiguration<V>().mountOptions;
 
-  const wrapper = shallowMount<V>(received, { ...mountOption });
+  let wrapper;
+  withMockWarning(() => {
+    wrapper = shallowMount<V>(received, { ...mountOption });
+  });
+
   const given = wrapper.props()[propName];
   const matched = (this as jest.MatcherUtils).equals(given, defaultValue);
-
-  console.error = original;
 
   return {
     message: matched ?
