@@ -4,7 +4,9 @@ import Vue, { ComponentOptions, FunctionalComponentOptions } from "vue";
 import { overwriteConfiguration, getConfiguration, setConfig } from "./config";
 export const config = setConfig;
 
-declare type MatcherComponent<V extends Vue> = VueClass<V> | ComponentOptions<V> | FunctionalComponentOptions;
+import { getWarningsByMount } from "./utils";
+
+export declare type MatcherComponent<V extends Vue> = VueClass<V> | ComponentOptions<V> | FunctionalComponentOptions;
 export declare type MatcherComponentOptions<V extends Vue> = ThisTypedShallowMountOptions<V> | ShallowMountOptions<Vue>;
 declare type MatcherResult = { message (): string, pass: boolean };
 
@@ -13,20 +15,11 @@ export function toRequireProp<V extends Vue> (
   propName: string,
   dynamicMountOptions?: MatcherComponentOptions<V>
 ): MatcherResult {
-  const original = console.error;
-  console.error = jest.fn();
+  const messages = getWarningsByMount(received, {}, dynamicMountOptions);
 
-  const mountOption = dynamicMountOptions ?
-    overwriteConfiguration<V>({ mountOptions: dynamicMountOptions }).mountOptions :
-    getConfiguration<V>().mountOptions;
-
-  shallowMount<V>(received, mountOption);
-
-  const found = (console.error as jest.Mock).mock.calls.find((c) => {
+  const found = messages.find((c) => {
     return c.find((arg: string) => arg.includes(`Missing required prop: "${propName}"\n`))
   });
-
-  console.error = original;
 
   return {
     message: !!found ?
@@ -69,22 +62,13 @@ export function toBeValidPropWithTypeCheck<V extends Vue> (
   value: any,
   dynamicMountOptions?: MatcherComponentOptions<V>
 ): MatcherResult {
-  const original = console.error;
-  console.error = jest.fn();
-
-  const mountOption = dynamicMountOptions ?
-    overwriteConfiguration<V>({ mountOptions: dynamicMountOptions }).mountOptions :
-    getConfiguration<V>().mountOptions;
   const propsData = {};
   propsData[propName] = value;
+  const messages = getWarningsByMount(received, propsData, dynamicMountOptions);
 
-  shallowMount<V>(received, { ...mountOption, propsData });
-
-  const found = (console.error as jest.Mock).mock && (console.error as jest.Mock).mock.calls.find((c) => {
+  const found = messages.find((c) => {
     return c.find((arg: string) => arg.includes(`Invalid prop: type check failed for prop "${propName}".`));
   });
-
-  console.error = original;
 
   return {
     message: !!!found ?
@@ -94,29 +78,19 @@ export function toBeValidPropWithTypeCheck<V extends Vue> (
   };
 }
 
-
 export function toBeValidPropWithCustomValidator<V extends Vue> (
   received: MatcherComponent<V>,
   propName: string,
   value: any,
   dynamicMountOptions?: MatcherComponentOptions<V>
 ): MatcherResult {
-  const original = console.error;
-  console.error = jest.fn();
-
-  const mountOption = dynamicMountOptions ?
-    overwriteConfiguration<V>({ mountOptions: dynamicMountOptions }).mountOptions :
-    getConfiguration<V>().mountOptions;
   const propsData = {};
   propsData[propName] = value;
+  const messages = getWarningsByMount(received, propsData, dynamicMountOptions);
 
-  shallowMount<V>(received, { ...mountOption, propsData });
-
-  const found = (console.error as jest.Mock).mock && (console.error as jest.Mock).mock.calls.find((c) => {
+  const found = messages.find((c) => {
     return c.find((arg: string) => arg.includes(`Invalid prop: custom validator check failed for prop "${propName}".\n`));
   });
-
-  console.error = original;
 
   return {
     message: !!!found ?
