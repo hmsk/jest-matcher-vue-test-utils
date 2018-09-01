@@ -1,33 +1,12 @@
 import { shallowMount, VueClass, ThisTypedShallowMountOptions, ShallowMountOptions } from "@vue/test-utils";
 import Vue, { ComponentOptions, FunctionalComponentOptions } from "vue";
 
+import { overwriteConfiguration, getConfiguration, setConfig } from "./config";
+export const config = setConfig;
+
 declare type MatcherComponent<V extends Vue> = VueClass<V> | ComponentOptions<V> | FunctionalComponentOptions;
 export declare type MatcherComponentOptions<V extends Vue> = ThisTypedShallowMountOptions<V> | ShallowMountOptions<Vue>;
-declare type MatcherMountOptions<V extends Vue> = ThisTypedShallowMountOptions<V> | ShallowMountOptions<Vue>;
-declare interface MatcherDynamicConfig<V extends Vue> {
-  mountOptions: MatcherMountOptions<V>;
-}
 declare type MatcherResult = { message (): string, pass: boolean };
-
-let configuration: MatcherDynamicConfig<Vue> = {
-  mountOptions: {}
-};
-
-export function config <V extends Vue>(overwrite: MatcherDynamicConfig<V>) {
-  configuration = overwriteConfiguration(overwrite);
-};
-
-const getConfiguration = <V extends Vue>(): MatcherDynamicConfig<V> => {
-  return {
-    mountOptions: configuration.mountOptions
-  }
-};
-
-const overwriteConfiguration = <V extends Vue>(overwrite: MatcherDynamicConfig<V>): MatcherDynamicConfig<V> => {
-  return {
-    mountOptions: { ...getConfiguration().mountOptions, ...overwrite.mountOptions }
-  };
-};
 
 export function toRequireProp<V extends Vue> (
   received: MatcherComponent<V>,
