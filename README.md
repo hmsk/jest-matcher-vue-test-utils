@@ -7,6 +7,37 @@ Cute matchers for [Jest](https://facebook.github.io/jest)  to test Vue component
 
 ## Matchers
 
+### `toBeValidProps`
+
+<details>
+  <summary>Assert that a prop set is valid for a component</summary>
+  
+```js
+// name-require-and-fullname-is-validated-component.vue
+props: {
+  name: {
+    type: String,
+    required: true
+  }
+  fullname: {
+    validator: function (val) {
+      return !!val && val.match(/.+\s.+/);
+    }
+  }
+}
+```
+
+```js
+import Component from "./name-require-and-fullname-is-validated-component.vue";
+
+it("component validates props", () => {
+  expect(Component).toBeValidProps({ name: "required name", fullName: "Kengo Hamasaki" }); // Passes
+  expect(Component).toBeValidProps({ fullName: "Kengo Hamasaki" }); // Fails
+  expect(Component).toBeValidProps({ name: "required name", fullName: "Kengo" }); // Fails
+});
+```
+</details>
+
 ### `toRequireProp`
 
 <details>
@@ -53,37 +84,6 @@ import Component from "./default-address-component.vue";
 it("component gives default value for address prop", () => {
   expect(Component).toHaveDefaultProp("address", "Kitakyushu, Japan"); // Passes
   expect(Component).toHaveDefaultProp("address", "San Francisco, US"); // Fails
-});
-```
-</details>
-
-### `toBeValidProps`
-
-<details>
-  <summary>Assert that a prop set is valid for a component</summary>
-  
-```js
-// name-require-and-fullname-is-validated-component.vue
-props: {
-  name: {
-    type: String,
-    required: true
-  }
-  fullname: {
-    validator: function (val) {
-      return !!val && val.match(/.+\s.+/);
-    }
-  }
-}
-```
-
-```js
-import Component from "./name-require-and-fullname-is-validated-component.vue";
-
-it("component validates props", () => {
-  expect(Component).toBeValidProps({ name: "required name", fullName: "Kengo Hamasaki" }); // Passes
-  expect(Component).toBeValidProps({ fullName: "Kengo Hamasaki" }); // Fails
-  expect(Component).toBeValidProps({ name: "required name", fullName: "Kengo" }); // Fails
 });
 ```
 </details>

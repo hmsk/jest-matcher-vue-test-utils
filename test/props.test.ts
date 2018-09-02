@@ -1,7 +1,7 @@
 import {
+  toBeValidProps,
   toRequireProp,
   toHaveDefaultProp,
-  toBeValidProps,
   toBeValidPropWithTypeCheck,
   toBeValidPropWithCustomValidator,
   config
@@ -10,9 +10,9 @@ import Component from "./fixtures/props.vue";
 import { createLocalVue } from "@vue/test-utils";
 
 expect.extend({
+  toBeValidProps,
   toRequireProp,
   toHaveDefaultProp,
-  toBeValidProps,
   toBeValidPropWithTypeCheck,
   toBeValidPropWithCustomValidator
 });
@@ -26,6 +26,32 @@ const fakeJestContext = (expect: boolean = true) => {
     equals: (a: any, b: any) => expect
   };
 };
+
+describe("toBeValidProps", () => {
+  describe("matcher function", () => {
+    it("returns true if matches default value", () => {
+      const result = toBeValidProps(Component, { name: "required name", fullName: "Kengo Hamasaki" });
+      expect(result.pass).toBe(true);
+      expect(result.message()).toBe("Props are valid");
+    });
+
+    it("returns false if not matches default value", () => {
+      const result = toBeValidProps(Component, { fullName: "KengoHamasaki" });
+      expect(result.pass).toBe(false);
+      expect(result.message()).toBe("Props are not valid");
+    });
+  });
+
+  describe("actual use", () => {
+    it("doesn't claim on correct expectation", () => {
+      expect(Component).toBeValidProps({ name: "required name", fullName: "Kengo Hamasaki" });
+    });
+
+    it("doesn't claim on incorrect expectation", () => {
+      expect(Component).not.toBeValidProps({ fullName: "KengoHamasaki" });
+    });
+  });
+});
 
 describe("toRequireProp", () => {
   describe("matcher function", () => {
@@ -88,32 +114,6 @@ describe("toHaveDefaultProp", () => {
 
     it("doesn't claim on incorrect expectation", () => {
       expect(Component).not.toRequireProp("Meguro, Japan");
-    });
-  });
-});
-
-describe("toBeValidProps", () => {
-  describe("matcher function", () => {
-    it("returns true if matches default value", () => {
-      const result = toBeValidProps(Component, { name: "required name", fullName: "Kengo Hamasaki" });
-      expect(result.pass).toBe(true);
-      expect(result.message()).toBe("Props are valid");
-    });
-
-    it("returns false if not matches default value", () => {
-      const result = toBeValidProps(Component, { fullName: "KengoHamasaki" });
-      expect(result.pass).toBe(false);
-      expect(result.message()).toBe("Props are not valid");
-    });
-  });
-
-  describe("actual use", () => {
-    it("doesn't claim on correct expectation", () => {
-      expect(Component).toBeValidProps({ name: "required name", fullName: "Kengo Hamasaki" });
-    });
-
-    it("doesn't claim on incorrect expectation", () => {
-      expect(Component).not.toBeValidProps({ fullName: "KengoHamasaki" });
     });
   });
 });
