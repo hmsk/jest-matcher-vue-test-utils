@@ -57,6 +57,37 @@ it("component gives default value for address prop", () => {
 ```
 </details>
 
+### `toBeValidProps`
+
+<details>
+  <summary>Assert that a prop set is valid for a component</summary>
+  
+```js
+// name-require-and-fullname-is-validated-component.vue
+props: {
+  name: {
+    type: String,
+    required: true
+  }
+  fullname: {
+    validator: function (val) {
+      return !!val && val.match(/.+\s.+/);
+    }
+  }
+}
+```
+
+```js
+import Component from "./name-require-and-fullname-is-validated-component.vue";
+
+it("component validates props", () => {
+  expect(Component).toBeValidProps({ name: "required name", fullName: "Kengo Hamasaki" }); // Passes
+  expect(Component).toBeValidProps({ fullName: "Kengo Hamasaki" }); // Fails
+  expect(Component).toBeValidProps({ name: "required name", fullName: "Kengo" }); // Fails
+});
+```
+</details>
+
 ### `toBeValidPropWithTypeCheck`
 
 <details>
