@@ -10,6 +10,10 @@ export declare type MatcherComponent<V extends Vue> = VueClass<V> | ComponentOpt
 export declare type MatcherComponentOptions<V extends Vue> = ThisTypedShallowMountOptions<V> | ShallowMountOptions<Vue>;
 declare type MatcherResult = { message (): string, pass: boolean };
 
+export interface ComponentProp {
+  [name: string]: any;
+}
+
 export function toRequireProp<V extends Vue> (
   received: MatcherComponent<V>,
   propName: string,
@@ -52,6 +56,21 @@ export function toHaveDefaultProp<V extends Vue> (
       () => `'${propName}' prop is given '${defaultValue}' as default` :
       () => `'${propName}' prop is not given '${defaultValue}' as default (is given '${given}')`,
     pass: matched
+  };
+}
+
+export function toBeValidProps<V extends Vue> (
+  received: MatcherComponent<V>,
+  props: ComponentProp,
+  dynamicMountOptions?: MatcherComponentOptions<V>
+): MatcherResult {
+  const messages = getWarningsByMount(received, props, dynamicMountOptions);
+
+  return {
+    message: messages.length == 0 ?
+      () => `Props are valid` :
+      () => `Props are not valid`,
+    pass: messages.length == 0
   };
 }
 
