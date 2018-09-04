@@ -71,12 +71,20 @@ describe("toBeValidProp", () => {
   });
 
   describe("actual use", () => {
-    it("doesn't claim on correct expectation", () => {
+    it("doesn't claim on correct expectation, giving required prop", () => {
       expect(Component).toBeValidProp("name",  "required name");
     });
 
-    it("doesn't claim on incorrect expectation", () => {
+    it("doesn't claim on incorrect expectation, missing required prop", () => {
       expect(Component).not.toBeValidProp("name", null);
+    });
+
+    it("doesn't claim on incorrect expectation, giving invalid type", () => {
+      expect(Component).not.toBeValidProp("zipcode", 94103);
+    });
+
+    it("doesn't claim on incorrect expectation, giving invalid type", () => {
+      expect(Component).not.toBeValidProp("fullname", "Kengo");
     });
   });
 });
