@@ -38,6 +38,34 @@ it("component validates props", () => {
 ```
 </details>
 
+### `toBeValidProp`
+
+<details>
+  <summary>Assert that a single prop is valid for a component</summary>
+  
+```js
+// name-require-component.vue
+props: {
+  name: {
+    type: String,
+    required: true
+  }
+}
+```
+
+```js
+import Component from "./name-require-component.vue";
+
+it("component validates props", () => {
+  expect(Component).toBeValidProp("name", "Required Name"); // Passes
+  expect(Component).toBeValidProp("name", null); // Fails as required
+  expect(Component).toBeValidProp("name", 123}); // Fails as typecheck
+});
+```
+</details>
+
+
+
 ### `toRequireProp`
 
 <details>
