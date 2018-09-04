@@ -31,13 +31,13 @@ const fakeJestContext = (expect: boolean = true) => {
 
 describe("toBeValidProps", () => {
   describe("matcher function", () => {
-    it("returns true if matches default value", () => {
+    it("returns true if all props are valid", () => {
       const result = toBeValidProps(Component, { name: "required name", fullName: "Kengo Hamasaki" });
       expect(result.pass).toBe(true);
       expect(result.message()).toBe("Props are valid");
     });
 
-    it("returns false if not matches default value", () => {
+    it("returns false if any prop is not valid", () => {
       const result = toBeValidProps(Component, { fullName: "KengoHamasaki" });
       expect(result.pass).toBe(false);
       expect(result.message()).toBe("Props are not valid");
@@ -51,6 +51,10 @@ describe("toBeValidProps", () => {
 
     it("doesn't claim on incorrect expectation", () => {
       expect(Component).not.toBeValidProps({ fullName: "KengoHamasaki" });
+    });
+
+    it("doesn't claim on incorrect expectation", () => {
+      expect(Component).not.toBeValidProps({ fullName: "Kengo Hamasaki" });
     });
   });
 });
