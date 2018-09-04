@@ -11,7 +11,7 @@ Cute matchers for [Jest](https://facebook.github.io/jest)  to test Vue component
 
 <details>
   <summary>Assert that a prop set is valid for a component</summary>
-  
+
 ```js
 // name-require-and-fullname-is-validated-component.vue
 props: {
@@ -42,7 +42,7 @@ it("component validates props", () => {
 
 <details>
   <summary>Assert that a single prop is valid for a component</summary>
-  
+
 ```js
 // name-require-component.vue
 props: {
@@ -70,7 +70,7 @@ it("component validates props", () => {
 
 <details>
   <summary>Assert that a component requires a prop</summary>
-  
+
 ```js
 // name-require-component.vue
 props: {
@@ -95,7 +95,7 @@ it("component requires name prop", () => {
 
 <details>
   <summary>Assert that a component gives default to a prop</summary>
-  
+
 ```js
 // default-address-component.vue
 props: {
@@ -120,7 +120,7 @@ it("component gives default value for address prop", () => {
 
 <details>
   <summary>Assert that a component validates a prop with type</summary>
-  
+
 ```js
 // takes-zipcode-component.vue
 props: {
@@ -145,7 +145,7 @@ it("component validates zipcode prop", () => {
 
 <details>
   <summary>Assert that a component validates a prop with custom validator</summary>
-  
+
 ```js
 // fullname-is-validated-component.vue
 props: {
