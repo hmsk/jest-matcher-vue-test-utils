@@ -1,5 +1,6 @@
 import {
   toBeValidProps,
+  toBeValidProp,
   toRequireProp,
   toHaveDefaultProp,
   toBeValidPropWithTypeCheck,
@@ -11,6 +12,7 @@ import { createLocalVue } from "@vue/test-utils";
 
 expect.extend({
   toBeValidProps,
+  toBeValidProp,
   toRequireProp,
   toHaveDefaultProp,
   toBeValidPropWithTypeCheck,
@@ -49,6 +51,32 @@ describe("toBeValidProps", () => {
 
     it("doesn't claim on incorrect expectation", () => {
       expect(Component).not.toBeValidProps({ fullName: "KengoHamasaki" });
+    });
+  });
+});
+
+describe("toBeValidProp", () => {
+  describe("matcher function", () => {
+    it("returns true if a prop is valid", () => {
+      const result = toBeValidProp(Component, "name", "required name");
+      expect(result.pass).toBe(true);
+      expect(result.message()).toBe("'name' is valid");
+    });
+
+    it("returns false if a prop is not valid", () => {
+      const result = toBeValidProp(Component, "name", null);
+      expect(result.pass).toBe(false);
+      expect(result.message()).toBe("'name' is not valid");
+    });
+  });
+
+  describe("actual use", () => {
+    it("doesn't claim on correct expectation", () => {
+      expect(Component).toBeValidProp("name",  "required name");
+    });
+
+    it("doesn't claim on incorrect expectation", () => {
+      expect(Component).not.toBeValidProp("name", null);
     });
   });
 });
