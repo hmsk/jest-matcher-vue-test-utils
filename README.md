@@ -5,7 +5,24 @@
 
 Cute matchers for [Jest](https://facebook.github.io/jest)  to test Vue components with `@vue/test-utils`.
 
-## Matchers
+# Installation
+
+Get from npm:
+
+```sh
+$ npm install -D jest-matcher-vue-test-utils
+```
+
+Then, register matchers on your jest process:
+
+```js
+import vueTestUtilMatchers from "jest-matcher-vue-test-utils";
+expect.extend({ ...vueTestUtilMatchers });
+```
+
+# Matchers
+
+## Prop Validations
 
 ### `toBeValidProps`
 
@@ -167,22 +184,7 @@ it("component validates fullname prop", () => {
 ```
 </details>
 
-## Installation
-
-Get from npm:
-
-```sh
-$ npm install -D jest-matcher-vue-test-utils
-```
-
-Then, register matchers on your jest process:
-
-```js
-import vueTestUtilMatchers from "jest-matcher-vue-test-utils";
-expect.extend({ ...vueTestUtilMatchers });
-```
-
-## Config
+# Config
 
 We can configure the matchers. Currently accepting *mountOptions* property to give options for `shallowMount` which is running in inside of matchers.
 
@@ -195,6 +197,6 @@ config({
 });
 ```
 
-## License
+# License
 
 MIT, Copyright (c) 2018 Kengo Hamasaki
