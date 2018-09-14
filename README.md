@@ -24,6 +24,74 @@ expect.extend({ ...vueTestUtilMatchers });
 
 ## Prop Validations
 
+### `toAppear` DRAFT
+
+<details>
+  <summary>Assert appears content by action</summary>
+
+```js
+// error-message.vue
+<template>
+  <div>
+    <p v-if="isError" class="error">message</p>
+  </div>
+</template>
+
+...
+
+data: function () {
+  return {
+    isError: false
+  }
+},
+methods: {
+  showError () {
+    isError = true;
+  }
+}
+```
+
+```js
+import Component from "./error-message.vue";
+
+it("show error by showError", () => {
+  expect(() => wrapper.vm.showError()).toAppear(wrapper, "p.error"); // Passes
+});
+```
+</details>
+
+### `toDisappear` DRAFT
+
+```js
+// error-message.vue
+<template>
+  <div>
+    <p v-if="isError" class="error">message</p>
+  </div>
+</template>
+
+...
+
+data: function () {
+  return {
+    isError: true
+  }
+},
+methods: {
+  dismissError () {
+    isError = false;
+  }
+}
+```
+
+```js
+import Component from "./error-message.vue";
+
+it("show error by showError", () => {
+  expect(() => wrapper.vm.dismissError()).toDisappear(wrapper, "p.error"); // Passes
+});
+```
+
 ### `toBeValidProps`
 
 <details>
