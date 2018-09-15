@@ -22,7 +22,7 @@ expect.extend({ ...vueTestUtilMatchers });
 
 # Matchers
 
-## Prop Validations
+## Contents
 
 ### `toAppear` DRAFT
 
@@ -62,6 +62,9 @@ it("show error by showError", () => {
 
 ### `toDisappear` DRAFT
 
+<details>
+  <summary>Assert disappears content by action</summary>
+
 ```js
 // error-message.vue
 <template>
@@ -84,6 +87,8 @@ methods: {
 }
 ```
 
+## Prop Validations
+
 ```js
 import Component from "./error-message.vue";
 
@@ -91,6 +96,8 @@ it("show error by showError", () => {
   expect(() => wrapper.vm.dismissError()).toDisappear(wrapper, "p.error"); // Passes
 });
 ```
+
+</details>
 
 ### `toBeValidProps`
 
