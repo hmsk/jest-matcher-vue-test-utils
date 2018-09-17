@@ -22,7 +22,7 @@ expect.extend({ ...vueTestUtilMatchers });
 
 # Matchers
 
-## Contents
+## For Wrapper Contents
 
 ### `toAppear` DRAFT
 
@@ -87,8 +87,6 @@ methods: {
 }
 ```
 
-## Prop Validations
-
 ```js
 import Component from "./error-message.vue";
 
@@ -98,6 +96,8 @@ it("show error by showError", () => {
 ```
 
 </details>
+
+## For Prop Validations
 
 ### `toBeValidProps`
 
