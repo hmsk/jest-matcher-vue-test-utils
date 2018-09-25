@@ -46,7 +46,7 @@ data: function () {
 },
 methods: {
   showError () {
-    isError = true;
+    this.isError = true;
   }
 }
 ```
@@ -82,7 +82,7 @@ data: function () {
 },
 methods: {
   dismissError () {
-    isError = false;
+    this.isError = false;
   }
 }
 ```
