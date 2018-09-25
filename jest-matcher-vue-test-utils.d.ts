@@ -16,3 +16,5 @@ declare namespace jest {
     toBeValidPropWithCustomValidator (prop: string, sampleValue: any, options?: ComponentOptions): R;
   }
 }
+
+declare module "jest-matcher-vue-test-utils";
