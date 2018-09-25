@@ -17,15 +17,15 @@ module.exports = {
       isError: false
     }
   },
+  created () {
+    this.isError = this.initialError;
+  },
   methods: {
-    created () {
-      this.isError = this.initialError;
-    },
     showError () {
-      isError = true;
+      this.isError = true;
     },
     dismissError () {
-      isError = false;
+      this.isError = false;
     }
   }
 }

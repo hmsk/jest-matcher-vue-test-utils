@@ -24,7 +24,7 @@ expect.extend({ ...vueTestUtilMatchers });
 
 ## For Wrapper Contents
 
-### `toAppear` DRAFT
+### `toAppear`
 
 <details>
   <summary>Assert appears content by action</summary>

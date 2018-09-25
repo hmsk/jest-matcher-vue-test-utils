@@ -3,12 +3,13 @@ import { FunctionalComponentOptions } from "vue";
 
 declare type ComponentOptions = import("./src/main").MatcherComponentOptions<import("vue").default>;
 declare type ComponentProp = import("./src/main").ComponentProp;
+declare type WrapperFindArgument = import("./src/main").WrapperFindArgument<import("vue").default>;
 
 declare global {
   namespace jest {
     interface Matchers<R> {
-      toAppear (prop: Wrapper<import("vue").default>, findAgrument: string | NameSelector | RefSelector | FunctionalComponentOptions | VueClass<import("vue").default> | ComponentOptions): R;
-      toDisappear (prop: Wrapper<import("vue").default>, findAgrument: string | NameSelector | RefSelector | FunctionalComponentOptions | VueClass<import("vue").default> | ComponentOptions): R;
+      toAppear (wrapper: Wrapper<import("vue").default>, findArgument: WrapperFindArgument): R;
+      toDisappear (wrapper: Wrapper<import("vue").default>, findAgrument: WrapperFindArgument): R;
       toRequireProp (prop: string, options?: ComponentOptions): R;
       toHaveDefaultProp (prop: string, defaultValue: any, options?: ComponentOptions): R;
       toBeValidProps (props: ComponentProp, options?: ComponentOptions): R;

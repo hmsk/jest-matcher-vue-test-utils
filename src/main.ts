@@ -1,4 +1,4 @@
-import { shallowMount, VueClass, ThisTypedShallowMountOptions, ShallowMountOptions } from "@vue/test-utils";
+import { shallowMount, Wrapper, VueClass, NameSelector, RefSelector, ThisTypedShallowMountOptions, ShallowMountOptions } from "@vue/test-utils";
 import Vue, { ComponentOptions, FunctionalComponentOptions } from "vue";
 
 import { overwriteConfiguration, getConfiguration, setConfig } from "./config";
@@ -8,10 +8,39 @@ import { withMockWarning, getWarningsByMount } from "./utils";
 
 export declare type MatcherComponent<V extends Vue> = VueClass<V> | ComponentOptions<V> | FunctionalComponentOptions;
 export declare type MatcherComponentOptions<V extends Vue> = ThisTypedShallowMountOptions<V> | ShallowMountOptions<Vue>;
+export declare type WrapperFindArgument<V extends Vue> = string | NameSelector | FunctionalComponentOptions | VueClass<import("vue").default> | MatcherComponentOptions<V>;
 declare type MatcherResult = { message (): string, pass: boolean };
 
 export interface ComponentProp {
   [name: string]: any;
+}
+
+export function toAppear<V extends Vue> (
+  action: Function,
+  wrapper: Wrapper<V>,
+  findArgument: WrapperFindArgument<V>
+): MatcherResult {
+  const before = wrapper.contains(findArgument);
+  action();
+  const after = wrapper.contains(findArgument);
+
+  let message, result;
+
+  if (before) {
+    message = "The target appears from the beginning";
+    result = false;
+  } else if (!after) {
+    message = "The target doesn't show even if the action runs";
+    result = false;
+  } else {
+    message = "The target appears by the action"
+    result = true;
+  }
+
+  return {
+    message: () => message,
+    pass: result
+  }
 }
 
 export function toBeValidProps<V extends Vue> (
