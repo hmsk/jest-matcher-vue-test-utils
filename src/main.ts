@@ -174,6 +174,9 @@ export function toBeValidPropWithCustomValidator<V extends Vue> (
 }
 
 const matchers = {
+  toAppear,
+  toBeValidProp,
+  toBeValidProps,
   toRequireProp,
   toHaveDefaultProp,
   toBeValidPropWithTypeCheck,
