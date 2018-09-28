@@ -4,8 +4,10 @@ import commonjs from "rollup-plugin-commonjs";
 import json from 'rollup-plugin-json';
 import cleanup from 'rollup-plugin-cleanup';
 
+import pkg from "./package.json";
+
 export default {
-  input: "./src/main.ts",
+  input: "./src/index.ts",
 
   plugins: [
     resolve(),
@@ -17,13 +19,16 @@ export default {
         'node_modules/@vue/test-utils/dist/vue-test-utils.js': [ 'shallowMount' ]
       }
     }),
-    typescript(),
+    typescript({
+      clean: true,
+      useTsconfigDeclarationDir: true
+    }),
     json(),
     cleanup()
   ],
 
   output: {
-    file: "index.js",
+    file: pkg.main,
     format: "cjs"
   },
 

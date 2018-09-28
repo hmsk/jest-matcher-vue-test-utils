@@ -12,6 +12,9 @@
     "noImplicitThis": false,
     "sourceMap": true,
     "baseUrl": ".",
+    "declaration": true,
+    "declarationDir": "dist",
+    "outDir": "dist",
     "types": [
       "node",
       "jest"
@@ -21,12 +24,6 @@
     }
   },
   "include": [
-    "*.d.ts",
-    "src/**/*.ts",
-    "test/**/*.ts",
-    "test/fixtures/*.vue"
-  ],
-  "exclude": [
-    "node_modules"
+    "src"
   ]
 }

@@ -1,6 +1,6 @@
 import Vue from "vue";
 import { shallowMount } from "@vue/test-utils";
-import { MatcherComponent, MatcherComponentOptions } from "./main";
+import { MatcherComponent, MatcherComponentOptions } from "./index";
 import { overwriteConfiguration, getConfiguration } from "./config";
 
 export const withMockWarning = (doesDuringMock) => {

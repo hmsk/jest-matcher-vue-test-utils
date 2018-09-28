@@ -6,7 +6,7 @@ import {
   toBeValidPropWithTypeCheck,
   toBeValidPropWithCustomValidator,
   config
-} from "@/main";
+} from "@/index";
 import Component from "./fixtures/props.vue";
 import { createLocalVue } from "@vue/test-utils";
 

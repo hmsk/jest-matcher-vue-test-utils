@@ -15,6 +15,21 @@ export interface ComponentProp {
   [name: string]: any;
 }
 
+declare global {
+  namespace jest {
+    interface Matchers<R> {
+      toAppear (wrapper: Wrapper<Vue>, findArgument: WrapperFindArgument<Vue>): R;
+      toDisappear (wrapper: Wrapper<Vue>, findAgrument: WrapperFindArgument<Vue>): R;
+      toRequireProp (prop: string, options?: ComponentOptions<Vue>): R;
+      toHaveDefaultProp (prop: string, defaultValue: any, options?: ComponentOptions<Vue>): R;
+      toBeValidProps (props: ComponentProp, options?: ComponentOptions<Vue>): R;
+      toBeValidProp (prop: string, sampleValue: any, options?: ComponentOptions<Vue>): R;
+      toBeValidPropWithTypeCheck (prop: string, type: any | any[], options?: ComponentOptions<Vue>): R;
+      toBeValidPropWithCustomValidator (prop: string, sampleValue: any, options?: ComponentOptions<Vue>): R;
+    }
+  }
+}
+
 export function toAppear<V extends Vue> (
   action: Function,
   wrapper: Wrapper<V>,

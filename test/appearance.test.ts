@@ -1,7 +1,7 @@
 import {
   toAppear,
   config
-} from "@/main";
+} from "@/index";
 
 import Component from "./fixtures/error-message.vue";
 import { createLocalVue, shallowMount } from "@vue/test-utils";
