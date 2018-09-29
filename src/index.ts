@@ -1,4 +1,4 @@
-import { shallowMount, Wrapper, VueClass, NameSelector, RefSelector, ThisTypedShallowMountOptions, ShallowMountOptions } from "@vue/test-utils";
+import { shallowMount, Wrapper, VueClass, NameSelector, ThisTypedShallowMountOptions, ShallowMountOptions } from "@vue/test-utils";
 import Vue, { ComponentOptions, FunctionalComponentOptions } from "vue";
 
 import { overwriteConfiguration, getConfiguration, setConfig } from "./config";
