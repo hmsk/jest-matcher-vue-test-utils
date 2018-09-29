@@ -58,6 +58,34 @@ export function toAppear<V extends Vue> (
   }
 }
 
+export function toDisappear<V extends Vue> (
+  action: Function,
+  wrapper: Wrapper<V>,
+  findArgument: WrapperFindArgument<V>
+): MatcherResult {
+  const before = wrapper.contains(findArgument);
+  action();
+  const after = wrapper.contains(findArgument);
+
+  let message, result;
+
+  if (!before) {
+    message = "The target disappears from the beginning";
+    result = false;
+  } else if (after) {
+    message = "The target doesn't disappear even if the action runs";
+    result = false;
+  } else {
+    message = "The target disappears by the action"
+    result = true;
+  }
+
+  return {
+    message: () => message,
+    pass: result
+  }
+}
+
 export function toBeValidProps<V extends Vue> (
   received: MatcherComponent<V>,
   props: ComponentProp,
@@ -190,6 +218,7 @@ export function toBeValidPropWithCustomValidator<V extends Vue> (
 
 const matchers = {
   toAppear,
+  toDisappear,
   toBeValidProp,
   toBeValidProps,
   toRequireProp,

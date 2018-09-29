@@ -24,7 +24,7 @@ module.exports = {
     showError () {
       this.isError = true;
     },
-    dismissError () {
+    hideError () {
       this.isError = false;
     }
   }

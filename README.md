@@ -60,7 +60,7 @@ it("show error by showError", () => {
 ```
 </details>
 
-### `toDisappear` DRAFT
+### `toDisappear`
 
 <details>
   <summary>Assert disappears content by action</summary>
