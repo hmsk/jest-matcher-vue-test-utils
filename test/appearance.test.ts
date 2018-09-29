@@ -1,6 +1,6 @@
 import {
   toShow,
-  toDisappear,
+  toHide,
   config
 } from "@/index";
 
@@ -9,7 +9,7 @@ import { createLocalVue, shallowMount } from "@vue/test-utils";
 
 expect.extend({
   toShow,
-  toDisappear
+  toHide
 });
 
 config({
@@ -58,44 +58,44 @@ describe("toShow", () => {
   });
 });
 
-describe("toDisappear", () => {
-  describe("matcher function", () => {
-    it("returns true if hidden by specified action", () => {
+describe("toHide", () => {
+  describe("as a function which is registered to jest", () => {
+    it("returns true if the target is hidden by specified action", () => {
       const wrapper = shallowMount(Component, { propsData: { initialError: true }});
-      const result = toDisappear(() => (wrapper.vm as any).hideError(), wrapper, ".error");
+      const result = toHide(() => (wrapper.vm as any).hideError(), wrapper, ".error");
       expect(result.pass).toBe(true);
-      expect(result.message()).toBe("The target disappears by the action");
+      expect(result.message()).toBe("The action hides the target");
     });
 
-    it("returns false if hidden from the beginning", () => {
+    it("returns false if the target is hidden from the beginning", () => {
       const wrapper = shallowMount(Component, { propsData: { initialError: false }});
-      const result = toDisappear(() => (wrapper.vm as any).hideError(), wrapper, ".error");
+      const result = toHide(() => (wrapper.vm as any).hideError(), wrapper, ".error");
       expect(result.pass).toBe(false);
-      expect(result.message()).toBe("The target disappears from the beginning");
+      expect(result.message()).toBe("The target has been hiding from the beginning");
     });
 
-    it("returns false if never hidden", () => {
+    it("returns false if the target is never hidden", () => {
       const wrapper = shallowMount(Component, { propsData: { initialError: true }});
-      const result = toDisappear(() => "do not anything", wrapper, ".error");
+      const result = toHide(() => "do not anything", wrapper, ".error");
       expect(result.pass).toBe(false);
-      expect(result.message()).toBe("The target doesn't disappear even if the action runs");
+      expect(result.message()).toBe("The action doesn't hide the target");
     });
   });
 
   describe("actual use", () => {
     it("doesn't claim on correct expectation", () => {
       const wrapper = shallowMount(Component, { propsData: { initialError: true }});
-      expect(() => (wrapper.vm as any).hideError()).toDisappear(wrapper, ".error");
+      expect(() => (wrapper.vm as any).hideError()).toHide(wrapper, ".error");
     });
 
-    it("doesn't claim on incorrect expectation: disappear -> *", () => {
+    it("doesn't claim on incorrect expectation: hidden -> *", () => {
       const wrapper = shallowMount(Component, { propsData: { initialError: false }});
-      expect(() => (wrapper.vm as any).showError()).not.toDisappear(wrapper, ".error");
+      expect(() => (wrapper.vm as any).showError()).not.toHide(wrapper, ".error");
     });
 
-    it("doesn't claim on incorrect expectation: appear -> appear", () => {
+    it("doesn't claim on incorrect expectation: shown -> shown", () => {
       const wrapper = shallowMount(Component, { propsData: { initialError: true }});
-      expect(() => "don't do nothing").not.toDisappear(wrapper, ".error");
+      expect(() => "don't do nothing").not.toHide(wrapper, ".error");
     });
   });
 });

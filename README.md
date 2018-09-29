@@ -60,10 +60,10 @@ it("show error by showError", () => {
 ```
 </details>
 
-### `toDisappear`
+### `toHide`
 
 <details>
-  <summary>Assert disappears content by action</summary>
+  <summary>Assert the action hides a content on Wrapper of vue-test-utils</summary>
 
 ```js
 // error-message.vue
@@ -81,7 +81,7 @@ data: function () {
   }
 },
 methods: {
-  dismissError () {
+  hideError () {
     this.isError = false;
   }
 }
@@ -91,7 +91,7 @@ methods: {
 import Component from "./error-message.vue";
 
 it("show error by showError", () => {
-  expect(() => wrapper.vm.dismissError()).toDisappear(wrapper, "p.error"); // Passes
+  expect(() => wrapper.vm.hideError()).toHide(wrapper, "p.error"); // Passes
 });
 ```
 

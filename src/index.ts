@@ -19,7 +19,7 @@ declare global {
   namespace jest {
     interface Matchers<R> {
       toShow (wrapper: Wrapper<Vue>, findArgument: WrapperFindArgument<Vue>): R;
-      toDisappear (wrapper: Wrapper<Vue>, findAgrument: WrapperFindArgument<Vue>): R;
+      toHide (wrapper: Wrapper<Vue>, findAgrument: WrapperFindArgument<Vue>): R;
       toRequireProp (prop: string, options?: ComponentOptions<Vue>): R;
       toHaveDefaultProp (prop: string, defaultValue: any, options?: ComponentOptions<Vue>): R;
       toBeValidProps (props: ComponentProp, options?: ComponentOptions<Vue>): R;
@@ -58,7 +58,7 @@ export function toShow<V extends Vue> (
   }
 }
 
-export function toDisappear<V extends Vue> (
+export function toHide<V extends Vue> (
   action: Function,
   wrapper: Wrapper<V>,
   findArgument: WrapperFindArgument<V>
@@ -70,13 +70,13 @@ export function toDisappear<V extends Vue> (
   let message, result;
 
   if (!before) {
-    message = "The target disappears from the beginning";
+    message = "The target has been hiding from the beginning";
     result = false;
   } else if (after) {
-    message = "The target doesn't disappear even if the action runs";
+    message = "The action doesn't hide the target";
     result = false;
   } else {
-    message = "The target disappears by the action"
+    message = "The action hides the target"
     result = true;
   }
 
@@ -218,7 +218,7 @@ export function toBeValidPropWithCustomValidator<V extends Vue> (
 
 const matchers = {
   toShow,
-  toDisappear,
+  toHide,
   toBeValidProp,
   toBeValidProps,
   toRequireProp,
