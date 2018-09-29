@@ -18,7 +18,7 @@ export interface ComponentProp {
 declare global {
   namespace jest {
     interface Matchers<R> {
-      toAppear (wrapper: Wrapper<Vue>, findArgument: WrapperFindArgument<Vue>): R;
+      toShow (wrapper: Wrapper<Vue>, findArgument: WrapperFindArgument<Vue>): R;
       toDisappear (wrapper: Wrapper<Vue>, findAgrument: WrapperFindArgument<Vue>): R;
       toRequireProp (prop: string, options?: ComponentOptions<Vue>): R;
       toHaveDefaultProp (prop: string, defaultValue: any, options?: ComponentOptions<Vue>): R;
@@ -30,7 +30,7 @@ declare global {
   }
 }
 
-export function toAppear<V extends Vue> (
+export function toShow<V extends Vue> (
   action: Function,
   wrapper: Wrapper<V>,
   findArgument: WrapperFindArgument<V>
@@ -42,13 +42,13 @@ export function toAppear<V extends Vue> (
   let message, result;
 
   if (before) {
-    message = "The target appears from the beginning";
+    message = "The target has been showing from the beginning";
     result = false;
   } else if (!after) {
-    message = "The target doesn't show even if the action runs";
+    message = "The action doesn't show the target";
     result = false;
   } else {
-    message = "The target appears by the action"
+    message = "The action shows the target";
     result = true;
   }
 
@@ -217,7 +217,7 @@ export function toBeValidPropWithCustomValidator<V extends Vue> (
 }
 
 const matchers = {
-  toAppear,
+  toShow,
   toDisappear,
   toBeValidProp,
   toBeValidProps,

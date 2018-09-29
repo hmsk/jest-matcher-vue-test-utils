@@ -24,10 +24,10 @@ expect.extend({ ...vueTestUtilMatchers });
 
 ## For Wrapper Contents
 
-### `toAppear`
+### `toShow`
 
 <details>
-  <summary>Assert appears content by action</summary>
+  <summary>Assert the action shows a content on Wrapper of vue-test-utils</summary>
 
 ```js
 // error-message.vue
@@ -55,7 +55,7 @@ methods: {
 import Component from "./error-message.vue";
 
 it("show error by showError", () => {
-  expect(() => wrapper.vm.showError()).toAppear(wrapper, "p.error"); // Passes
+  expect(() => wrapper.vm.showError()).toShow(wrapper, "p.error"); // Passes
 });
 ```
 </details>
