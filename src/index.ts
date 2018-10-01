@@ -18,13 +18,73 @@ export interface ComponentProp {
 declare global {
   namespace jest {
     interface Matchers<R> {
+      /**
+       * Asserts that the action shows the specific content
+       * @param wrapper - The wrapper of vue-test-utils
+       * @param findAgrument - The argument for "wrapper.find" to find the specific content
+       * @example
+       * expect(() => somethingGreat()).toShow(wrapper, "p.error")
+       */
       toShow (wrapper: Wrapper<Vue>, findArgument: WrapperFindArgument<Vue>): R;
+      /**
+       * Asserts that the action hides the specific content
+       * @param wrapper - The wrapper of vue-test-utils
+       * @param findAgrument - The argument for "wrapper.find" to find the specific content
+       * @example
+       * expect(() => somethingGreat()).toHide(wrapper, "p.error")
+       */
       toHide (wrapper: Wrapper<Vue>, findAgrument: WrapperFindArgument<Vue>): R;
+      /**
+       * Asserts that the component requires the prop
+       * @param {string} prop - The prop's name
+       * @param options - Mount Option of the component
+       * @example
+       * expect(AComponent).toRequireProp("type")
+       */
       toRequireProp (prop: string, options?: ComponentOptions<Vue>): R;
+      /**
+       * Asserts that the component gives default value for the prop
+       * @param {string} prop - The prop's name
+       * @param {any} defaultValue - The default value you're expecting for the prop
+       * @param options - Mount Option of the component
+       * @example
+       * expect(AComponent).toHaveDefaultProp("type", "I am a default message")
+       */
       toHaveDefaultProp (prop: string, defaultValue: any, options?: ComponentOptions<Vue>): R;
+      /**
+       * Asserts that the component accepts the set of props
+       * @param {any} props - The set of props
+       * @param options - Mount Option of the component
+       * @example
+       * expect(AComponent).toBeValidProps({ type: "the type", color: "cool one"})
+       */
       toBeValidProps (props: ComponentProp, options?: ComponentOptions<Vue>): R;
+      /**
+       * Asserts that the component accepts the value for the single prop
+       * @param {string} prop - The prop's name
+       * @param {any} sampleValue - The value you give for the prop
+       * @param options - Mount Option of the component
+       * @example
+       * expect(AComponent).toBeValidProp("type", "hope this value accepts")
+       */
       toBeValidProp (prop: string, sampleValue: any, options?: ComponentOptions<Vue>): R;
+      /**
+       * Asserts that the component accepts the type for the single prop
+       * @param {string} prop - The prop's name
+       * @param {any} type - The type (String|Number|Boolean|Array|Object|Date|Function|Symbol|[your prototype instance])
+       * @param options - Mount Option of the component
+       * @example
+       * expect(AComponent).toBeValidPropWithTypeCheck("color", String)
+       */
       toBeValidPropWithTypeCheck (prop: string, type: any | any[], options?: ComponentOptions<Vue>): R;
+      /**
+       * Asserts that the component accepts the value with custom validator for the prop
+       * @param {string} prop - The prop's name
+       * @param {any} sampleValue - The value you give for the prop
+       * @param options - Mount Option of the component
+       * @example
+       * expect(AComponent).toBeValidPropWithCustomValidator("color", "awesomeColor")
+       */
       toBeValidPropWithCustomValidator (prop: string, sampleValue: any, options?: ComponentOptions<Vue>): R;
     }
   }
