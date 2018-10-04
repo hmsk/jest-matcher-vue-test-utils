@@ -41,7 +41,7 @@ declare global {
        * @example
        * expect(AComponent).toRequireProp("type")
        */
-      toRequireProp (prop: string, options?: ComponentOptions<Vue>): R;
+      toRequireProp (prop: string, options?: MatcherComponentOptions<Vue>): R;
       /**
        * Asserts that the component gives default value for the prop
        * @param {string} prop - The prop's name
@@ -50,7 +50,7 @@ declare global {
        * @example
        * expect(AComponent).toHaveDefaultProp("type", "I am a default message")
        */
-      toHaveDefaultProp (prop: string, defaultValue: any, options?: ComponentOptions<Vue>): R;
+      toHaveDefaultProp (prop: string, defaultValue: any, options?: MatcherComponentOptions<Vue>): R;
       /**
        * Asserts that the component accepts the set of props
        * @param {any} props - The set of props
@@ -58,7 +58,7 @@ declare global {
        * @example
        * expect(AComponent).toBeValidProps({ type: "the type", color: "cool one"})
        */
-      toBeValidProps (props: ComponentProp, options?: ComponentOptions<Vue>): R;
+      toBeValidProps (props: ComponentProp, options?: MatcherComponentOptions<Vue>): R;
       /**
        * Asserts that the component accepts the value for the single prop
        * @param {string} prop - The prop's name
@@ -67,7 +67,7 @@ declare global {
        * @example
        * expect(AComponent).toBeValidProp("type", "hope this value accepts")
        */
-      toBeValidProp (prop: string, sampleValue: any, options?: ComponentOptions<Vue>): R;
+      toBeValidProp (prop: string, sampleValue: any, options?: MatcherComponentOptions<Vue>): R;
       /**
        * Asserts that the component accepts the type for the single prop
        * @param {string} prop - The prop's name
@@ -76,7 +76,7 @@ declare global {
        * @example
        * expect(AComponent).toBeValidPropWithTypeCheck("color", String)
        */
-      toBeValidPropWithTypeCheck (prop: string, type: any | any[], options?: ComponentOptions<Vue>): R;
+      toBeValidPropWithTypeCheck (prop: string, type: any | any[], options?: MatcherComponentOptions<Vue>): R;
       /**
        * Asserts that the component accepts the value with custom validator for the prop
        * @param {string} prop - The prop's name
@@ -85,7 +85,7 @@ declare global {
        * @example
        * expect(AComponent).toBeValidPropWithCustomValidator("color", "awesomeColor")
        */
-      toBeValidPropWithCustomValidator (prop: string, sampleValue: any, options?: ComponentOptions<Vue>): R;
+      toBeValidPropWithCustomValidator (prop: string, sampleValue: any, options?: MatcherComponentOptions<Vue>): R;
     }
   }
 }
