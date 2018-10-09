@@ -3,7 +3,7 @@
 [![npm](https://img.shields.io/npm/v/jest-matcher-vue-test-utils.svg?style=for-the-badge)](https://www.npmjs.com/package/jest-matcher-vue-test-utils)
 [![CircleCI](https://img.shields.io/circleci/project/github/hmsk/jest-matcher-vue-test-utils.svg?style=for-the-badge)](https://circleci.com/gh/hmsk/jest-matcher-vue-test-utils)
 
-Cute matchers for [Jest](https://facebook.github.io/jest)  to test Vue components with `@vue/test-utils`.
+Cute matchers for [Jest](https://facebook.github.io/jest)  to test Vue components with [Vue Test Utils](https://vue-test-utils.vuejs.org/).
 
 # Installation
 
