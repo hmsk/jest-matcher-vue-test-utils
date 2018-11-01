@@ -1,4 +1,4 @@
-import Vue from "vue";
+import Vue, { ComponentOptions } from "vue";
 import { shallowMount } from "@vue/test-utils";
 import { MatcherComponent, MatcherComponentOptions } from "./index";
 import { overwriteConfiguration, getConfiguration } from "./config";
@@ -20,11 +20,19 @@ export const getWarningsByMount = <V extends Vue> (
     getConfiguration<V>().mountOptions;
 
   let warnings;
-
   withMockWarning((mock) => {
-    shallowMount<V>(component, { ...mountOption, propsData });
+    shallowMount<V>(corkComponent(component), { ...mountOption, propsData });
     warnings = mock.calls || [];
   });
 
   return warnings;
 }
+
+export const corkComponent = <V extends Vue> (
+  component: MatcherComponent<V>
+) => {
+  return {
+    mixins: [component],
+    template: "<h1>mocked template</h1>"
+  } as ComponentOptions<V>; // mixins is not compatible actually since that expects ComponentOptions<Vue> unintentionally
+};

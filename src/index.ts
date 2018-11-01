@@ -4,7 +4,7 @@ import Vue, { ComponentOptions, FunctionalComponentOptions } from "vue";
 import { overwriteConfiguration, getConfiguration, setConfig } from "./config";
 export const config = setConfig;
 
-import { withMockWarning, getWarningsByMount } from "./utils";
+import { withMockWarning, getWarningsByMount, corkComponent } from "./utils";
 
 export declare type MatcherComponent<V extends Vue> = VueClass<V> | ComponentOptions<V> | FunctionalComponentOptions;
 export declare type MatcherComponentOptions<V extends Vue> = ThisTypedShallowMountOptions<V> | ShallowMountOptions<Vue>;
@@ -218,7 +218,7 @@ export function toHaveDefaultProp<V extends Vue> (
 
   let wrapper;
   withMockWarning(() => {
-    wrapper = shallowMount<V>(received, { ...mountOption });
+    wrapper = shallowMount<V>(corkComponent(received), { ...mountOption });
   });
 
   const given = wrapper.props()[propName];
