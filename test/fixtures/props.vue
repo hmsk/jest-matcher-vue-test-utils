@@ -1,6 +1,7 @@
 <template>
   <div class="props">
     Matchers for Prop {{ internal }}
+    {{ obj.something }}
   </div>
 </template>
 
@@ -27,6 +28,9 @@ module.exports = {
       validator: function (val) {
         return !!val && val.match(/.+\s.+/);
       }
+    },
+    obj: {
+      type: Object
     }
   },
   created () {
