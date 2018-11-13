@@ -1,6 +1,6 @@
 {
   "name": "jest-matcher-vue-test-utils",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Jest matchers to test Vue components easily",
   "main": "./dist/index.js",
   "typings": "./dist/index.d.ts",
