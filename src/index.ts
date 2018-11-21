@@ -34,6 +34,16 @@ declare global {
        * expect(() => somethingGreat()).toHide(wrapper, "p.error")
        */
       toHide (wrapper: Wrapper<Vue>, findAgrument: WrapperFindArgument<Vue>): R;
+
+      /**
+       * Asserts that the action shows the specific content
+       * @param wrapper - The wrapper of vue-test-utils
+       * @param eventName - The event name
+       * @example
+       * expect(wrapper).toBeEmitted("input")
+       */
+      toBeEmitted (wrapper: Wrapper<Vue>, eventName: string): R;
+
       /**
        * Asserts that the component requires the prop
        * @param {string} prop - The prop's name
