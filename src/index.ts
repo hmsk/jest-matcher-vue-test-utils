@@ -37,12 +37,11 @@ declare global {
 
       /**
        * Asserts that the action shows the specific content
-       * @param wrapper - The wrapper of vue-test-utils
-       * @param eventName - The event name
+       * @param {string} eventName - The eventName
        * @example
        * expect(wrapper).toBeEmitted("input")
        */
-      toBeEmitted (wrapper: Wrapper<Vue>, eventName: string): R;
+      toBeEmitted (eventName: string): R;
 
       /**
        * Asserts that the component requires the prop
@@ -153,6 +152,19 @@ export function toHide<V extends Vue> (
   return {
     message: () => message,
     pass: result
+  }
+}
+
+export function toBeEmitted<V extends Vue> (
+  wrapper: Wrapper<V>,
+  eventName: string
+): MatcherResult {
+  const emitted = wrapper.emitted()[eventName] || [];
+  return {
+    message: emitted.length > 0 ?
+      () => `The event "${eventName}" is emitted` :
+      () => `The event "${eventName}" never been emitted`,
+    pass: emitted.length > 0
   }
 }
 
@@ -289,6 +301,7 @@ export function toBeValidPropWithCustomValidator<V extends Vue> (
 const matchers = {
   toShow,
   toHide,
+  toBeEmitted,
   toBeValidProp,
   toBeValidProps,
   toRequireProp,
