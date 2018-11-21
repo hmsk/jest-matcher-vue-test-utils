@@ -97,6 +97,44 @@ it("show error by showError", () => {
 
 </details>
 
+## For Wrapper Events
+
+### `toBeEmitted`
+
+<details>
+  <summary>Assert the event is emitted</summary>
+
+```js
+// event.vue
+<template>
+  <div @click="emitEvent">
+    Click Me
+  </div>
+</template>
+
+<script>
+module.exports = {
+  methods: {
+    emitEvent (e) {
+      this.$emit("special", e);
+    }
+  }
+}
+</script>
+```
+
+```js
+import Component from "./emit.vue";
+
+it("emits special event by click", () => {
+  const wrapper = shallowMount(Component);
+  wrapper.trigger("click");
+  expect(wrapper).toBeEmitted("special"); // Passes
+});
+```
+</details>
+
+
 ## For Prop Validations
 
 ### `toBeValidProps`
