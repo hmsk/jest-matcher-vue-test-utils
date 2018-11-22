@@ -21,14 +21,14 @@ describe("toBeEmitted", () => {
       wrapper.trigger("click");
       const result = toBeEmitted(wrapper, "special");
       expect(result.pass).toBe(true);
-      expect(result.message()).toBe('The event "special" is emitted');
+      expect(result.message()).toBe('The "special" event was emitted');
     });
 
     it("returns false if the event is not emitted", () => {
       const wrapper = shallowMount(Component);
       const result = toBeEmitted(wrapper, "special");
       expect(result.pass).toBe(false);
-      expect(result.message()).toBe('The event "special" never been emitted');
+      expect(result.message()).toBe('The "special" event was never emitted');
     });
 
     it("returns false if the another event is emitted", () => {
@@ -36,7 +36,7 @@ describe("toBeEmitted", () => {
       wrapper.trigger("another");
       const result = toBeEmitted(wrapper, "special");
       expect(result.pass).toBe(false);
-      expect(result.message()).toBe('The event "special" never been emitted');
+      expect(result.message()).toBe('The "special" event was never emitted');
     });
   });
 

@@ -162,8 +162,8 @@ export function toBeEmitted<V extends Vue> (
   const emitted = wrapper.emitted()[eventName] || [];
   return {
     message: emitted.length > 0 ?
-      () => `The event "${eventName}" is emitted` :
-      () => `The event "${eventName}" never been emitted`,
+      () => `The "${eventName}" event was emitted` :
+      () => `The "${eventName}" event was never emitted`,
     pass: emitted.length > 0
   }
 }
