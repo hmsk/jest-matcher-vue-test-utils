@@ -134,6 +134,40 @@ it("emits special event by click", () => {
 ```
 </details>
 
+### `toBeEmittedWith`
+
+<details>
+  <summary>Assert the event is emitted with the payload</summary>
+
+```js
+// event.vue
+<template>
+  <div @click="emitEvent">
+    Click Me
+  </div>
+</template>
+
+<script>
+module.exports = {
+  methods: {
+    emitEvent (e) {
+      this.$emit("special", "something");
+    }
+  }
+}
+</script>
+```
+
+```js
+import Component from "./event.vue";
+
+it("emits special event by click", () => {
+  const wrapper = shallowMount(Component);
+  wrapper.trigger("click");
+  expect(wrapper).toBeEmittedWith("special", "something"); // Passes
+});
+```
+</details>
 
 ## For Prop Validations
 
