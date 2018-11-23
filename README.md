@@ -124,7 +124,7 @@ module.exports = {
 ```
 
 ```js
-import Component from "./emit.vue";
+import Component from "./event.vue";
 
 it("emits special event by click", () => {
   const wrapper = shallowMount(Component);
