@@ -1,5 +1,6 @@
 <template>
-  <div @click="emitEvent">
+  <div
+    @click="emitEvent">
     Click Me
   </div>
 </template>
@@ -9,6 +10,9 @@ module.exports = {
   methods: {
     emitEvent (e) {
       this.$emit("special", e);
+    },
+    emitEventWithPayload (eventName, payload) {
+      this.$emit(eventName, payload);
     }
   }
 }

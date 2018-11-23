@@ -44,6 +44,15 @@ declare global {
       toBeEmitted (eventName: string): R;
 
       /**
+       * Asserts that the action shows the specific content
+       * @param {string} eventName - The event's name
+       * @param payload - The payload of the event
+       * @example
+       * expect(wrapper).toBeEmittedWith("input", "expected new value")
+       */
+      toBeEmittedWith (eventName: string, payload: any): R;
+
+      /**
        * Asserts that the component requires the prop
        * @param {string} prop - The prop's name
        * @param options - Mount Option of the component
@@ -165,6 +174,27 @@ export function toBeEmitted<V extends Vue> (
       () => `The "${eventName}" event was emitted` :
       () => `The "${eventName}" event was never emitted`,
     pass: emitted.length > 0
+  }
+}
+
+export function toBeEmittedWith<V extends Vue> (
+  wrapper: Wrapper<V>,
+  eventName: string,
+  payload: any
+): MatcherResult {
+  const emitted = wrapper.emitted()[eventName] || [];
+
+  const pass = emitted.some((event) => {
+    return (this as jest.MatcherUtils).equals(event[0], payload)
+  });
+
+  return {
+    message: pass ?
+      () => `The "${eventName}" event was emitted with the expected payload` :
+        emitted.length > 0 ?
+          () => `The "${eventName}" event was emitted but the payload is not matched` :
+          () => `The "${eventName}" event was never emitted`,
+    pass
   }
 }
 
@@ -302,6 +332,7 @@ const matchers = {
   toShow,
   toHide,
   toBeEmitted,
+  toBeEmittedWith,
   toBeValidProp,
   toBeValidProps,
   toRequireProp,
