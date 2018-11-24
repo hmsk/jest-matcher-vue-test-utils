@@ -6,18 +6,27 @@ declare global {
   namespace jest {
     interface Matchers<R> {
       /**
-       * Asserts that the action shows the specific content
+       * Asserts that the event is emitted with specific payload
        * @param {string} eventName - The event's name
        * @param payload - The payload of the event
        * @example
        * expect(wrapper).toBeEmittedWith("input", "expected new value")
        */
       toBeEmittedWith (eventName: string, payload: any): R;
+
+      /**
+       * Asserts that the event is emitted with specific payload
+       * @param {string} eventName - The event's name
+       * @param payload - The payload of the event
+       * @example
+       * expect(wrapper).toHaveBeenEmittedWith("input", "expected new value")
+       */
+      toHaveBeenEmittedWith (eventName: string, payload: any): R;
     }
   }
 }
 
-export default function toBeEmittedWith<V extends Vue> (
+export default function<V extends Vue> (
   wrapper: Wrapper<V>,
   eventName: string,
   payload: any

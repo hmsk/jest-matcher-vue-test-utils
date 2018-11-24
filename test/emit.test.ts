@@ -2,7 +2,8 @@ import {
   config,
   toBeEmitted,
   toBeEmittedWith,
-  toHaveBeenEmitted
+  toHaveBeenEmitted,
+  toHaveBeenEmittedWith
 } from "@/index";
 
 import Component from "./fixtures/event.vue";
@@ -11,7 +12,8 @@ import { createLocalVue, shallowMount } from "@vue/test-utils";
 expect.extend({
   toBeEmitted,
   toHaveBeenEmitted,
-  toBeEmittedWith
+  toBeEmittedWith,
+  toHaveBeenEmittedWith,
 });
 
 config({
@@ -119,6 +121,12 @@ describe.only("toBeEmittedWith", () => {
       const wrapper = shallowMount(Component);
       emitEvent(wrapper, "special", { value: "actual life" });
       expect(wrapper).toBeEmittedWith("special", { value: "actual life" });
+    });
+
+    it("passes for expected case positively with alias", () => {
+      const wrapper = shallowMount(Component);
+      emitEvent(wrapper, "special", { value: "actual life" });
+      expect(wrapper).toHaveBeenEmittedWith("special", { value: "actual life" });
     });
 
     it("passes negatively when any event was not emitted", () => {
