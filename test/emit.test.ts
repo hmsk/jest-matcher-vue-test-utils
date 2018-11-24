@@ -24,6 +24,10 @@ const fakeJestContext = (expect: boolean = true) => {
   };
 };
 
+const emitEvent = (wrapper, eventName, payload) => {
+  (wrapper.vm as any).emitEventWithPayload(eventName, payload);
+};
+
 describe("toBeEmitted", () => {
   describe("as a function which is registered to jest", () => {
     it("returns true if the event is emitted", () => {
@@ -77,10 +81,6 @@ describe("toBeEmitted", () => {
 });
 
 describe("toBeEmitted with payload", () => {
-  const emitEvent = (wrapper, eventName, payload) => {
-    (wrapper.vm as any).emitEventWithPayload(eventName, payload);
-  };
-
   describe("as a function which is registered to jest", () => {
     it("returns true if the event is emitted with the expected payload", () => {
       const wrapper = shallowMount(Component);
@@ -186,6 +186,30 @@ describe("toEmit", () => {
       const wrapper = shallowMount(Component);
       wrapper.trigger("click")
       expect(() => "nothing to do").not.toEmit(wrapper, "special");
+    });
+
+    describe("with payload", () => {
+      it("passes positively when the expected event is emitted with the payload by the action", () => {
+        const wrapper = shallowMount(Component);
+        expect(() => {
+          emitEvent(wrapper, "special", { value: "actual life" });
+        }).toEmit(wrapper, "special", { value: "actual life" });
+      });
+
+      it("passes negatively when the expected event is not emitted by the action", () => {
+        const wrapper = shallowMount(Component);
+        emitEvent(wrapper, "special", { value: "actual life" });
+        expect(() => {
+          return "nothing to do";
+        }).not.toEmit(wrapper, "special", { value: "actual life" });
+      });
+
+      it("passes negatively when the expected event is emitted by the action, but the payload is not matched", () => {
+        const wrapper = shallowMount(Component);
+        expect(() => {
+          emitEvent(wrapper, "special", { value: "unintentional life" });
+        }).not.toEmit(wrapper, "special", { value: "actual life" });
+      });
     });
   });
 });

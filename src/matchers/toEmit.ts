@@ -9,10 +9,11 @@ declare global {
        * Asserts that the action emits the specific content
        * @param wrapper - The wrapper of vue-test-utils
        * @param eventName - The event's name
+       * @param payload - The payload of the event (optional)
        * @example
        * expect(() => somethingGreat()).toShow(wrapper, "p.error")
        */
-      toEmit (wrapper: Wrapper<Vue>, eventName: string): R;
+      toEmit (wrapper: Wrapper<Vue>, eventName: string, payload?: any): R;
     }
   }
 }
@@ -20,7 +21,8 @@ declare global {
 export default function<V extends Vue> (
   action: Function,
   wrapper: Wrapper<V>,
-  eventName: string
+  eventName: string,
+  payload?: any
 ): MatcherResult {
   const before = wrapper.emitted()[eventName] || [];
   action();
@@ -29,13 +31,24 @@ export default function<V extends Vue> (
   let pass: boolean;
   let message: () => string;
 
-  pass = after.length > before.length
-  message = pass ?
-    () => `The action emitted the "${eventName}" event` :
-    () => `The action did not emit the "${eventName}" event`;
+  const matchesToPayload = (event) => (this as jest.MatcherUtils).equals(event[0], payload);
+
+  if (arguments.length == 4) {
+    pass = after.filter(matchesToPayload).length > before.filter(matchesToPayload).length;
+    message = pass ?
+      () => `The action emitted the "${eventName}" event with the expected payload` :
+        after.length > before.length ?
+          () => `The action emitted the "${eventName}" event, but the payload is not matched` :
+          () => `The action did not emit the "${eventName}" event`;
+  } else {
+    pass = after.length > before.length
+    message = pass ?
+      () => `The action emitted the "${eventName}" event` :
+      () => `The action did not emit the "${eventName}" event`;
+  }
 
   return {
     pass,
     message
-  }
+  };
 }
