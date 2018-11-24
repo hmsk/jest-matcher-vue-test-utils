@@ -1,13 +1,16 @@
-import { config } from "@/index";
-
-import toBeEmitted from "@/matchers/toBeEmitted";
-import toBeEmittedWith from "@/matchers/toBeEmittedWith";
+import {
+  config,
+  toBeEmitted,
+  toBeEmittedWith,
+  toHaveBeenEmitted
+} from "@/index";
 
 import Component from "./fixtures/event.vue";
 import { createLocalVue, shallowMount } from "@vue/test-utils";
 
 expect.extend({
   toBeEmitted,
+  toHaveBeenEmitted,
   toBeEmittedWith
 });
 
@@ -52,6 +55,12 @@ describe("toBeEmitted", () => {
       const wrapper = shallowMount(Component);
       wrapper.trigger("click");
       expect(wrapper).toBeEmitted("special");
+    });
+
+    it("doesn't claim for positive expectation with alias when expected event happens", () => {
+      const wrapper = shallowMount(Component);
+      wrapper.trigger("click");
+      expect(wrapper).toHaveBeenEmitted("special");
     });
 
     it("doesn't claim for negative expectation when expected event doesn't happen", () => {

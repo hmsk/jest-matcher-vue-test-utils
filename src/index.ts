@@ -14,9 +14,6 @@ export interface ComponentProp {
   [name: string]: any;
 }
 
-import toBeEmitted from "./matchers/toBeEmitted";
-import toBeEmittedWith from "./matchers/toBeEmittedWith";
-
 declare global {
   namespace jest {
     interface Matchers<R> {
@@ -279,10 +276,17 @@ export function toBeValidPropWithCustomValidator<V extends Vue> (
   };
 }
 
+import toBeEmitted from "./matchers/toBeEmitted";
+import toBeEmittedWith from "./matchers/toBeEmittedWith";
+
+export { toBeEmitted, toBeEmittedWith };
+export { toBeEmitted as toHaveBeenEmitted };
+
 const matchers = {
   toShow,
   toHide,
   toBeEmitted,
+  toHaveBeenEmitted: toBeEmitted,
   toBeEmittedWith,
   toBeValidProp,
   toBeValidProps,
