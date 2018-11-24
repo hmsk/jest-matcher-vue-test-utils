@@ -1,9 +1,7 @@
 import {
   config,
   toBeEmitted,
-  toBeEmittedWith,
-  toHaveBeenEmitted,
-  toHaveBeenEmittedWith
+  toHaveBeenEmitted
 } from "@/index";
 
 import Component from "./fixtures/event.vue";
@@ -11,9 +9,7 @@ import { createLocalVue, shallowMount } from "@vue/test-utils";
 
 expect.extend({
   toBeEmitted,
-  toHaveBeenEmitted,
-  toBeEmittedWith,
-  toHaveBeenEmittedWith,
+  toHaveBeenEmitted
 });
 
 config({
@@ -78,7 +74,7 @@ describe("toBeEmitted", () => {
   });
 });
 
-describe.only("toBeEmittedWith", () => {
+describe("toBeEmitted with payload", () => {
   const emitEvent = (wrapper, eventName, payload) => {
     (wrapper.vm as any).emitEventWithPayload(eventName, payload);
   };
@@ -87,14 +83,14 @@ describe.only("toBeEmittedWith", () => {
     it("returns true if the event is emitted with the expected payload", () => {
       const wrapper = shallowMount(Component);
       emitEvent(wrapper, "special", { value: "something" });
-      const result = toBeEmittedWith.bind(fakeJestContext(true))(wrapper, "special", "something");
+      const result = toBeEmitted.bind(fakeJestContext(true))(wrapper, "special", "something");
       expect(result.pass).toBe(true);
       expect(result.message()).toBe('The "special" event was emitted with the expected payload');
     });
 
     it("returns false if the event is not emitted", () => {
       const wrapper = shallowMount(Component);
-      const result = toBeEmittedWith(wrapper, "special", "something");
+      const result = toBeEmitted(wrapper, "special", "something");
       expect(result.pass).toBe(false);
       expect(result.message()).toBe('The "special" event was never emitted');
     });
@@ -102,7 +98,7 @@ describe.only("toBeEmittedWith", () => {
     it("returns false if the another event is emitted", () => {
       const wrapper = shallowMount(Component);
       emitEvent(wrapper, "another", { value: "something" });
-      const result = toBeEmittedWith(wrapper, "special", "something");
+      const result = toBeEmitted(wrapper, "special", "something");
       expect(result.pass).toBe(false);
       expect(result.message()).toBe('The "special" event was never emitted');
     });
@@ -110,7 +106,7 @@ describe.only("toBeEmittedWith", () => {
     it("returns false if the event is emitted but the payload is not matched", () => {
       const wrapper = shallowMount(Component);
       emitEvent(wrapper, "special", { value: "anything" });
-      const result = toBeEmittedWith.bind(fakeJestContext(false))(wrapper, "special", "something");
+      const result = toBeEmitted.bind(fakeJestContext(false))(wrapper, "special", "something");
       expect(result.pass).toBe(false);
       expect(result.message()).toBe('The "special" event was emitted but the payload is not matched');
     });
@@ -120,30 +116,30 @@ describe.only("toBeEmittedWith", () => {
     it("passes for expected case positively", () => {
       const wrapper = shallowMount(Component);
       emitEvent(wrapper, "special", { value: "actual life" });
-      expect(wrapper).toBeEmittedWith("special", { value: "actual life" });
+      expect(wrapper).toBeEmitted("special", { value: "actual life" });
     });
 
     it("passes for expected case positively with alias", () => {
       const wrapper = shallowMount(Component);
       emitEvent(wrapper, "special", { value: "actual life" });
-      expect(wrapper).toHaveBeenEmittedWith("special", { value: "actual life" });
+      expect(wrapper).toHaveBeenEmitted("special", { value: "actual life" });
     });
 
     it("passes negatively when any event was not emitted", () => {
       const wrapper = shallowMount(Component);
-      expect(wrapper).not.toBeEmittedWith("special", { value: "unusual life" });
+      expect(wrapper).not.toBeEmitted("special", { value: "unusual life" });
     });
 
     it("passes negatively when unintentional event was emitted", () => {
       const wrapper = shallowMount(Component);
       emitEvent(wrapper, "another", { value: "actual life" });
-      expect(wrapper).not.toBeEmittedWith("special", { value: "unusual life" });
+      expect(wrapper).not.toBeEmitted("special", { value: "unusual life" });
     });
 
     it("passes negatively when the expected event is emitted but the payload is not matched", () => {
       const wrapper = shallowMount(Component);
       emitEvent(wrapper, "special", { value: "actual life" });
-      expect(wrapper).not.toBeEmittedWith("special", { value: "exciting life" });
+      expect(wrapper).not.toBeEmitted("special", { value: "exciting life" });
     });
   });
 });

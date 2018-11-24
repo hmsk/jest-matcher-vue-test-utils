@@ -277,13 +277,10 @@ export function toBeValidPropWithCustomValidator<V extends Vue> (
 }
 
 import toBeEmitted from "./matchers/toBeEmitted";
-import toBeEmittedWith from "./matchers/toBeEmittedWith";
 
 export {
   toBeEmitted,
-  toBeEmitted as toHaveBeenEmitted,
-  toBeEmittedWith,
-  toBeEmittedWith as toHaveBeenEmittedWith
+  toBeEmitted as toHaveBeenEmitted
 };
 
 const matchers = {
@@ -291,8 +288,6 @@ const matchers = {
   toHide,
   toBeEmitted,
   toHaveBeenEmitted: toBeEmitted,
-  toBeEmittedWith,
-  toHaveBeenEmittedWith: toBeEmittedWith,
   toBeValidProp,
   toBeValidProps,
   toRequireProp,
