@@ -99,6 +99,41 @@ it("show error by showError", () => {
 
 ## For Wrapper Events
 
+### `toEmit`
+
+<details>
+  <summary>Assert the action emits the event on Wrapper of vue-test-utils</summary>
+
+```js
+// event.vue
+<template>
+  <div @click="emitEvent('clicked')">
+    Click Me
+  </div>
+</template>
+
+<script>
+module.exports = {
+  methods: {
+    emitEvent (e) {
+      this.$emit("special", e);
+    }
+  }
+}
+</script>
+```
+
+```js
+import Component from "./event.vue";
+
+it("emits special event by click", () => {
+  const wrapper = shallowMount(Component);
+  expect(() => wrapper.trigger("click")).toEmit("special"); // Passes
+});
+```
+
+</details>
+
 ### `toBeEmitted`
 
 <details>
@@ -107,7 +142,7 @@ it("show error by showError", () => {
 ```js
 // event.vue
 <template>
-  <div @click="emitEvent("clicked")">
+  <div @click="emitEvent('clicked')">
     Click Me
   </div>
 </template>
