@@ -3,6 +3,8 @@ import { shallowMount } from "@vue/test-utils";
 import { MatcherComponent, MatcherComponentOptions } from "./index";
 import { overwriteConfiguration, getConfiguration } from "./config";
 
+export type MatcherResult = { message (): string, pass: boolean };
+
 export const withMockWarning = (doesDuringMock) => {
   const original = console.error;
   console.error = jest.fn();

@@ -4,16 +4,17 @@ import Vue, { ComponentOptions, FunctionalComponentOptions } from "vue";
 import { overwriteConfiguration, getConfiguration, setConfig } from "./config";
 export const config = setConfig;
 
-import { withMockWarning, getWarningsByMount, corkComponent } from "./utils";
+import { withMockWarning, getWarningsByMount, corkComponent, MatcherResult } from "./utils";
 
 export declare type MatcherComponent<V extends Vue> = VueClass<V> | ComponentOptions<V> | FunctionalComponentOptions;
 export declare type MatcherComponentOptions<V extends Vue> = ThisTypedShallowMountOptions<V> | ShallowMountOptions<Vue>;
 export declare type WrapperFindArgument<V extends Vue> = string | NameSelector | FunctionalComponentOptions | VueClass<import("vue").default> | MatcherComponentOptions<V>;
-declare type MatcherResult = { message (): string, pass: boolean };
 
 export interface ComponentProp {
   [name: string]: any;
 }
+
+import toBeEmitted from "./matchers/toBeEmitted";
 
 declare global {
   namespace jest {
@@ -34,14 +35,6 @@ declare global {
        * expect(() => somethingGreat()).toHide(wrapper, "p.error")
        */
       toHide (wrapper: Wrapper<Vue>, findAgrument: WrapperFindArgument<Vue>): R;
-
-      /**
-       * Asserts that the action shows the specific content
-       * @param {string} eventName - The eventName
-       * @example
-       * expect(wrapper).toBeEmitted("input")
-       */
-      toBeEmitted (eventName: string): R;
 
       /**
        * Asserts that the action shows the specific content
@@ -161,19 +154,6 @@ export function toHide<V extends Vue> (
   return {
     message: () => message,
     pass: result
-  }
-}
-
-export function toBeEmitted<V extends Vue> (
-  wrapper: Wrapper<V>,
-  eventName: string
-): MatcherResult {
-  const emitted = wrapper.emitted()[eventName] || [];
-  return {
-    message: emitted.length > 0 ?
-      () => `The "${eventName}" event was emitted` :
-      () => `The "${eventName}" event was never emitted`,
-    pass: emitted.length > 0
   }
 }
 
