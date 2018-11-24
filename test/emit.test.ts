@@ -1,9 +1,7 @@
-import {
-  toBeEmittedWith,
-  config
-} from "@/index";
+import { config } from "@/index";
 
 import toBeEmitted from "@/matchers/toBeEmitted";
+import toBeEmittedWith from "@/matchers/toBeEmittedWith";
 
 import Component from "./fixtures/event.vue";
 import { createLocalVue, shallowMount } from "@vue/test-utils";

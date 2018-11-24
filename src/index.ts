@@ -15,6 +15,7 @@ export interface ComponentProp {
 }
 
 import toBeEmitted from "./matchers/toBeEmitted";
+import toBeEmittedWith from "./matchers/toBeEmittedWith";
 
 declare global {
   namespace jest {
@@ -35,15 +36,6 @@ declare global {
        * expect(() => somethingGreat()).toHide(wrapper, "p.error")
        */
       toHide (wrapper: Wrapper<Vue>, findAgrument: WrapperFindArgument<Vue>): R;
-
-      /**
-       * Asserts that the action shows the specific content
-       * @param {string} eventName - The event's name
-       * @param payload - The payload of the event
-       * @example
-       * expect(wrapper).toBeEmittedWith("input", "expected new value")
-       */
-      toBeEmittedWith (eventName: string, payload: any): R;
 
       /**
        * Asserts that the component requires the prop
@@ -154,27 +146,6 @@ export function toHide<V extends Vue> (
   return {
     message: () => message,
     pass: result
-  }
-}
-
-export function toBeEmittedWith<V extends Vue> (
-  wrapper: Wrapper<V>,
-  eventName: string,
-  payload: any
-): MatcherResult {
-  const emitted = wrapper.emitted()[eventName] || [];
-
-  const pass = emitted.some((event) => {
-    return (this as jest.MatcherUtils).equals(event[0], payload)
-  });
-
-  return {
-    message: pass ?
-      () => `The "${eventName}" event was emitted with the expected payload` :
-        emitted.length > 0 ?
-          () => `The "${eventName}" event was emitted but the payload is not matched` :
-          () => `The "${eventName}" event was never emitted`,
-    pass
   }
 }
 
