@@ -102,12 +102,12 @@ it("show error by showError", () => {
 ### `toBeEmitted`
 
 <details>
-  <summary>Assert the event is emitted</summary>
+  <summary>Assert the event is emitted (with the payload optionally)</summary>
 
 ```js
 // event.vue
 <template>
-  <div @click="emitEvent">
+  <div @click="emitEvent("clicked")">
     Click Me
   </div>
 </template>
@@ -130,41 +130,7 @@ it("emits special event by click", () => {
   const wrapper = shallowMount(Component);
   wrapper.trigger("click");
   expect(wrapper).toBeEmitted("special"); // Passes
-});
-```
-</details>
-
-### `toBeEmittedWith`
-
-<details>
-  <summary>Assert the event is emitted with the payload</summary>
-
-```js
-// event.vue
-<template>
-  <div @click="emitEvent">
-    Click Me
-  </div>
-</template>
-
-<script>
-module.exports = {
-  methods: {
-    emitEvent (e) {
-      this.$emit("special", "something");
-    }
-  }
-}
-</script>
-```
-
-```js
-import Component from "./event.vue";
-
-it("emits special event by click", () => {
-  const wrapper = shallowMount(Component);
-  wrapper.trigger("click");
-  expect(wrapper).toBeEmittedWith("special", "something"); // Passes
+  expect(wrapper).toBeEmitted("special", "clicked); // Passes
 });
 ```
 </details>
