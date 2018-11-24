@@ -1,5 +1,6 @@
 import {
   config,
+  toEmit,
   toBeEmitted,
   toHaveBeenEmitted
 } from "@/index";
@@ -8,6 +9,7 @@ import Component from "./fixtures/event.vue";
 import { createLocalVue, shallowMount } from "@vue/test-utils";
 
 expect.extend({
+  toEmit,
   toBeEmitted,
   toHaveBeenEmitted
 });
@@ -140,6 +142,50 @@ describe("toBeEmitted with payload", () => {
       const wrapper = shallowMount(Component);
       emitEvent(wrapper, "special", { value: "actual life" });
       expect(wrapper).not.toBeEmitted("special", { value: "exciting life" });
+    });
+  });
+});
+
+describe("toEmit", () => {
+  describe("as a function which is registered to jest", () => {
+    it("returns true if the event is emitted by the action", () => {
+      const wrapper = shallowMount(Component);
+      const result = toEmit(() => wrapper.trigger("click"), wrapper, "special");
+      expect(result.pass).toBe(true);
+      expect(result.message()).toBe('The action emitted the "special" event');
+    });
+
+    it("returns false if the event is not emitted by the action", () => {
+      const wrapper = shallowMount(Component);
+      const result = toEmit(() => "nothing to do", wrapper, "special");
+      expect(result.pass).toBe(false);
+      expect(result.message()).toBe('The action did not emit the "special" event');
+    });
+
+    it("returns false if the event is emitted before the action", () => {
+      const wrapper = shallowMount(Component);
+      wrapper.trigger("click");
+      const result = toEmit(() => "nothing to do", wrapper, "special");
+      expect(result.pass).toBe(false);
+      expect(result.message()).toBe('The action did not emit the "special" event');
+    });
+  });
+
+  describe("actual use", () => {
+    it("passes positively when the expected event is emitted by the action", () => {
+      const wrapper = shallowMount(Component);
+      expect(() => wrapper.trigger("click")).toEmit(wrapper, "special");
+    });
+
+    it("passes negatively when the expected event is not emitted by the action", () => {
+      const wrapper = shallowMount(Component);
+      expect(() => "nothing to do").not.toEmit(wrapper, "special");
+    });
+
+    it("passes negatively when the expected event is emitted before the action", () => {
+      const wrapper = shallowMount(Component);
+      wrapper.trigger("click")
+      expect(() => "nothing to do").not.toEmit(wrapper, "special");
     });
   });
 });
