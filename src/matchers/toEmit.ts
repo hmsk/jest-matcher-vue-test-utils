@@ -24,9 +24,9 @@ export default function<V extends Vue> (
   eventName: string,
   payload?: any
 ): MatcherResult {
-  const before = wrapper.emitted()[eventName] || [];
+  const before = wrapper.emitted()[eventName] ?  wrapper.emitted()[eventName].slice(0) : [];
   action();
-  const after = wrapper.emitted()[eventName] || [];
+  const after = wrapper.emitted()[eventName] ?  wrapper.emitted()[eventName].slice(0) : [];
 
   let pass: boolean;
   let message: () => string;

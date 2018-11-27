@@ -196,6 +196,14 @@ describe("toEmit", () => {
         }).toEmit(wrapper, "special", { value: "actual life" });
       });
 
+      it("passes positively when the expected event is emitted with the payload by the action after emitted the same event with another payload", () => {
+        const wrapper = shallowMount(Component);
+        emitEvent(wrapper, "special", { value: "another life" });
+        expect(() => {
+          emitEvent(wrapper, "special", { value: "actual life" });
+        }).toEmit(wrapper, "special", { value: "actual life" });
+      });
+
       it("passes negatively when the expected event is not emitted by the action", () => {
         const wrapper = shallowMount(Component);
         emitEvent(wrapper, "special", { value: "actual life" });
