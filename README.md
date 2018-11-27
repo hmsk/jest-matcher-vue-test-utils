@@ -102,7 +102,7 @@ it("show error by showError", () => {
 ### `toEmit`
 
 <details>
-  <summary>Assert the action emits the event on Wrapper of vue-test-utils</summary>
+  <summary>Assert the action emits the event (with the payload optionally) on Wrapper of vue-test-utils</summary>
 
 ```js
 // event.vue
@@ -138,7 +138,7 @@ it("emits special event by click", () => {
 ### `toBeEmitted`
 
 <details>
-  <summary>Assert the event is emitted (with the payload optionally)</summary>
+  <summary>Assert the event is emitted (with the payload optionally) on Wrapper of vue-test-utils</summary>
 
 ```js
 // event.vue
@@ -166,7 +166,7 @@ it("emits special event by click", () => {
   const wrapper = shallowMount(Component);
   wrapper.trigger("click");
   expect(wrapper).toBeEmitted("special"); // Passes
-  expect(wrapper).toBeEmitted("special", "clicked); // Passes
+  expect(wrapper).toBeEmitted("special", "clicked"); // Passes
 });
 ```
 </details>
