@@ -135,7 +135,7 @@ it("emits special event by click", () => {
 
 </details>
 
-### `toBeEmitted`
+### `toHaveEmitted`
 
 <details>
   <summary>Assert the event is emitted (with the payload optionally) on Wrapper of vue-test-utils</summary>
@@ -165,8 +165,8 @@ import Component from "./event.vue";
 it("emits special event by click", () => {
   const wrapper = shallowMount(Component);
   wrapper.trigger("click");
-  expect(wrapper).toBeEmitted("special"); // Passes
-  expect(wrapper).toBeEmitted("special", "clicked"); // Passes
+  expect(wrapper).toHaveEmitted("special"); // Passes
+  expect(wrapper).toHaveEmitted("special", "clicked"); // Passes
 });
 ```
 </details>
@@ -294,7 +294,6 @@ props: {
     type: String
   }
 }
-
 ```
 
 ```js

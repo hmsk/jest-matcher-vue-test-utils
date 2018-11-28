@@ -10,20 +10,10 @@ declare global {
        * @param {string} eventName - The event's name
        * @param payload - The payload of the event (optional)
        * @example
-       * expect(wrapper).toBeEmitted("input")
-       * expect(wrapper).toBeEmitted("input", "value")
+       * expect(wrapper).toHaveEmitted("input")
+       * expect(wrapper).toHaveEmitted("input", "value")
        */
-      toBeEmitted (eventName: string, payload?: any): R;
-
-      /**
-       * Asserts that the event is emitted
-       * @param {string} eventName - The event's name
-       * @param payload - The payload of the event (optional)
-       * @example
-       * expect(wrapper).toHaveBeenEmitted("input")
-       * expect(wrapper).toHaveBeenEmitted("input", "value")
-       */
-      toHaveBeenEmitted(eventName: string, payload?: any): R;
+      toHaveEmitted (eventName: string, payload?: any): R;
     }
   }
 }
