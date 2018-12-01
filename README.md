@@ -128,8 +128,8 @@ import Component from "./event.vue";
 
 it("emits special event by click", () => {
   const wrapper = shallowMount(Component);
-  expect(() => wrapper.trigger("click")).toEmit("special"); // Passes
-  expect(() => wrapper.trigger("click")).toEmit("special", "clicked"); // Passes
+  expect(() => wrapper.trigger("click")).toEmit(wrapper, "special"); // Passes
+  expect(() => wrapper.trigger("click")).toEmit(wrapper, "special", "clicked"); // Passes
 });
 ```
 
