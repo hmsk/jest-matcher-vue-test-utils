@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/hmsk/jest-matcher-vue-test-utils#readme",
   "devDependencies": {
-    "@types/jest": "23.3.11",
+    "@types/jest": "23.3.12",
     "@vue/test-utils": "1.0.0-beta.28",
     "jest": "23.6.0",
     "rollup": "1.0.2",
