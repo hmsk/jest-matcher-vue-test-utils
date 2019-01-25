@@ -29,7 +29,8 @@ export default {
 
   output: {
     file: pkg.main,
-    format: "cjs"
+    format: "cjs",
+    exports: "named"
   },
 
   external: ["@vue/test-utils"]
