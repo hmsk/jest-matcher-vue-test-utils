@@ -40,9 +40,9 @@
     "rollup-plugin-typescript2": "0.19.2",
     "ts-jest": "23.10.5",
     "typescript": "3.3.3",
-    "vue": "2.6.3",
+    "vue": "2.6.4",
     "vue-jest": "3.0.3",
-    "vue-template-compiler": "2.6.3"
+    "vue-template-compiler": "2.6.4"
   },
   "peerDependencies": {
     "@vue/test-utils": "^1.0.0-beta.20",
