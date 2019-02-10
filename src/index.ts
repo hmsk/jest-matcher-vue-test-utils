@@ -18,14 +18,6 @@ declare global {
   namespace jest {
     interface Matchers<R> {
       /**
-       * Asserts that the action shows the specific content
-       * @param wrapper - The wrapper of vue-test-utils
-       * @param findAgrument - The argument for "wrapper.find" to find the specific content
-       * @example
-       * expect(() => somethingGreat()).toShow(wrapper, "p.error")
-       */
-      toShow (wrapper: Wrapper<Vue>, findArgument: WrapperFindArgument<Vue>): R;
-      /**
        * Asserts that the action hides the specific content
        * @param wrapper - The wrapper of vue-test-utils
        * @param findAgrument - The argument for "wrapper.find" to find the specific content
@@ -87,34 +79,6 @@ declare global {
        */
       toBeValidPropWithCustomValidator (prop: string, sampleValue: any, options?: MatcherComponentOptions<Vue>): R;
     }
-  }
-}
-
-export function toShow<V extends Vue> (
-  action: Function,
-  wrapper: Wrapper<V>,
-  findArgument: WrapperFindArgument<V>
-): MatcherResult {
-  const before = wrapper.contains(findArgument);
-  action();
-  const after = wrapper.contains(findArgument);
-
-  let message, result;
-
-  if (before) {
-    message = "The target has been showing from the beginning";
-    result = false;
-  } else if (!after) {
-    message = "The action doesn't show the target";
-    result = false;
-  } else {
-    message = "The action shows the target";
-    result = true;
-  }
-
-  return {
-    message: () => message,
-    pass: result
   }
 }
 
@@ -276,10 +240,12 @@ export function toBeValidPropWithCustomValidator<V extends Vue> (
   };
 }
 
+import toShow from "./matchers/toShow";
 import toEmit from "./matchers/toEmit";
 import toHaveEmitted from "./matchers/toHaveEmitted";
 
 export {
+  toShow,
   toEmit,
   toHaveEmitted
 };
