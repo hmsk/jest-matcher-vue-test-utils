@@ -20,14 +20,32 @@ import vueTestUtilMatchers from "jest-matcher-vue-test-utils";
 expect.extend({ ...vueTestUtilMatchers });
 ```
 
-# Matchers
+# Provided Matchers
 
-## For Wrapper Contents
+Matcher|Description|Quick sample
+---|---|---
+Existence on Wrapper||
+`toShow`|Assert the function shows a content on Wrapper|`expect(() => wrapper.vm.showError()).toShow(wrapper, "p.error")`
+`toHide`|Assert the function hides a content on Wrapper|`expect(() => wrapper.vm.hideError()).toHide(wrapper, "p.error");`
+Events on Wrapper||
+`toEmit`|Assert the function emits the event on Wrapper|`expect(() => wrapper.trigger("click")).toEmit(wrapper, "special")`
+`toHaveEmitted`|Assert the event is emitted on Wrapper|`expect(wrapper).toHaveEmitted("special")`
+Prop validations ||
+`toBeValidProps`|Assert that a prop set is valid for a component|`expect(Component).toBeValidProps({ name: "required name", fullName: "Kengo Hamasaki" })`
+`toBeValidProp`|Assert that a single prop is valid for a component|`expect(Component).toBeValidProp("name", "Required Name")`
+`toRequireProp`|Assert that a component requires a prop|`expect(Component).toRequireProp("name")`
+`toHaveDefaultProp`|Assert that a component gives default to a prop|`expect(Component).toHaveDefaultProp("address", "Kitakyushu, Japan")`
+`toBeValidPropWithTypeCheck`|Assert that a component validates a prop with type|`expect(Component).toBeValidPropWithTypeCheck("zipcode", "94103")`
+`toBeValidPropWithCustomValidator`|Assert that a component validates a prop with custom validator|`expect(Component).toBeValidPropWithCustomValidator("fullname", "Kengo Hamasaki")`
 
-### `toShow`
+## Further details
+
+### Existence on Wrapper
+
+#### `toShow`
 
 <details>
-  <summary>Assert the action shows a content on Wrapper of vue-test-utils</summary>
+  <summary>Assert the function shows a content on Wrapper of vue-test-utils</summary>
 
 ```js
 // error-message.vue
@@ -60,10 +78,10 @@ it("show error by showError", () => {
 ```
 </details>
 
-### `toHide`
+#### `toHide`
 
 <details>
-  <summary>Assert the action hides a content on Wrapper of vue-test-utils</summary>
+  <summary>Assert the function hides a content on Wrapper of vue-test-utils</summary>
 
 ```js
 // error-message.vue
@@ -97,9 +115,9 @@ it("show error by showError", () => {
 
 </details>
 
-## For Wrapper Events
+### Events on Wrapper
 
-### `toEmit`
+#### `toEmit`
 
 <details>
   <summary>Assert the action emits the event (with the payload optionally) on Wrapper of vue-test-utils</summary>
@@ -135,7 +153,7 @@ it("emits special event by click", () => {
 
 </details>
 
-### `toHaveEmitted`
+#### `toHaveEmitted`
 
 <details>
   <summary>Assert the event is emitted (with the payload optionally) on Wrapper of vue-test-utils</summary>
@@ -171,9 +189,9 @@ it("emits special event by click", () => {
 ```
 </details>
 
-## For Prop Validations
+### Prop validations
 
-### `toBeValidProps`
+#### `toBeValidProps`
 
 <details>
   <summary>Assert that a prop set is valid for a component</summary>
@@ -204,7 +222,7 @@ it("component validates props", () => {
 ```
 </details>
 
-### `toBeValidProp`
+#### `toBeValidProp`
 
 <details>
   <summary>Assert that a single prop is valid for a component</summary>
@@ -232,7 +250,7 @@ it("component validates props", () => {
 
 
 
-### `toRequireProp`
+#### `toRequireProp`
 
 <details>
   <summary>Assert that a component requires a prop</summary>
@@ -257,7 +275,7 @@ it("component requires name prop", () => {
 ```
 </details>
 
-### `toHaveDefaultProp`
+#### `toHaveDefaultProp`
 
 <details>
   <summary>Assert that a component gives default to a prop</summary>
@@ -282,7 +300,7 @@ it("component gives default value for address prop", () => {
 ```
 </details>
 
-### `toBeValidPropWithTypeCheck`
+#### `toBeValidPropWithTypeCheck`
 
 <details>
   <summary>Assert that a component validates a prop with type</summary>
@@ -306,7 +324,7 @@ it("component validates zipcode prop", () => {
 ```
 </details>
 
-### `toBeValidPropWithCustomValidator`
+#### `toBeValidPropWithCustomValidator`
 
 <details>
   <summary>Assert that a component validates a prop with custom validator</summary>
@@ -347,4 +365,4 @@ config({
 
 # License
 
-MIT, Copyright (c) 2018 Kengo Hamasaki
+MIT, Copyright (c) 2018- Kengo Hamasaki
