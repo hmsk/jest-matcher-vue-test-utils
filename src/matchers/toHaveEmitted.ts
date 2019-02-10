@@ -6,7 +6,7 @@ declare global {
   namespace jest {
     interface Matchers<R> {
       /**
-       * Asserts that the event is emitted
+       * Asserts that the emitted event with payload
        * @param {string} eventName - The event's name
        * @param payload - The payload of the event (optional)
        * @example

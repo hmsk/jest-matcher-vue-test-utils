@@ -6,12 +6,13 @@ declare global {
   namespace jest {
     interface Matchers<R> {
       /**
-       * Asserts that the action emits the specific content
+       * Asserts that the action emits the specific event and payload
        * @param wrapper - The wrapper of vue-test-utils
        * @param eventName - The event's name
        * @param payload - The payload of the event (optional)
        * @example
-       * expect(() => somethingGreat()).toShow(wrapper, "p.error")
+       * expect(() => somethingGreat()).toEmit(wrapper, "greatEvent")
+       * expect(() => somethingGreat()).toEmit(wrapper, "greatEvent", "crazyPayload")
        */
       toEmit (wrapper: Wrapper<Vue>, eventName: string, payload?: any): R;
     }
