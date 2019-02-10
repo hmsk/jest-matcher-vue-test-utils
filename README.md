@@ -3,7 +3,7 @@
 [![npm](https://img.shields.io/npm/v/jest-matcher-vue-test-utils.svg?style=for-the-badge)](https://www.npmjs.com/package/jest-matcher-vue-test-utils)
 [![CircleCI](https://img.shields.io/circleci/project/github/hmsk/jest-matcher-vue-test-utils/master.svg?style=for-the-badge)](https://circleci.com/gh/hmsk/jest-matcher-vue-test-utils)
 
-Cute matchers for [Jest](https://facebook.github.io/jest)  to test Vue components with [Vue Test Utils](https://vue-test-utils.vuejs.org/).
+Cute matchers for [Jest](https://facebook.github.io/jest) to test Vue components with [Vue Test Utils](https://vue-test-utils.vuejs.org/).
 
 # Installation
 
@@ -22,21 +22,21 @@ expect.extend({ ...vueTestUtilMatchers });
 
 # Provided Matchers
 
-Matcher|Description|Quick sample
+Matcher|What's asserted|Quick sample
 ---|---|---
 Existence on Wrapper||
-`toShow`|Assert the function shows a content on Wrapper|`expect(() => wrapper.vm.showError()).toShow(wrapper, "p.error")`
-`toHide`|Assert the function hides a content on Wrapper|`expect(() => wrapper.vm.hideError()).toHide(wrapper, "p.error");`
+`toShow`|Function shows a content on Wrapper|`expect(() => wrapper.vm.showError()).toShow(wrapper, "p.error")`
+`toHide`|Function hides a content on Wrapper|`expect(() => wrapper.vm.hideError()).toHide(wrapper, "p.error");`
 Events on Wrapper||
-`toEmit`|Assert the function emits the event on Wrapper|`expect(() => wrapper.trigger("click")).toEmit(wrapper, "special")`
-`toHaveEmitted`|Assert the event is emitted on Wrapper|`expect(wrapper).toHaveEmitted("special")`
+`toEmit`|Function emits the event on Wrapper|`expect(() => wrapper.trigger("click")).toEmit(wrapper, "special")`
+`toHaveEmitted`|Wrapper has emitted an event|`expect(wrapper).toHaveEmitted("special")`
 Prop validations ||
-`toBeValidProps`|Assert that a prop set is valid for a component|`expect(Component).toBeValidProps({ name: "required name", fullName: "Kengo Hamasaki" })`
-`toBeValidProp`|Assert that a single prop is valid for a component|`expect(Component).toBeValidProp("name", "Required Name")`
-`toRequireProp`|Assert that a component requires a prop|`expect(Component).toRequireProp("name")`
-`toHaveDefaultProp`|Assert that a component gives default to a prop|`expect(Component).toHaveDefaultProp("address", "Kitakyushu, Japan")`
-`toBeValidPropWithTypeCheck`|Assert that a component validates a prop with type|`expect(Component).toBeValidPropWithTypeCheck("zipcode", "94103")`
-`toBeValidPropWithCustomValidator`|Assert that a component validates a prop with custom validator|`expect(Component).toBeValidPropWithCustomValidator("fullname", "Kengo Hamasaki")`
+`toBeValidProps`|All props are valid|`expect(Component).toBeValidProps({ name: "required name", fullName: "Kengo Hamasaki" })`
+`toBeValidProp`|Single prop is valid|`expect(Component).toBeValidProp("name", "Required Name")`
+`toRequireProp`|Single prop is required|`expect(Component).toRequireProp("name")`
+`toHaveDefaultProp`|Single prop has a default|`expect(Component).toHaveDefaultProp("address", "Kitakyushu, Japan")`
+`toBeValidPropWithTypeCheck`|Single prop is valid for type|`expect(Component).toBeValidPropWithTypeCheck("zipcode", "94103")`
+`toBeValidPropWithCustomValidator`|Single props is valid for custom validator|`expect(Component).toBeValidPropWithCustomValidator("fullname", "Kengo Hamasaki")`
 
 ## Further details
 
