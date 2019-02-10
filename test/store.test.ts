@@ -65,6 +65,13 @@ describe("toDispatch", () => {
       expect(result.pass).toBe(false);
       expect(result.message()).toBe('The function dispatched the "awesomeAction" type but the payload is not matched on Vuex Store');
     });
+
+    it("returns false if the wrapper's Vue instance doesn't have Vuex Store", () => {
+      const wrapper = shallowMount(Component);
+      const result = toDispatch(() => {}, wrapper, "awesomeAction");
+      expect(result.pass).toBe(false);
+      expect(result.message()).toBe("The Vue instance doesn't have Vuex store");
+    });
   });
 
   describe("actual use", () => {

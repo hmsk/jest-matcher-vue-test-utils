@@ -26,22 +26,27 @@ export default function<V extends Vue> (
 ): MatcherResult {
   let pass: boolean = false;
   let message: string = `The function never dispatched the "${actionType}" type on Vuex Store`;
-  // if store is not defined
-  const unsubscribe = wrapper.vm.$store.subscribeAction((action, _state) => {
-    if (!pass && action.type === actionType) {
-      if (payload) {
-        if ((this as jest.MatcherUtils).equals(action.payload, payload)) {
+  let unsubscribe = () => {};
+
+  if (wrapper.vm.$store === undefined) {
+    message = "The Vue instance doesn't have Vuex store";
+  } else {
+    unsubscribe = wrapper.vm.$store.subscribeAction((action, _state) => {
+      if (!pass && action.type === actionType) {
+        if (payload) {
+          if ((this as jest.MatcherUtils).equals(action.payload, payload)) {
+            pass = true;
+            message = `The function dispatched the "${actionType}" type on Vuex Store`;
+          } else {
+            message = `The function dispatched the "${actionType}" type but the payload is not matched on Vuex Store`;
+          }
+        } else {
           pass = true;
           message = `The function dispatched the "${actionType}" type on Vuex Store`;
-        } else {
-          message = `The function dispatched the "${actionType}" type but the payload is not matched on Vuex Store`;
         }
-      } else {
-        pass = true;
-        message = `The function dispatched the "${actionType}" type on Vuex Store`;
       }
-    }
-  });
+    });
+  }
 
   fun();
   unsubscribe();
