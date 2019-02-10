@@ -171,6 +171,88 @@ it("emits special event by click", () => {
 ```
 </details>
 
+## Vuex store actions/mutations
+
+### `toDispatch`
+
+<details>
+<summary>Assert the store action is dispatched</summary>
+
+```js
+// click-store.vue
+<template>
+  <div @click="dispatchStore('click')">
+    Click Me
+  </div>
+</template>
+
+<script>
+module.exports = {
+  methods: {
+    dispatchStore (e) {
+      this.$store.dispatch('awesomeAction', e);
+    }
+  }
+}
+</script>
+```
+
+```js
+import Component from "./click-store.vue";
+
+it("Commits the action on store by click", () => {
+  const wrapper = shallowMount(Component);
+  expect(() => {
+    wrapper.trigger("click");
+  }).toDispatch(wrapper, "awesomeAction"); // Passes
+
+  expect(() => {
+    wrapper.trigger("click");
+  }).toDispatch(wrapper, "awesomeAction", 'click'); // Passes
+});
+```
+</details>
+
+### `toCommit`
+
+<details>
+<summary>Assert the store mutation is committed</summary>
+
+```js
+// click-store.vue
+<template>
+  <div @click="commitStore('click')">
+    Click Me
+  </div>
+</template>
+
+<script>
+module.exports = {
+  methods: {
+    commitStore (e) {
+      this.$store.commit('importantMutation', e);
+    }
+  }
+}
+</script>
+```
+
+```js
+import Component from "./click-store.vue";
+
+it("Commits the mutation on store by click", () => {
+  const wrapper = shallowMount(Component);
+  expect(() => {
+    wrapper.trigger("click");
+  }).toCommit(wrapper, "importantMutation"); // Passes
+
+  expect(() => {
+    wrapper.trigger("click");
+  }).toCommit(wrapper, "importantMutation", 'click'); // Passes
+});
+```
+</details>
+
 ## For Prop Validations
 
 ### `toBeValidProps`
