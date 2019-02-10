@@ -6,12 +6,13 @@ declare global {
   namespace jest {
     interface Matchers<R> {
       /**
-       * Asserts that the action emits the specific content
+       * Asserts that the function emits the specific event and payload
        * @param wrapper - The wrapper of vue-test-utils
        * @param eventName - The event's name
        * @param payload - The payload of the event (optional)
        * @example
-       * expect(() => somethingGreat()).toShow(wrapper, "p.error")
+       * expect(() => somethingGreat()).toEmit(wrapper, "greatEvent")
+       * expect(() => somethingGreat()).toEmit(wrapper, "greatEvent", "crazyPayload")
        */
       toEmit (wrapper: Wrapper<Vue>, eventName: string, payload?: any): R;
     }
@@ -19,13 +20,13 @@ declare global {
 }
 
 export default function<V extends Vue> (
-  action: Function,
+  func: Function,
   wrapper: Wrapper<V>,
   eventName: string,
   payload?: any
 ): MatcherResult {
   const before = wrapper.emitted()[eventName] ?  wrapper.emitted()[eventName].slice(0) : [];
-  action();
+  func();
   const after = wrapper.emitted()[eventName] ?  wrapper.emitted()[eventName].slice(0) : [];
 
   let pass: boolean;
@@ -36,15 +37,15 @@ export default function<V extends Vue> (
   if (arguments.length == 4) {
     pass = after.filter(matchesToPayload).length > before.filter(matchesToPayload).length;
     message = pass ?
-      () => `The action emitted the "${eventName}" event with the expected payload` :
+      () => `The function emitted the "${eventName}" event with the expected payload` :
         after.length > before.length ?
-          () => `The action emitted the "${eventName}" event, but the payload is not matched` :
-          () => `The action did not emit the "${eventName}" event`;
+          () => `The function emitted the "${eventName}" event, but the payload is not matched` :
+          () => `The function did not emit the "${eventName}" event`;
   } else {
     pass = after.length > before.length
     message = pass ?
-      () => `The action emitted the "${eventName}" event` :
-      () => `The action did not emit the "${eventName}" event`;
+      () => `The function emitted the "${eventName}" event` :
+      () => `The function did not emit the "${eventName}" event`;
   }
 
   return {

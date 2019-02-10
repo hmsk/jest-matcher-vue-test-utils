@@ -3,7 +3,7 @@
 [![npm](https://img.shields.io/npm/v/jest-matcher-vue-test-utils.svg?style=for-the-badge)](https://www.npmjs.com/package/jest-matcher-vue-test-utils)
 [![CircleCI](https://img.shields.io/circleci/project/github/hmsk/jest-matcher-vue-test-utils/master.svg?style=for-the-badge)](https://circleci.com/gh/hmsk/jest-matcher-vue-test-utils)
 
-Cute matchers for [Jest](https://facebook.github.io/jest)  to test Vue components with [Vue Test Utils](https://vue-test-utils.vuejs.org/).
+Cute matchers for [Jest](https://facebook.github.io/jest) to test Vue components with [Vue Test Utils](https://vue-test-utils.vuejs.org/).
 
 # Installation
 
@@ -20,14 +20,35 @@ import vueTestUtilMatchers from "jest-matcher-vue-test-utils";
 expect.extend({ ...vueTestUtilMatchers });
 ```
 
-# Matchers
+# Provided Matchers
 
-## For Wrapper Contents
+Matcher|What's asserted|Quick sample
+---|---|---
+Existence on Wrapper||
+`toShow`|Function shows a content on Wrapper|`expect(() => wrapper.vm.showError()).toShow(wrapper, "p.error")`
+`toHide`|Function hides a content on Wrapper|`expect(() => wrapper.vm.hideError()).toHide(wrapper, "p.error");`
+Events on Wrapper||
+`toEmit`|Function emits the event on Wrapper|`expect(() => wrapper.trigger("click")).toEmit(wrapper, "special")`
+`toHaveEmitted`|Wrapper has emitted an event|`expect(wrapper).toHaveEmitted("special")`
+Vuex actions/mutations ||
+`toDispatch`|Function dispatches the Vuex action on a component|`expect(() => somethingAwesome()).toDispatch(wrapper, "awesomeAction")`
+`toCommit`|Function commits the Vuex mutation on a component|`expect(() => somethingAwesome()).toCommit(wrapper, "awesomeMutation")`
+Prop validations ||
+`toBeValidProps`|All props are valid|`expect(Component).toBeValidProps({ name: "required name", fullName: "Kengo Hamasaki" })`
+`toBeValidProp`|Single prop is valid|`expect(Component).toBeValidProp("name", "Required Name")`
+`toRequireProp`|Single prop is required|`expect(Component).toRequireProp("name")`
+`toHaveDefaultProp`|Single prop has a default|`expect(Component).toHaveDefaultProp("address", "Kitakyushu, Japan")`
+`toBeValidPropWithTypeCheck`|Single prop is valid for type|`expect(Component).toBeValidPropWithTypeCheck("zipcode", "94103")`
+`toBeValidPropWithCustomValidator`|Single props is valid for custom validator|`expect(Component).toBeValidPropWithCustomValidator("fullname", "Kengo Hamasaki")`
 
-### `toShow`
+## Further details
+
+### Existence on Wrapper
+
+#### `toShow`
 
 <details>
-  <summary>Assert the action shows a content on Wrapper of vue-test-utils</summary>
+  <summary>Assert the function shows a content on Wrapper of vue-test-utils</summary>
 
 ```js
 // error-message.vue
@@ -60,10 +81,10 @@ it("show error by showError", () => {
 ```
 </details>
 
-### `toHide`
+#### `toHide`
 
 <details>
-  <summary>Assert the action hides a content on Wrapper of vue-test-utils</summary>
+  <summary>Assert the function hides a content on Wrapper of vue-test-utils</summary>
 
 ```js
 // error-message.vue
@@ -97,9 +118,9 @@ it("show error by showError", () => {
 
 </details>
 
-## For Wrapper Events
+### Events on Wrapper
 
-### `toEmit`
+#### `toEmit`
 
 <details>
   <summary>Assert the action emits the event (with the payload optionally) on Wrapper of vue-test-utils</summary>
@@ -135,7 +156,7 @@ it("emits special event by click", () => {
 
 </details>
 
-### `toHaveEmitted`
+#### `toHaveEmitted`
 
 <details>
   <summary>Assert the event is emitted (with the payload optionally) on Wrapper of vue-test-utils</summary>
@@ -171,12 +192,12 @@ it("emits special event by click", () => {
 ```
 </details>
 
-## Vuex store actions/mutations
+### Vuex actions/mutations
 
-### `toDispatch`
+#### `toDispatch`
 
 <details>
-<summary>Assert the store action is dispatched</summary>
+<summary>Assert the function dispatches Vuex action on the component</summary>
 
 ```js
 // click-store.vue
@@ -201,8 +222,7 @@ module.exports = {
 import Component from "./click-store.vue";
 
 it("Commits the action on store by click", () => {
-  const wrapper = shallowMount(Component);
-  expect(() => {
+  const wrapper = shallowMount(Component)  expect(() => {
     wrapper.trigger("click");
   }).toDispatch(wrapper, "awesomeAction"); // Passes
 
@@ -213,7 +233,7 @@ it("Commits the action on store by click", () => {
 ```
 </details>
 
-### `toCommit`
+#### `toCommit`
 
 <details>
 <summary>Assert the store mutation is committed</summary>
@@ -253,9 +273,9 @@ it("Commits the mutation on store by click", () => {
 ```
 </details>
 
-## For Prop Validations
+### Prop Validations
 
-### `toBeValidProps`
+#### `toBeValidProps`
 
 <details>
   <summary>Assert that a prop set is valid for a component</summary>
@@ -286,7 +306,7 @@ it("component validates props", () => {
 ```
 </details>
 
-### `toBeValidProp`
+#### `toBeValidProp`
 
 <details>
   <summary>Assert that a single prop is valid for a component</summary>
@@ -314,7 +334,7 @@ it("component validates props", () => {
 
 
 
-### `toRequireProp`
+#### `toRequireProp`
 
 <details>
   <summary>Assert that a component requires a prop</summary>
@@ -339,7 +359,7 @@ it("component requires name prop", () => {
 ```
 </details>
 
-### `toHaveDefaultProp`
+#### `toHaveDefaultProp`
 
 <details>
   <summary>Assert that a component gives default to a prop</summary>
@@ -364,7 +384,7 @@ it("component gives default value for address prop", () => {
 ```
 </details>
 
-### `toBeValidPropWithTypeCheck`
+#### `toBeValidPropWithTypeCheck`
 
 <details>
   <summary>Assert that a component validates a prop with type</summary>
@@ -388,7 +408,7 @@ it("component validates zipcode prop", () => {
 ```
 </details>
 
-### `toBeValidPropWithCustomValidator`
+#### `toBeValidPropWithCustomValidator`
 
 <details>
   <summary>Assert that a component validates a prop with custom validator</summary>
@@ -429,4 +449,4 @@ config({
 
 # License
 
-MIT, Copyright (c) 2018 Kengo Hamasaki
+MIT, Copyright (c) 2018- Kengo Hamasaki

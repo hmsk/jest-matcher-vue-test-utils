@@ -134,55 +134,55 @@ describe("toHaveEmitted with payload", () => {
 
 describe("toEmit", () => {
   describe("as a function which is registered to jest", () => {
-    it("returns true if the event is emitted by the action", () => {
+    it("returns true if the event is emitted by the function", () => {
       const wrapper = shallowMount(Component);
       const result = toEmit(() => wrapper.trigger("click"), wrapper, "special");
       expect(result.pass).toBe(true);
-      expect(result.message()).toBe('The action emitted the "special" event');
+      expect(result.message()).toBe('The function emitted the "special" event');
     });
 
-    it("returns false if the event is not emitted by the action", () => {
+    it("returns false if the event is not emitted by the function", () => {
       const wrapper = shallowMount(Component);
       const result = toEmit(() => "nothing to do", wrapper, "special");
       expect(result.pass).toBe(false);
-      expect(result.message()).toBe('The action did not emit the "special" event');
+      expect(result.message()).toBe('The function did not emit the "special" event');
     });
 
-    it("returns false if the event is emitted before the action", () => {
+    it("returns false if the event is emitted before the function", () => {
       const wrapper = shallowMount(Component);
       wrapper.trigger("click");
       const result = toEmit(() => "nothing to do", wrapper, "special");
       expect(result.pass).toBe(false);
-      expect(result.message()).toBe('The action did not emit the "special" event');
+      expect(result.message()).toBe('The function did not emit the "special" event');
     });
   });
 
   describe("actual use", () => {
-    it("passes positively when the expected event is emitted by the action", () => {
+    it("passes positively when the expected event is emitted by the function", () => {
       const wrapper = shallowMount(Component);
       expect(() => wrapper.trigger("click")).toEmit(wrapper, "special");
     });
 
-    it("passes negatively when the expected event is not emitted by the action", () => {
+    it("passes negatively when the expected event is not emitted by the function", () => {
       const wrapper = shallowMount(Component);
       expect(() => "nothing to do").not.toEmit(wrapper, "special");
     });
 
-    it("passes negatively when the expected event is emitted before the action", () => {
+    it("passes negatively when the expected event is emitted before the function", () => {
       const wrapper = shallowMount(Component);
       wrapper.trigger("click")
       expect(() => "nothing to do").not.toEmit(wrapper, "special");
     });
 
     describe("with payload", () => {
-      it("passes positively when the expected event is emitted with the payload by the action", () => {
+      it("passes positively when the expected event is emitted with the payload by the function", () => {
         const wrapper = shallowMount(Component);
         expect(() => {
           emitEvent(wrapper, "special", { value: "actual life" });
         }).toEmit(wrapper, "special", { value: "actual life" });
       });
 
-      it("passes positively when the expected event is emitted with the payload by the action after emitted the same event with another payload", () => {
+      it("passes positively when the expected event is emitted with the payload by the function after emitted the same event with another payload", () => {
         const wrapper = shallowMount(Component);
         emitEvent(wrapper, "special", { value: "another life" });
         expect(() => {
@@ -190,7 +190,7 @@ describe("toEmit", () => {
         }).toEmit(wrapper, "special", { value: "actual life" });
       });
 
-      it("passes negatively when the expected event is not emitted by the action", () => {
+      it("passes negatively when the expected event is not emitted by the function", () => {
         const wrapper = shallowMount(Component);
         emitEvent(wrapper, "special", { value: "actual life" });
         expect(() => {
@@ -198,7 +198,7 @@ describe("toEmit", () => {
         }).not.toEmit(wrapper, "special", { value: "actual life" });
       });
 
-      it("passes negatively when the expected event is emitted by the action, but the payload is not matched", () => {
+      it("passes negatively when the expected event is emitted by the function, but the payload is not matched", () => {
         const wrapper = shallowMount(Component);
         expect(() => {
           emitEvent(wrapper, "special", { value: "unintentional life" });
