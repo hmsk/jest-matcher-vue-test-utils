@@ -204,6 +204,36 @@ describe("toEmit", () => {
           emitEvent(wrapper, "special", { value: "unintentional life" });
         }).not.toEmit(wrapper, "special", { value: "actual life" });
       });
+
+      describe("multiple payloads", () => {
+        it("passes positively when the expected event is emitted with the multiple payloads by the function", () => {
+          const wrapper = shallowMount(Component);
+          expect(() => {
+            (wrapper.vm as any).emitEventWithMultiplePayload("multi!");
+          }).toEmit(wrapper, "multi!", "a", 5, ["C"]);
+        });
+
+        it("passes positively for expect helper to assert with 'anything'", () => {
+          const wrapper = shallowMount(Component);
+          expect(() => {
+            (wrapper.vm as any).emitEventWithMultiplePayload("multi!");
+          }).toEmit(wrapper, "multi!", "a", expect.anything(), expect.arrayContaining(["C"]));
+        });
+
+        it("passes negatively when the number of paylod is shorter than actual (even they are matching)", () => {
+          const wrapper = shallowMount(Component);
+          expect(() => {
+            (wrapper.vm as any).emitEventWithMultiplePayload("multi!");
+          }).not.toEmit(wrapper, "multi!", "a", 5);
+        });
+
+        it("passes negatively when the number of paylod is longer", () => {
+          const wrapper = shallowMount(Component);
+          expect(() => {
+            (wrapper.vm as any).emitEventWithMultiplePayload("multi!");
+          }).not.toEmit(wrapper, "multi!", "a", 5, ["C"], "e");
+        });
+      });
     });
   });
 });
