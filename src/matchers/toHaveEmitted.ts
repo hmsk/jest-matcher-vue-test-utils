@@ -12,8 +12,9 @@ declare global {
        * @example
        * expect(wrapper).toHaveEmitted("input")
        * expect(wrapper).toHaveEmitted("input", "value")
+       * expect(wrapper).toHaveEmitted("input", "value", ["more"], "arguments")
        */
-      toHaveEmitted (eventName: string, payload?: any): R;
+      toHaveEmitted (eventName: string, ...payloads: any[]): R;
     }
   }
 }
@@ -21,16 +22,19 @@ declare global {
 export default function<V extends Vue> (
   wrapper: Wrapper<V>,
   eventName: string,
-  payload?: any
+  ...payloads: any[]
 ): MatcherResult {
   const emitted = wrapper.emitted()[eventName] || [];
 
   let pass: boolean;
   let message: () => string;
 
-  if (arguments.length == 3) {
+  if (arguments.length >= 3) {
     pass = emitted.some((event) => {
-      return (this as jest.MatcherUtils).equals(event[0], payload)
+      return payloads.length === event.length &&
+        payloads.every((payload, index) => {
+          return (this as jest.MatcherUtils).equals(event[index], payload);
+        });
     });
     message = pass ?
       () => `The "${eventName}" event was emitted with the expected payload` :

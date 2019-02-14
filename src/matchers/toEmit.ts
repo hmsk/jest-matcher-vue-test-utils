@@ -13,8 +13,9 @@ declare global {
        * @example
        * expect(() => somethingGreat()).toEmit(wrapper, "greatEvent")
        * expect(() => somethingGreat()).toEmit(wrapper, "greatEvent", "crazyPayload")
+       * expect(() => somethingGreat()).toEmit(wrapper, "greatEvent", "crazyPayload", ["more"], "arguments")
        */
-      toEmit (wrapper: Wrapper<Vue>, eventName: string, payload?: any): R;
+      toEmit (wrapper: Wrapper<Vue>, eventName: string, ...payloads: any[]): R;
     }
   }
 }
@@ -23,7 +24,7 @@ export default function<V extends Vue> (
   func: Function,
   wrapper: Wrapper<V>,
   eventName: string,
-  payload?: any
+  ...payloads: any[]
 ): MatcherResult {
   const before = wrapper.emitted()[eventName] ?  wrapper.emitted()[eventName].slice(0) : [];
   func();
@@ -32,9 +33,14 @@ export default function<V extends Vue> (
   let pass: boolean;
   let message: () => string;
 
-  const matchesToPayload = (event) => (this as jest.MatcherUtils).equals(event[0], payload);
+  const matchesToPayload = (event): boolean => {
+    return payloads.length === event.length &&
+      payloads.every((payload, index) => {
+        return (this as jest.MatcherUtils).equals(event[index], payload);
+      });
+  };
 
-  if (arguments.length == 4) {
+  if (arguments.length >= 4) {
     pass = after.filter(matchesToPayload).length > before.filter(matchesToPayload).length;
     message = pass ?
       () => `The function emitted the "${eventName}" event with the expected payload` :

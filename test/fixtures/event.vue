@@ -13,6 +13,9 @@ module.exports = {
     },
     emitEventWithPayload (eventName, payload) {
       this.$emit(eventName, payload);
+    },
+    emitEventWithMultiplePayload (eventName) {
+      this.$emit(eventName, "a", 5, ["C"]);
     }
   }
 }
