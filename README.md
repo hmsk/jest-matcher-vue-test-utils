@@ -31,7 +31,8 @@ Events on Wrapper||
 `toEmit`|Function emits the event on Wrapper|`expect(() => wrapper.trigger("click")).toEmit(wrapper, "special")`
 `toHaveEmitted`|Wrapper has emitted an event|`expect(wrapper).toHaveEmitted("special")`
 Vuex actions/mutations ||
-`toDispatch`|Function dispatches the Vuex action on a component|`expect(() => somethingAwesome()).toDispatch(wrapper, "awesomeAction")`
+`toDispatch`|Function dispatches Vuex action on a component|`expect(() => somethingAwesome()).toDispatch(wrapper, "awesomeAction")`
+`toHaveDispatched`|Component has dispatched Vuex action|`expect(wrapper).toHaveDispatched("awesomeAction")`
 `toCommit`|Function commits the Vuex mutation on a component|`expect(() => somethingAwesome()).toCommit(wrapper, "awesomeMutation")`
 Prop validations ||
 `toBeValidProps`|All props are valid|`expect(Component).toBeValidProps({ name: "required name", fullName: "Kengo Hamasaki" })`
@@ -221,7 +222,7 @@ module.exports = {
 ```js
 import Component from "./click-store.vue";
 
-it("Commits the action on store by click", () => {
+it("Dispatches the action on store by click", () => {
   const wrapper = shallowMount(Component)  expect(() => {
     wrapper.trigger("click");
   }).toDispatch(wrapper, "awesomeAction"); // Passes
@@ -233,7 +234,7 @@ it("Commits the action on store by click", () => {
 ```
 </details>
 
-#### `toCommit`
+#### `toCommit` (TBD)
 
 <details>
 <summary>Assert the store mutation is committed</summary>
@@ -269,6 +270,42 @@ it("Commits the mutation on store by click", () => {
   expect(() => {
     wrapper.trigger("click");
   }).toCommit(wrapper, "importantMutation", 'click'); // Passes
+});
+```
+</details>
+
+#### `toHaveDispatched`
+
+<details>
+<summary>Assert a component has dispatched Vuex action</summary>
+
+```js
+// click-store.vue
+<template>
+  <div @click="dispatchStore('click')">
+    Click Me
+  </div>
+</template>
+
+<script>
+module.exports = {
+  methods: {
+    dispatchStore (e) {
+      this.$store.dispatch('awesomeAction', e);
+    }
+  }
+}
+</script>
+```
+
+```js
+import Component from "./click-store.vue";
+
+it("Dispatches the action on store by click", () => {
+  const wrapper = shallowMount(Component)
+  wrapper.trigger("click");
+  expect(wrapper).toHaveDispatched("awesomeAction"); // Passes
+  expect(wrapper).toHaveDispatched("awesomeAction", "click"); // Passes
 });
 ```
 </details>
