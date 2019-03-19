@@ -300,9 +300,15 @@ module.exports = {
 
 ```js
 import Component from "./click-store.vue";
+import { vuexPlugin } from jest-matcher-vue-test-utils";
 
 it("Dispatches the action on store by click", () => {
-  const wrapper = shallowMount(Component)
+  const store = new Vuex.Store({
+    actions: dispatchStore() {},
+    plugins: [vuexPlugin()] // Requires adding plugin to use `toHaveDispatched` matcher
+  });
+
+  const wrapper = shallowMount(Component, { store })
   wrapper.trigger("click");
   expect(wrapper).toHaveDispatched("awesomeAction"); // Passes
   expect(wrapper).toHaveDispatched("awesomeAction", "click"); // Passes
