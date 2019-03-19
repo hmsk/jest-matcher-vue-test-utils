@@ -300,7 +300,7 @@ module.exports = {
 
 ```js
 import Component from "./click-store.vue";
-import { vuexPlugin } from jest-matcher-vue-test-utils";
+import { vuexPlugin } from "jest-matcher-vue-test-utils";
 
 it("Dispatches the action on store by click", () => {
   const store = new Vuex.Store({
