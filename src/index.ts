@@ -208,13 +208,18 @@ import toHide from "./matchers/toHide";
 import toEmit from "./matchers/toEmit";
 import toHaveEmitted from "./matchers/toHaveEmitted";
 import toDispatch from "./matchers/toDispatch";
+import toHaveDispatched from "./matchers/toHaveDispatched";
+
+import vuexPlugin from "./vuex-plugin";
 
 export {
   toShow,
   toHide,
   toEmit,
   toHaveEmitted,
-  toDispatch
+  toDispatch,
+  toHaveDispatched,
+  vuexPlugin
 };
 
 const matchers = {
@@ -223,6 +228,7 @@ const matchers = {
   toEmit,
   toHaveEmitted,
   toDispatch,
+  toHaveDispatched,
   toBeValidProp,
   toBeValidProps,
   toRequireProp,
