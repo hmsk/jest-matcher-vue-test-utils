@@ -13,16 +13,7 @@ export declare type WrapperFindArgument<V extends Vue> = string | NameSelector |
 declare global {
   namespace jest {
     interface Matchers<R> {
-      /**
-       * Asserts that the component accepts the type for the single prop
-       * @param {string} prop - The prop's name
-       * @param {any} type - The type (String|Number|Boolean|Array|Object|Date|Function|Symbol|[your prototype instance])
-       * @param options - Mount Option of the component
-       * @example
-       * expect(AComponent).toBeValidPropWithTypeCheck("color", String)
-       */
-      toBeValidPropWithTypeCheck (prop: string, type: any | any[], options?: MatcherComponentOptions<Vue>): R;
-      /**
+       /**
        * Asserts that the component accepts the value with custom validator for the prop
        * @param {string} prop - The prop's name
        * @param {any} sampleValue - The value you give for the prop
@@ -33,28 +24,6 @@ declare global {
       toBeValidPropWithCustomValidator (prop: string, sampleValue: any, options?: MatcherComponentOptions<Vue>): R;
     }
   }
-}
-
-export function toBeValidPropWithTypeCheck<V extends Vue> (
-  received: MatcherComponent<V>,
-  propName: string,
-  value: any,
-  dynamicMountOptions?: MatcherComponentOptions<V>
-): MatcherResult {
-  const propsData = {};
-  propsData[propName] = value;
-  const messages = getWarningsByMount(received, propsData, dynamicMountOptions);
-
-  const found = messages.find((c) => {
-    return c.find((arg: string) => arg.includes(`Invalid prop: type check failed for prop "${propName}".`));
-  });
-
-  return {
-    message: !!!found ?
-      () => `'${propName}' prop is valid with '${value}'` :
-      () => `'${propName}' prop is invalid with '${value}'`,
-    pass: !!!found
-  };
 }
 
 export function toBeValidPropWithCustomValidator<V extends Vue> (
@@ -89,6 +58,7 @@ import toRequireProp from "./matchers/toRequireProp";
 import toHaveDefaultProp from "./matchers/toHaveDefaultProp";
 import toBeValidProps from "./matchers/toBeValidProps";
 import toBeValidProp from "./matchers/toBeValidProp";
+import toBeValidPropWithTypeCheck from "./matchers/toBeValidWithTypeCheck";
 
 import vuexPlugin from "./vuex-plugin";
 
@@ -103,6 +73,7 @@ export {
   toHaveDefaultProp,
   toBeValidProps,
   toBeValidProp,
+  toBeValidPropWithTypeCheck,
   vuexPlugin
 };
 
