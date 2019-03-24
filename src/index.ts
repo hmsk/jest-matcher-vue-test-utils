@@ -1,10 +1,10 @@
-import { shallowMount, VueClass, NameSelector, ThisTypedShallowMountOptions, ShallowMountOptions } from "@vue/test-utils";
+import { VueClass, NameSelector, ThisTypedShallowMountOptions, ShallowMountOptions } from "@vue/test-utils";
 import Vue, { ComponentOptions, FunctionalComponentOptions } from "vue";
 
-import { overwriteConfiguration, getConfiguration, setConfig } from "./config";
+import { setConfig } from "./config";
 export const config = setConfig;
 
-import { withMockWarning, getWarningsByMount, corkComponent, MatcherResult } from "./utils";
+import { getWarningsByMount, MatcherResult } from "./utils";
 
 export declare type MatcherComponent<V extends Vue> = VueClass<V> | ComponentOptions<V> | FunctionalComponentOptions;
 export declare type MatcherComponentOptions<V extends Vue> = ThisTypedShallowMountOptions<V> | ShallowMountOptions<Vue>;
