@@ -1,6 +1,5 @@
 import Vue from "vue";
-import { MatcherComponent, MatcherComponentOptions } from "../";
-import { getWarningsByMount, MatcherResult } from "../utils";
+import { getWarningsByMount, MatcherResult, MatcherComponent, MatcherComponentOptions } from "../utils";
 
 interface ComponentProp {
   [name: string]: any;

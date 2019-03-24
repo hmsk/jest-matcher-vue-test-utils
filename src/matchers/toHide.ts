@@ -1,9 +1,6 @@
 import Vue from "vue";
-
 import { Wrapper } from "@vue/test-utils";
-
-import { MatcherResult } from "../utils";
-import { WrapperFindArgument } from "../";
+import { MatcherResult, WrapperFindArgument } from "../utils";
 
 declare global {
   namespace jest {

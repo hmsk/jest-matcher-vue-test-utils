@@ -1,8 +1,7 @@
 import Vue from "vue";
 import { shallowMount } from "@vue/test-utils";
-import { MatcherResult, withMockWarning, corkComponent } from "../utils";
+import { MatcherResult, withMockWarning, corkComponent, MatcherComponent, MatcherComponentOptions } from "../utils";
 import { overwriteConfiguration, getConfiguration } from "../config";
-import { MatcherComponent, MatcherComponentOptions } from "../";
 
 declare global {
   namespace jest {

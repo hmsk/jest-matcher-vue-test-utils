@@ -1,8 +1,8 @@
 import Vue from "vue";
+import { ActionPayload } from "vuex";
 import { Wrapper } from "@vue/test-utils";
 import { MatcherResult } from "../utils";
 import { storeKey } from "../vuex-plugin";
-import { ActionPayload } from "vuex";
 
 declare global {
   namespace jest {

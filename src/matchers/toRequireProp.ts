@@ -1,6 +1,5 @@
 import Vue from "vue";
-import { getWarningsByMount, MatcherResult } from "../utils";
-import { MatcherComponent, MatcherComponentOptions } from "../";
+import { getWarningsByMount, MatcherResult, MatcherComponent, MatcherComponentOptions } from "../utils";
 
 declare global {
   namespace jest {
