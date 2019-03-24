@@ -10,21 +10,9 @@ export declare type MatcherComponent<V extends Vue> = VueClass<V> | ComponentOpt
 export declare type MatcherComponentOptions<V extends Vue> = ThisTypedShallowMountOptions<V> | ShallowMountOptions<Vue>;
 export declare type WrapperFindArgument<V extends Vue> = string | NameSelector | FunctionalComponentOptions | VueClass<import("vue").default> | MatcherComponentOptions<V>;
 
-export interface ComponentProp {
-  [name: string]: any;
-}
-
 declare global {
   namespace jest {
     interface Matchers<R> {
-      /**
-       * Asserts that the component accepts the set of props
-       * @param {any} props - The set of props
-       * @param options - Mount Option of the component
-       * @example
-       * expect(AComponent).toBeValidProps({ type: "the type", color: "cool one"})
-       */
-      toBeValidProps (props: ComponentProp, options?: MatcherComponentOptions<Vue>): R;
       /**
        * Asserts that the component accepts the value for the single prop
        * @param {string} prop - The prop's name
@@ -54,21 +42,6 @@ declare global {
       toBeValidPropWithCustomValidator (prop: string, sampleValue: any, options?: MatcherComponentOptions<Vue>): R;
     }
   }
-}
-
-export function toBeValidProps<V extends Vue> (
-  received: MatcherComponent<V>,
-  props: ComponentProp,
-  dynamicMountOptions?: MatcherComponentOptions<V>
-): MatcherResult {
-  const messages = getWarningsByMount(received, props, dynamicMountOptions);
-
-  return {
-    message: messages.length == 0 ?
-      () => `Props are valid` :
-      () => `Props are not valid`,
-    pass: messages.length == 0
-  };
 }
 
 export function toBeValidProp<V extends Vue> (
@@ -149,6 +122,7 @@ import toDispatch from "./matchers/toDispatch";
 import toHaveDispatched from "./matchers/toHaveDispatched";
 import toRequireProp from "./matchers/toRequireProp";
 import toHaveDefaultProp from "./matchers/toHaveDefaultProp";
+import toBeValidProps from "./matchers/toBeValidProps";
 
 import vuexPlugin from "./vuex-plugin";
 
@@ -161,6 +135,7 @@ export {
   toHaveDispatched,
   toRequireProp,
   toHaveDefaultProp,
+  toBeValidProps,
   vuexPlugin
 };
 
