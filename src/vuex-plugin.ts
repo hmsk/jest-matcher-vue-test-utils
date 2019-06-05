@@ -19,6 +19,6 @@ const defineLogger = (store: Store<{}>) => {
   });
 }
 
-const generatePlugin = () => (store: Store<{}>) => defineLogger(store);
+const generatePlugin = <S>() => (store: Store<S>) => defineLogger(store);
 
 export default generatePlugin;
