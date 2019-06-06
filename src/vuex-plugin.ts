@@ -2,12 +2,12 @@ import { Store, ActionPayload } from "vuex";
 
 export const storeKey = "jestMatcherVueTestUtils";
 
-const defineLogger = (store: Store<{}>) => {
+const defineLogger = <S>(store: Store<S>) => {
   const log: { dispatched: ActionPayload[] } = {
     dispatched: []
   };
 
-  store.subscribeAction((action, _state) => {
+  store.subscribeAction((action, _state: S) => {
     log.dispatched.push(action);
   });
 
