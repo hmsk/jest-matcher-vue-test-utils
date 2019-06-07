@@ -48,29 +48,7 @@ import vueTestUtilMatchers from "jest-matcher-vue-test-utils";
 expect.extend({ ...vueTestUtilMatchers });
 ```
 
-# Provided Matchers
-
-Matcher|What's asserted|Quick sample
----|---|---
-Existence on Wrapper||
-`toShow`|Function shows a content on Wrapper|`expect(() => wrapper.vm.showError()).toShow(wrapper, "p.error")`
-`toHide`|Function hides a content on Wrapper|`expect(() => wrapper.vm.hideError()).toHide(wrapper, "p.error");`
-Events on Wrapper||
-`toEmit`|Function emits the event on Wrapper|`expect(() => wrapper.trigger("click")).toEmit(wrapper, "special")`
-`toHaveEmitted`|Wrapper has emitted an event|`expect(wrapper).toHaveEmitted("special")`
-Vuex actions/mutations ||
-`toDispatch`|Function dispatches Vuex action on a component|`expect(() => somethingAwesome()).toDispatch(wrapper, "awesomeAction")`
-`toHaveDispatched`|Component has dispatched Vuex action|`expect(wrapper).toHaveDispatched("awesomeAction")`
-`toCommit`|Function commits the Vuex mutation on a component|`expect(() => somethingAwesome()).toCommit(wrapper, "awesomeMutation")`
-Prop validations ||
-`toBeValidProps`|All props are valid|`expect(Component).toBeValidProps({ name: "required name", fullName: "Kengo Hamasaki" })`
-`toBeValidProp`|Single prop is valid|`expect(Component).toBeValidProp("name", "Required Name")`
-`toRequireProp`|Single prop is required|`expect(Component).toRequireProp("name")`
-`toHaveDefaultProp`|Single prop has a default|`expect(Component).toHaveDefaultProp("address", "Kitakyushu, Japan")`
-`toBeValidPropWithTypeCheck`|Single prop is valid for type|`expect(Component).toBeValidPropWithTypeCheck("zipcode", "94103")`
-`toBeValidPropWithCustomValidator`|Single props is valid for custom validator|`expect(Component).toBeValidPropWithCustomValidator("fullname", "Kengo Hamasaki")`
-
-## Further details
+## Provided Matchers
 
 ### Existence on Wrapper
 
