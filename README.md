@@ -4,6 +4,29 @@
 [![CircleCI](https://img.shields.io/circleci/project/github/hmsk/jest-matcher-vue-test-utils/master.svg?style=for-the-badge)](https://circleci.com/gh/hmsk/jest-matcher-vue-test-utils)
 
 Cute matchers for [Jest](https://facebook.github.io/jest) to test Vue components with [Vue Test Utils](https://vue-test-utils.vuejs.org/).
+You can write tests for Vue component/store intuitively ⚡️
+
+```ts
+it("Emits 'select' event by clicking PrimaryButton", () => {
+  const wrapper = shallowMount(Component);
+  
+  expect(wrapper.emitted().select).toBeUndefined();
+  wrapper.find(PrimaryButton).vm.$emit("click");
+  expect(wrapper.emitted().select[0]).toBeTruthy();
+});
+```
+
+becomes
+
+```ts
+it("Emits 'select' event by clicking PrimaryButton", () => {
+  const wrapper = shallowMount(Component);
+  
+  expect(() => {
+    wrapper.find(PrimaryButton).vm.$emit("click");
+  }).toEmit(wrapper, "select");
+});
+```
 
 # Installation
 
