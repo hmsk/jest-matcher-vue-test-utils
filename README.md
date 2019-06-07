@@ -4,6 +4,7 @@
 [![CircleCI](https://img.shields.io/circleci/project/github/hmsk/jest-matcher-vue-test-utils/master.svg?style=for-the-badge)](https://circleci.com/gh/hmsk/jest-matcher-vue-test-utils)
 
 Cute matchers for [Jest](https://facebook.github.io/jest) to test Vue components with [Vue Test Utils](https://vue-test-utils.vuejs.org/).
+
 You can write tests for Vue component/store intuitively ⚡️
 
 ```ts
@@ -27,6 +28,10 @@ it("Emits 'select' event by clicking PrimaryButton", () => {
   }).toEmit(wrapper, "select");
 });
 ```
+
+And all matchers have type definition and doc 💇‍♂️
+
+![190607_jest_matcher_infer](https://user-images.githubusercontent.com/85887/59101871-316fb600-88df-11e9-9ce1-54e5231c2bf6.gif)
 
 # Installation
 
