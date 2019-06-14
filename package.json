@@ -39,7 +39,7 @@
     "rollup-plugin-node-resolve": "5.0.2",
     "rollup-plugin-typescript2": "0.21.1",
     "ts-jest": "23.10.5",
-    "typescript": "3.5.1",
+    "typescript": "3.5.2",
     "vue": "2.6.10",
     "vue-jest": "3.0.4",
     "vue-template-compiler": "2.6.10",
