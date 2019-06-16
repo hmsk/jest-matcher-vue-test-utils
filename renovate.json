@@ -4,5 +4,10 @@
   ],
   "assignees": [
     "hmsk"
-  ]
+  ],
+  "packageRules": [{
+    "packagePatterns": ["^rollup"],
+    "updateTypes": ["patch"],
+    "enabled": false
+  }]
 }
