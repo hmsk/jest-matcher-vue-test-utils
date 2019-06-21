@@ -53,6 +53,9 @@
     "globals": {
       "ts-jest": {
         "tsConfig": "./test/tsconfig.json"
+      },
+      "vue-jest": {
+        "babelConfig": false
       }
     },
     "moduleFileExtensions": [
