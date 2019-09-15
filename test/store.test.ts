@@ -62,11 +62,27 @@ describe("toDispatch", () => {
       expect(result.message()).toBe('The function dispatched the "awesomeAction" type on Vuex Store');
     });
 
-    it("returns false if the action is dispatched by the function, but payload is not matched", () => {
-      const wrapper = mountComponent();
-      const result = toDispatch.bind(fakeJestContext(false))(() => customDispatch(wrapper, "hello"), wrapper, "awesomeAction", "hellooooo");
-      expect(result.pass).toBe(false);
-      expect(result.message()).toBe('The function dispatched the "awesomeAction" type but the payload is not matched on Vuex Store');
+    describe("the action is dispatched by the function, but the payload is not matched", () => {
+      const subject = () => {
+        const wrapper = mountComponent();
+        return toDispatch.bind(fakeJestContext(false))(() => customDispatch(wrapper, "hello?"), wrapper, "awesomeAction", "hellooooo");
+      };
+
+      it("returns false", () => {
+        expect(subject().pass).toBe(false);
+      });
+
+      it("message tells the reason", () => {
+        expect(subject().message()).toContain('The function dispatched the "awesomeAction" type but the payload is not matched on Vuex Store');
+      });
+
+      it("message tells the reason", () => {
+        const message = subject().message();
+        expect(message).toContain("- Expected");
+        expect(message).toContain("- hellooooo");
+        expect(message).toContain("+ Dispatched");
+        expect(message).toContain("+ hello?");
+      });
     });
 
     it("returns false if the wrapper's Vue instance doesn't have Vuex Store", () => {
