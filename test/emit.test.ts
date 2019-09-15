@@ -181,6 +181,37 @@ describe("toEmit", () => {
       expect(result.pass).toBe(false);
       expect(result.message()).toBe('The function did not emit the "special" event');
     });
+
+    describe("with payload", () => {
+      describe("when the event is emitted but the payloads is not matched", () => {
+        const subject = () => {
+          const wrapper = shallowMount(Component);
+          return toEmit.bind(fakeJestContext(false))(() => {
+            emitEvent(wrapper, "special", { value: "actual life" });
+            emitEvent(wrapper, "special", { value: "actual second life" });
+          }, wrapper, "special", { value: "expected" });
+        };
+
+        it("returns false", () => {
+          expect(subject().pass).toBe(false);
+        });
+
+        it("tells the reason", () => {
+          expect(subject().message()).toContain('The function emitted the \"special\" event, but the payload is not matched');
+        });
+
+        it("shows the diff of payloads", () => {
+          const message = subject().message();
+          expect(message).toContain("'special' event #0 payloads:");
+          expect(message).toContain('+     "value": "actual life"');
+          expect(message).toContain("'special' event #1 payloads:");
+          expect(message).toContain('+     "value": "actual second life"');
+          expect(message.match(/- Expected/g)).toHaveLength(2);
+          expect(message.match(/\+ Emitted/g)).toHaveLength(2);
+          expect(message.match(/-     "value": "expected"/g)).toHaveLength(2);
+        });
+      });
+    });
   });
 
   describe("actual use", () => {
