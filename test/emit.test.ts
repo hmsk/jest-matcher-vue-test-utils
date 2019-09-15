@@ -97,12 +97,30 @@ describe("toHaveEmitted with payload", () => {
       expect(result.message()).toBe('The "special" event was never emitted');
     });
 
-    it("returns false if the event is emitted but the payload is not matched", () => {
-      const wrapper = shallowMount(Component);
-      emitEvent(wrapper, "special", { value: "anything" });
-      const result = toHaveEmitted.bind(fakeJestContext(false))(wrapper, "special", "something");
-      expect(result.pass).toBe(false);
-      expect(result.message()).toBe('The "special" event was emitted but the payload is not matched');
+    describe("when the event is emitted but the payload is not matched", () => {
+      const subject = () => {
+        const wrapper = shallowMount(Component);
+        emitEvent(wrapper, "special", { value: "anything" });
+        return toHaveEmitted.bind(fakeJestContext(false))(wrapper, "special", "some text", { value: "something" });
+      };
+
+      it("returns false", () => {
+        expect(subject().pass).toBe(false);
+      });
+
+      it("tells the reason", () => {
+        expect(subject().message()).toContain('The "special" event was emitted but the payload is not matched');
+      });
+
+      it("shows the diff of payloads", () => {
+        const message = subject().message();
+        expect(message).toContain("'special' event #0 payloads:");
+        expect(message).toContain("- Expected");
+        expect(message).toContain("+ Emitted");
+        expect(message).toContain('-   "some text"');
+        expect(message).toContain('-     "value": "something"');
+        expect(message).toContain('+     "value": "anything"');
+      });
     });
   });
 
