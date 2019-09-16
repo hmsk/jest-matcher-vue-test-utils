@@ -1,5 +1,6 @@
 import Vue from "vue";
 import { Wrapper } from "@vue/test-utils";
+import diff from "jest-diff";
 import { MatcherResult } from "../utils";
 
 declare global {
@@ -38,7 +39,8 @@ export default function<V extends Vue> (
             pass = true;
             message = `The function dispatched the "${actionType}" type on Vuex Store`;
           } else {
-            message = `The function dispatched the "${actionType}" type but the payload is not matched on Vuex Store`;
+            // TODO: Show diff for all dispatched payloads
+            message = `The function dispatched the "${actionType}" type but the payload is not matched on Vuex Store\n${diff(payload, action.payload, { bAnnotation: "Dispatched" })}`;
           }
         } else {
           pass = true;

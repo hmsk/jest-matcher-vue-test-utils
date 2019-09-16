@@ -1,5 +1,6 @@
 import Vue from "vue";
 import { Wrapper } from "@vue/test-utils";
+import diff from "jest-diff";
 import { MatcherResult } from "../utils";
 
 declare global {
@@ -29,26 +30,31 @@ export default function<V extends Vue> (
   const before = wrapper.emitted()[eventName] ?  wrapper.emitted()[eventName].slice(0) : [];
   func();
   const after = wrapper.emitted()[eventName] ?  wrapper.emitted()[eventName].slice(0) : [];
+  const emitted = after.slice(before.length, after.length);
 
   let pass: boolean;
   let message: () => string;
 
-  const matchesToPayload = (event): boolean => {
-    return payloads.length === event.length &&
-      payloads.every((payload, index) => {
-        return (this as jest.MatcherUtils).equals(event[index], payload);
-      });
-  };
-
   if (arguments.length >= 4) {
-    pass = after.filter(matchesToPayload).length > before.filter(matchesToPayload).length;
+    const matchesToPayload = (event): boolean => {
+      return payloads.length === event.length &&
+        payloads.every((payload, index) => {
+          return (this as jest.MatcherUtils).equals(event[index], payload);
+        });
+    };
+    pass = emitted.filter(matchesToPayload).length > 0;
     message = pass ?
       () => `The function emitted the "${eventName}" event with the expected payload` :
-        after.length > before.length ?
-          () => `The function emitted the "${eventName}" event, but the payload is not matched` :
+        emitted.length > 0 ?
+          () => {
+            const diffs = emitted.map((event, i): string | null => {
+              return `'${eventName}' event #${i} payloads:\n\n${diff(payloads, event, { bAnnotation: "Emitted" })}`;
+            }).join("\n\n");
+            return `The function emitted the "${eventName}" event, but the payload is not matched\n\n${diffs}`
+          } :
           () => `The function did not emit the "${eventName}" event`;
   } else {
-    pass = after.length > before.length
+    pass = emitted.length > 0
     message = pass ?
       () => `The function emitted the "${eventName}" event` :
       () => `The function did not emit the "${eventName}" event`;

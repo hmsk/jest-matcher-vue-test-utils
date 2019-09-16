@@ -1,6 +1,7 @@
 import Vue from "vue";
 import { ActionPayload } from "vuex";
 import { Wrapper } from "@vue/test-utils";
+import diff from "jest-diff";
 import { MatcherResult } from "../utils";
 import { storeKey } from "../vuex-plugin";
 
@@ -42,7 +43,10 @@ export default function<V extends Vue> (
           pass = true;
           message = `"${actionType}" action has been dispatched with expected payload`;
         } else {
-          message = `"${actionType}" action has been dispatched, but payload isn't matched to the expectation`;
+          const diffs = matched.map((action, i): string | null => {
+            return `"${actionType}" action #${i} payloads:\n\n${diff(payload, action.payload, { bAnnotation: "Dispatched" })}`;
+          }).join("\n\n");
+          message = `"${actionType}" action has been dispatched, but payload isn't matched to the expectation\n\n${diffs}`;
         }
       } else {
         pass = true;
