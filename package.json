@@ -10,7 +10,8 @@
   "scripts": {
     "build": "rollup -c",
     "test": "jest",
-    "test:watch": "jest --watch -o"
+    "test:watch": "jest --watch -o",
+    "pretest": "rm -rf dist/ && npm run build"
   },
   "repository": {
     "type": "git",
