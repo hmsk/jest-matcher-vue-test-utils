@@ -7,7 +7,7 @@ interface ComponentProp {
 
 declare global {
   namespace jest {
-    interface Matchers<R> {
+    interface Matchers<R, T> {
       /**
        * Asserts that the component accepts the set of props
        * @param {any} props - The set of props

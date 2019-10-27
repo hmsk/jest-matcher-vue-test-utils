@@ -5,7 +5,7 @@ import { MatcherResult } from "../utils";
 
 declare global {
   namespace jest {
-    interface Matchers<R> {
+    interface Matchers<R, T> {
       /**
        * Asserts that the function dispatch the Vuex action
        * @param wrapper - The wrapper of vue-test-utils

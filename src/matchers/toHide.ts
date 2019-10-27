@@ -4,7 +4,7 @@ import { MatcherResult, WrapperFindArgument } from "../utils";
 
 declare global {
   namespace jest {
-    interface Matchers<R> {
+    interface Matchers<R, T> {
       /**
        * Asserts that the action hides the specific content
        * @param wrapper - The wrapper of vue-test-utils
