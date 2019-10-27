@@ -5,7 +5,7 @@ import { MatcherResult } from "../utils";
 
 declare global {
   namespace jest {
-    interface Matchers<R> {
+    interface Matchers<R, T> {
       /**
        * Asserts that the emitted event with payload
        * @param {string} eventName - The event's name

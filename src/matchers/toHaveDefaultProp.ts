@@ -5,7 +5,7 @@ import { overwriteConfiguration, getConfiguration } from "../config";
 
 declare global {
   namespace jest {
-    interface Matchers<R> {
+    interface Matchers<R, T> {
       /**
        * Asserts that the component gives default value for the prop
        * @param {string} prop - The prop's name

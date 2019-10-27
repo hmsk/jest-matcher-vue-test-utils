@@ -3,7 +3,7 @@ import { getWarningsByMount, MatcherResult, MatcherComponent, MatcherComponentOp
 
 declare global {
   namespace jest {
-    interface Matchers<R> {
+    interface Matchers<R, T> {
       /**
        * Asserts that the component accepts the value for the single prop
        * @param {string} prop - The prop's name

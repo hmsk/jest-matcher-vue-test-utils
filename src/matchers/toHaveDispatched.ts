@@ -7,7 +7,7 @@ import { storeKey } from "../vuex-plugin";
 
 declare global {
   namespace jest {
-    interface Matchers<R> {
+    interface Matchers<R, T> {
       /**
        * Asserts dispatched the Vuex action
        * @param actionType - The type of store's action
