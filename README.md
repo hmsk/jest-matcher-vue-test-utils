@@ -82,8 +82,11 @@ methods: {
 ```js
 import Component from "./error-message.vue";
 
-it("show error by showError", () => {
-  expect(() => wrapper.vm.showError()).toShow(wrapper, "p.error"); // Passes
+it("show error by showError", async () => {
+  expect(async () => {
+    wrapper.vm.showError();
+    await wrapper.vm.$nextTick();
+  }).toShow(wrapper, "p.error"); // Passes
 });
 ```
 </details>
@@ -118,8 +121,11 @@ methods: {
 ```js
 import Component from "./error-message.vue";
 
-it("show error by showError", () => {
-  expect(() => wrapper.vm.hideError()).toHide(wrapper, "p.error"); // Passes
+it("show error by showError", async () => {
+  expect(async () => {
+    wrapper.vm.hideError();
+    await wrapper.vm.$nextTick();
+  }).toHide(wrapper, "p.error"); // Passes
 });
 ```
 

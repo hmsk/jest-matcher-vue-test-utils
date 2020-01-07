@@ -6,6 +6,7 @@ import {
 
 import Component from "./fixtures/error-message.vue";
 import { createLocalVue, shallowMount } from "@vue/test-utils";
+import { MatcherResult } from '@/utils';
 
 expect.extend({
   toShow,
@@ -18,84 +19,156 @@ config({
 
 describe("toShow", () => {
   describe("as a function which is registered to jest", () => {
-    it("returns true if the target is shown by specified action", () => {
+    it("returns true if the target is shown by specified action", async () => {
       const wrapper = shallowMount(Component, { propsData: { initialError: false }});
-      const result = toShow(() => (wrapper.vm as any).showError(), wrapper, ".error");
+      const result = await toShow(async () => {
+        (wrapper.vm as any).showError();
+        await wrapper.vm.$nextTick();
+      }, wrapper, ".error");
       expect(result.pass).toBe(true);
       expect(result.message()).toBe("The action shows the target");
     });
 
-    it("returns false if ther target is shown from the beginning", () => {
+    it("returns false if ther target is shown from the beginning", async () => {
       const wrapper = shallowMount(Component, { propsData: { initialError: true }});
-      const result = toShow(() => (wrapper.vm as any).showError(), wrapper, ".error");
+      const result = await toShow(async () => {
+        (wrapper.vm as any).showError();
+        await wrapper.vm.$nextTick();
+      }, wrapper, ".error");
       expect(result.pass).toBe(false);
       expect(result.message()).toBe("The target has been showing from the beginning");
     });
 
-    it("returns false if the target is never shown", () => {
+    it("returns false if the target is never shown", async () => {
       const wrapper = shallowMount(Component, { propsData: { initialError: false }});
-      const result = toShow(() => "do not anything", wrapper, ".error");
+      const result = await toShow(async () => {
+        // Don't do nothing
+        await wrapper.vm.$nextTick();
+      }, wrapper, ".error");
+      expect(result.pass).toBe(false);
+      expect(result.message()).toBe("The action doesn't show the target");
+    });
+
+    it("returns false synchronously before nextTick", () => {
+      const wrapper = shallowMount(Component, { propsData: { initialError: false }});
+      // Doesn't wait for nextTick with synchronous expectation, Passes from @vue/test-utils@beta.30
+      const result = toShow(() => {
+        (wrapper.vm as any).showError();
+      }, wrapper, ".error") as MatcherResult;
       expect(result.pass).toBe(false);
       expect(result.message()).toBe("The action doesn't show the target");
     });
   });
 
   describe("actual use", () => {
-    it("doesn't claim on correct expectation", () => {
+    it("doesn't complain about the correct expectation", async () => {
       const wrapper = shallowMount(Component, { propsData: { initialError: false }});
-      expect(() => (wrapper.vm as any).showError()).toShow(wrapper, ".error");
+      expect(async () => {
+        (wrapper.vm as any).showError();
+        await wrapper.vm.$nextTick();
+      }).toShow(wrapper, ".error");
     });
 
-    it("doesn't claim on incorrect expectation: shown -> *", () => {
+    it("doesn't complain about the correct negative expectation: shown -> *", async () => {
       const wrapper = shallowMount(Component, { propsData: { initialError: true }});
-      expect(() => (wrapper.vm as any).showError()).not.toShow(wrapper, ".error");
+      expect(async () => {
+        (wrapper.vm as any).showError();
+        await wrapper.vm.$nextTick();
+      }).not.toShow(wrapper, ".error");
     });
 
-    it("doesn't claim on incorrect expectation: hidden -> hidden", () => {
+    it("doesn't complain about the correct negative expectation: hidden -> hidden", async () => {
       const wrapper = shallowMount(Component, { propsData: { initialError: false }});
-      expect(() => "don't do nothing").not.toShow(wrapper, ".error");
+      expect(async () => {
+        // Don't do nothing
+        await wrapper.vm.$nextTick();
+      }).not.toShow(wrapper, ".error");
+    });
+
+    it("doesn't complain about the correct negative expectation synchronously", () => {
+      const wrapper = shallowMount(Component, { propsData: { initialError: false }});
+      // Doesn't wait for nextTick with synchronous expectation, Passes from @vue/test-utils@beta.30
+      expect(() => {
+        (wrapper.vm as any).showError();
+      }).not.toShow(wrapper, ".error");
     });
   });
 });
 
 describe("toHide", () => {
   describe("as a function which is registered to jest", () => {
-    it("returns true if the target is hidden by specified action", () => {
+    it("returns true if the target is hidden by specified action", async () => {
       const wrapper = shallowMount(Component, { propsData: { initialError: true }});
-      const result = toHide(() => (wrapper.vm as any).hideError(), wrapper, ".error");
+      const result = await toHide(async () => {
+        (wrapper.vm as any).hideError();
+        await wrapper.vm.$nextTick();
+      }, wrapper, ".error");
       expect(result.pass).toBe(true);
       expect(result.message()).toBe("The action hides the target");
     });
 
-    it("returns false if the target is hidden from the beginning", () => {
+    it("returns false if the target is hidden from the beginning", async () => {
       const wrapper = shallowMount(Component, { propsData: { initialError: false }});
-      const result = toHide(() => (wrapper.vm as any).hideError(), wrapper, ".error");
+      const result = await toHide(async () => {
+        (wrapper.vm as any).hideError();
+        await wrapper.vm.$nextTick();
+      }, wrapper, ".error");
       expect(result.pass).toBe(false);
       expect(result.message()).toBe("The target has been hiding from the beginning");
     });
 
-    it("returns false if the target is never hidden", () => {
+    it("returns false if the target is never hidden", async () => {
       const wrapper = shallowMount(Component, { propsData: { initialError: true }});
-      const result = toHide(() => "do not anything", wrapper, ".error");
+      const result = await toHide(async () => {
+        // Don't do nothing
+        await wrapper.vm.$nextTick();
+      }, wrapper, ".error");
+      expect(result.pass).toBe(false);
+      expect(result.message()).toBe("The action doesn't hide the target");
+    });
+
+    it("returns false synchronously before nextTick", () => {
+      const wrapper = shallowMount(Component, { propsData: { initialError: true }});
+      // Doesn't wait for nextTick with synchronous expectation, Passes from @vue/test-utils@beta.30
+      const result = toHide(() => {
+        (wrapper.vm as any).hideError();
+      }, wrapper, ".error") as MatcherResult;
       expect(result.pass).toBe(false);
       expect(result.message()).toBe("The action doesn't hide the target");
     });
   });
 
   describe("actual use", () => {
-    it("doesn't claim on correct expectation", () => {
+    it("doesn't claim about the correct expectation", async () => {
       const wrapper = shallowMount(Component, { propsData: { initialError: true }});
-      expect(() => (wrapper.vm as any).hideError()).toHide(wrapper, ".error");
+      expect(async () => {
+        (wrapper.vm as any).hideError();
+        await wrapper.vm.$nextTick();
+      }).toHide(wrapper, ".error");
     });
 
-    it("doesn't claim on incorrect expectation: hidden -> *", () => {
+    it("doesn't complain about the correct negative expectation: hidden -> *", async () => {
       const wrapper = shallowMount(Component, { propsData: { initialError: false }});
-      expect(() => (wrapper.vm as any).showError()).not.toHide(wrapper, ".error");
+      expect(async () => {
+        (wrapper.vm as any).showError();
+        await wrapper.vm.$nextTick();
+      }).not.toHide(wrapper, ".error");
     });
 
-    it("doesn't claim on incorrect expectation: shown -> shown", () => {
+    it("doesn't complain about the correct negative expectation: shown -> shown", async () => {
       const wrapper = shallowMount(Component, { propsData: { initialError: true }});
-      expect(() => "don't do nothing").not.toHide(wrapper, ".error");
+      expect(async () => {
+        // Don't do nothing
+        wrapper.vm.$nextTick();
+      }).not.toHide(wrapper, ".error");
+    });
+
+    it("doesn't complain about the correct negative expectation synchronously", () => {
+      const wrapper = shallowMount(Component, { propsData: { initialError: true }});
+      // Doesn't wait for nextTick with synchronous expectation, Passes from @vue/test-utils@beta.30
+      expect(() => {
+        (wrapper.vm as any).hideError();
+      }).not.toHide(wrapper, ".error");
     });
   });
 });
