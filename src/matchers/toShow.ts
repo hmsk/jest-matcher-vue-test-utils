@@ -1,5 +1,6 @@
 import Vue from "vue";
 import { Wrapper } from "@vue/test-utils";
+import { isPromise } from "jest-util";
 
 import { MatcherResult, WrapperFindArgument } from "../utils";
 
@@ -18,15 +19,7 @@ declare global {
   }
 }
 
-export default function<V extends Vue> (
-  action: Function,
-  wrapper: Wrapper<V>,
-  findArgument: WrapperFindArgument<V>
-): MatcherResult {
-  const before = wrapper.contains(findArgument);
-  action();
-  const after = wrapper.contains(findArgument);
-
+const processResult = (before: boolean, after: boolean): MatcherResult => {
   let message: string;
   let result: boolean;
 
@@ -44,5 +37,21 @@ export default function<V extends Vue> (
   return {
     message: () => message,
     pass: result
+  }
+};
+
+export default function<V extends Vue> (
+  action: () => void | Promise<unknown>,
+  wrapper: Wrapper<V>,
+  findArgument: WrapperFindArgument<V>
+): MatcherResult | Promise<MatcherResult> {
+  const before = wrapper.contains(findArgument);
+  const result = action();
+
+  if (isPromise(result)) {
+    return result.then(() => processResult(before, wrapper.contains(findArgument)));
+  } else {
+    action();
+    return processResult(before, wrapper.contains(findArgument));
   }
 }
