@@ -35,6 +35,7 @@ export default {
 
   external: [
     "@vue/test-utils",
-    "jest-diff"
+    "jest-diff",
+    "jest-util"
   ]
 }
