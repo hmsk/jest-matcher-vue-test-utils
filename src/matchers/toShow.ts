@@ -51,7 +51,6 @@ export default function<V extends Vue> (
   if (isPromise(result)) {
     return result.then(() => processResult(before, wrapper.contains(findArgument)));
   } else {
-    action();
     return processResult(before, wrapper.contains(findArgument));
   }
 }
