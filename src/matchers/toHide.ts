@@ -46,11 +46,15 @@ export default function<V extends Vue> (
   findArgument: WrapperFindArgument<V>
 ): MatcherResult | Promise<MatcherResult> {
   const before = wrapper.contains(findArgument);
-  const result = action();
 
-  if (isPromise(result)) {
-    return result.then(() => processResult(before, wrapper.contains(findArgument)));
-  } else {
+  const processResultAfterTrigger = (): MatcherResult => {
     return processResult(before, wrapper.contains(findArgument));
+  };
+
+  const trigger = action();
+  if (isPromise(trigger)) {
+    return trigger.then(processResultAfterTrigger);
+  } else {
+    return processResultAfterTrigger();
   }
 }
