@@ -83,7 +83,7 @@ methods: {
 import Component from "./error-message.vue";
 
 it("show error by showError", async () => {
-  expect(async () => {
+  return expect(async () => {
     wrapper.vm.showError();
     await wrapper.vm.$nextTick();
   }).toShow(wrapper, "p.error"); // Passes
@@ -122,7 +122,7 @@ methods: {
 import Component from "./error-message.vue";
 
 it("show error by showError", async () => {
-  expect(async () => {
+  return expect(async () => {
     wrapper.vm.hideError();
     await wrapper.vm.$nextTick();
   }).toHide(wrapper, "p.error"); // Passes
@@ -164,6 +164,15 @@ it("emits special event by click", () => {
   const wrapper = shallowMount(Component);
   expect(() => wrapper.trigger("click")).toEmit(wrapper, "special"); // Passes
   expect(() => wrapper.trigger("click")).toEmit(wrapper, "special", "clicked"); // Passes
+});
+```
+
+Async function is supported as well.
+
+```js
+it("emits special event by click", async () => {
+  const wrapper = shallowMount(Component);
+  return expect(async () => triggersEventAsynchronously()).toEmit(wrapper, "special", "clicked"); // Passes
 });
 ```
 
