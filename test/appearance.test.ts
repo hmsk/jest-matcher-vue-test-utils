@@ -51,7 +51,7 @@ describe("toShow", () => {
 
     it("returns false synchronously before nextTick", () => {
       const wrapper = shallowMount(Component, { propsData: { initialError: false }});
-      // Doesn't wait for nextTick with synchronous expectation, Passes from @vue/test-utils@beta.30
+      // Doesn't wait for nextTick with synchronous expectation, "pass: true" in older than @vue/test-utils@beta.30
       const result = toShow(() => {
         (wrapper.vm as any).showError();
       }, wrapper, ".error") as MatcherResult;
@@ -63,7 +63,7 @@ describe("toShow", () => {
   describe("actual use", () => {
     it("doesn't complain about the correct expectation", async () => {
       const wrapper = shallowMount(Component, { propsData: { initialError: false }});
-      expect(async () => {
+      return expect(async () => {
         (wrapper.vm as any).showError();
         await wrapper.vm.$nextTick();
       }).toShow(wrapper, ".error");
@@ -71,7 +71,7 @@ describe("toShow", () => {
 
     it("doesn't complain about the correct negative expectation: shown -> *", async () => {
       const wrapper = shallowMount(Component, { propsData: { initialError: true }});
-      expect(async () => {
+      return expect(async () => {
         (wrapper.vm as any).showError();
         await wrapper.vm.$nextTick();
       }).not.toShow(wrapper, ".error");
@@ -79,7 +79,7 @@ describe("toShow", () => {
 
     it("doesn't complain about the correct negative expectation: hidden -> hidden", async () => {
       const wrapper = shallowMount(Component, { propsData: { initialError: false }});
-      expect(async () => {
+      return expect(async () => {
         // Don't do nothing
         await wrapper.vm.$nextTick();
       }).not.toShow(wrapper, ".error");
@@ -87,7 +87,7 @@ describe("toShow", () => {
 
     it("doesn't complain about the correct negative expectation synchronously", () => {
       const wrapper = shallowMount(Component, { propsData: { initialError: false }});
-      // Doesn't wait for nextTick with synchronous expectation, Passes from @vue/test-utils@beta.30
+      // Doesn't wait for nextTick with synchronous expectation, toShow passes in older than @vue/test-utils@beta.30
       expect(() => {
         (wrapper.vm as any).showError();
       }).not.toShow(wrapper, ".error");
@@ -141,7 +141,7 @@ describe("toHide", () => {
   describe("actual use", () => {
     it("doesn't claim about the correct expectation", async () => {
       const wrapper = shallowMount(Component, { propsData: { initialError: true }});
-      expect(async () => {
+      return expect(async () => {
         (wrapper.vm as any).hideError();
         await wrapper.vm.$nextTick();
       }).toHide(wrapper, ".error");
@@ -149,7 +149,7 @@ describe("toHide", () => {
 
     it("doesn't complain about the correct negative expectation: hidden -> *", async () => {
       const wrapper = shallowMount(Component, { propsData: { initialError: false }});
-      expect(async () => {
+      return expect(async () => {
         (wrapper.vm as any).showError();
         await wrapper.vm.$nextTick();
       }).not.toHide(wrapper, ".error");
@@ -157,7 +157,7 @@ describe("toHide", () => {
 
     it("doesn't complain about the correct negative expectation: shown -> shown", async () => {
       const wrapper = shallowMount(Component, { propsData: { initialError: true }});
-      expect(async () => {
+      return expect(async () => {
         // Don't do nothing
         wrapper.vm.$nextTick();
       }).not.toHide(wrapper, ".error");
