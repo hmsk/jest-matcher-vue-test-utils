@@ -1,4 +1,4 @@
-# jest-matcher-vue-test-utils [![jest-matcher-vue-test-utils Dev Token](https://badge.devtoken.rocks/jest-matcher-vue-test-utils)](https://devtoken.rocks/package/jest-matcher-vue-test-utils)
+# jest-matcher-vue-test-utils
 
 [![npm](https://img.shields.io/npm/v/jest-matcher-vue-test-utils.svg?style=for-the-badge)](https://www.npmjs.com/package/jest-matcher-vue-test-utils)
 [![CircleCI](https://img.shields.io/circleci/project/github/hmsk/jest-matcher-vue-test-utils/master.svg?style=for-the-badge)](https://circleci.com/gh/hmsk/jest-matcher-vue-test-utils)
