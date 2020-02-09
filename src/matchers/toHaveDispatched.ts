@@ -2,6 +2,8 @@ import Vue from "vue";
 import { ActionPayload } from "vuex";
 import { Wrapper } from "@vue/test-utils";
 import diff from "jest-diff";
+import { equals } from "expect/build/jasmineUtils";
+
 import { MatcherResult } from "../utils";
 import { storeKey } from "../vuex-plugin";
 
@@ -38,7 +40,7 @@ export default function<V extends Vue> (
 
     if (matched.length > 0) {
       if (payload) {
-        const matchedPayload = matched.some((log) => (this as jest.MatcherUtils).equals(log.payload, payload));
+        const matchedPayload = matched.some((log) => equals(log.payload, payload));
         if (matchedPayload) {
           pass = true;
           message = `"${actionType}" action has been dispatched with expected payload`;

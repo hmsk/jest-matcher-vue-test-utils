@@ -1,5 +1,7 @@
 import Vue from "vue";
 import { shallowMount } from "@vue/test-utils";
+import { equals } from "expect/build/jasmineUtils";
+
 import { MatcherResult, withMockWarning, corkComponent, MatcherComponent, MatcherComponentOptions } from "../utils";
 import { overwriteConfiguration, getConfiguration } from "../config";
 
@@ -35,7 +37,7 @@ export default function toHaveDefaultProp<V extends Vue> (
   });
 
   const given = wrapper.props()[propName];
-  const matched = (this as jest.MatcherUtils).equals(given, defaultValue);
+  const matched = equals(given, defaultValue);
 
   return {
     message: matched ?

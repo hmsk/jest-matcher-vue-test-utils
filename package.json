@@ -30,6 +30,7 @@
   },
   "homepage": "https://github.com/hmsk/jest-matcher-vue-test-utils#readme",
   "dependencies": {
+    "expect": ">=23.0",
     "jest-diff": ">=23.0"
   },
   "devDependencies": {

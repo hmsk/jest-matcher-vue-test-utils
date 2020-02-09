@@ -18,12 +18,6 @@ config({
   mountOptions: { localVue: createLocalVue() }
 });
 
-const fakeJestContext = (expect: boolean = true) => {
-  return {
-    equals: (a: any, b: any) => expect
-  };
-};
-
 describe("toDispatch", () => {
   const mountComponent = () => {
     const localVue = createLocalVue();
@@ -57,7 +51,7 @@ describe("toDispatch", () => {
 
     it("returns true if the action type with matching payload is dispatched by the function", () => {
       const wrapper = mountComponent();
-      const result = toDispatch.bind(fakeJestContext(true))(() => customDispatch(wrapper, "hello"), wrapper, "awesomeAction", "hello");
+      const result = toDispatch(() => customDispatch(wrapper, "hello"), wrapper, "awesomeAction", "hello");
       expect(result.pass).toBe(true);
       expect(result.message()).toBe('The function dispatched the "awesomeAction" type on Vuex Store');
     });
@@ -65,7 +59,7 @@ describe("toDispatch", () => {
     describe("the action is dispatched by the function, but the payload is not matched", () => {
       const subject = () => {
         const wrapper = mountComponent();
-        return toDispatch.bind(fakeJestContext(false))(() => customDispatch(wrapper, "hello?"), wrapper, "awesomeAction", "hellooooo");
+        return toDispatch(() => customDispatch(wrapper, "hello?"), wrapper, "awesomeAction", "hellooooo");
       };
 
       it("returns false", () => {
@@ -153,7 +147,7 @@ describe("toHaveDispatched", () => {
     it("returns true if the action type with matching payload has been dispatched", () => {
       const wrapper = mountComponent();
       customDispatch(wrapper, "hello")
-      const result = toHaveDispatched.bind(fakeJestContext(true))(wrapper, "awesomeAction", "hello");
+      const result = toHaveDispatched(wrapper, "awesomeAction", "hello");
       expect(result.pass).toBe(true);
       expect(result.message()).toBe('"awesomeAction" action has been dispatched with expected payload');
     });
@@ -162,7 +156,7 @@ describe("toHaveDispatched", () => {
       const subject = () => {
         const wrapper = mountComponent();
         customDispatch(wrapper, "hello")
-        return toHaveDispatched.bind(fakeJestContext(false))(wrapper, "awesomeAction", "good bye");
+        return toHaveDispatched(wrapper, "awesomeAction", "good bye");
       };
 
       it("returns false", () => {

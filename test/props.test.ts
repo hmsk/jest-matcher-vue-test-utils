@@ -23,12 +23,6 @@ config({
   mountOptions: { localVue: createLocalVue() }
 });
 
-const fakeJestContext = (expect: boolean = true) => {
-  return {
-    equals: (a: any, b: any) => expect
-  };
-};
-
 describe("toBeValidProps", () => {
   describe("matcher function", () => {
     it("returns true if all props are valid", () => {
@@ -135,13 +129,13 @@ describe("toRequireProp", () => {
 describe("toHaveDefaultProp", () => {
   describe("matcher function", () => {
     it("returns true if matches default value", () => {
-      const result = toHaveDefaultProp.bind(fakeJestContext(true))(Component, "address", "Kitakyushu, Japan");
+      const result = toHaveDefaultProp(Component, "address", "Kitakyushu, Japan");
       expect(result.pass).toBe(true);
       expect(result.message()).toBe("'address' prop is given 'Kitakyushu, Japan' as default");
     });
 
     it("returns false if not matches default value", () => {
-      const result = toHaveDefaultProp.bind(fakeJestContext(false))(Component, "address", "Chofu, Japan");
+      const result = toHaveDefaultProp(Component, "address", "Chofu, Japan");
       expect(result.pass).toBe(false);
       expect(result.message()).toBe("'address' prop is not given 'Chofu, Japan' as default (is given 'Kitakyushu, Japan')");
     });

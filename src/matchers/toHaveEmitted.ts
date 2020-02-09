@@ -1,6 +1,8 @@
 import Vue from "vue";
 import { Wrapper } from "@vue/test-utils";
 import diff from "jest-diff";
+import { equals } from "expect/build/jasmineUtils";
+
 import { MatcherResult } from "../utils";
 
 declare global {
@@ -34,7 +36,7 @@ export default function<V extends Vue> (
     pass = emitted.some((event) => {
       return payloads.length === event.length &&
         payloads.every((payload, index) => {
-          return (this as jest.MatcherUtils).equals(event[index], payload);
+          return equals(event[index], payload);
         });
     });
     message = pass ?

@@ -79,7 +79,7 @@ describe("toHaveEmitted with payload", () => {
     it("returns true if the event is emitted with the expected payload", () => {
       const wrapper = shallowMount(Component);
       emitEvent(wrapper, "special", { value: "something" });
-      const result = toHaveEmitted(wrapper, "special", "something");
+      const result = toHaveEmitted(wrapper, "special", { value: "something" });
       expect(result.pass).toBe(true);
       expect(result.message()).toBe('The "special" event was emitted with the expected payload');
     });
@@ -94,7 +94,7 @@ describe("toHaveEmitted with payload", () => {
     it("returns false if the another event is emitted", () => {
       const wrapper = shallowMount(Component);
       emitEvent(wrapper, "another", { value: "something" });
-      const result = toHaveEmitted(wrapper, "special", "something");
+      const result = toHaveEmitted(wrapper, "special", { value: "something" });
       expect(result.pass).toBe(false);
       expect(result.message()).toBe('The "special" event was never emitted');
     });

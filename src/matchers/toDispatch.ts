@@ -1,6 +1,8 @@
 import Vue from "vue";
 import { Wrapper } from "@vue/test-utils";
 import diff from "jest-diff";
+import { equals } from "expect/build/jasmineUtils";
+
 import { MatcherResult } from "../utils";
 
 declare global {
@@ -35,7 +37,7 @@ export default function<V extends Vue> (
     unsubscribe = wrapper.vm.$store.subscribeAction((action, _state) => {
       if (!pass && action.type === actionType) {
         if (payload) {
-          if ((this as jest.MatcherUtils).equals(action.payload, payload)) {
+          if (equals(action.payload, payload)) {
             pass = true;
             message = `The function dispatched the "${actionType}" type on Vuex Store`;
           } else {
