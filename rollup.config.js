@@ -35,6 +35,7 @@ export default {
 
   external: [
     "@vue/test-utils",
+    "expect/build/jasmineUtils",
     "jest-diff",
     "jest-util"
   ]
