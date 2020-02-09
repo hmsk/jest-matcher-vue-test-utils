@@ -1,6 +1,8 @@
 import Vue from "vue";
 import { Wrapper } from "@vue/test-utils";
 import diff from "jest-diff";
+import { isPromise } from "jest-util";
+import { equals } from "expect/build/jasmineUtils";
 import { MatcherResult } from "../utils";
 
 declare global {
@@ -21,26 +23,18 @@ declare global {
   }
 }
 
-export default function<V extends Vue> (
-  func: Function,
-  wrapper: Wrapper<V>,
-  eventName: string,
-  ...payloads: any[]
-): MatcherResult {
-  const before = wrapper.emitted()[eventName] ?  wrapper.emitted()[eventName].slice(0) : [];
-  func();
-  const after = wrapper.emitted()[eventName] ?  wrapper.emitted()[eventName].slice(0) : [];
-  const emitted = after.slice(before.length, after.length);
+type EmittedResult = ReturnType<Wrapper<any>['emitted']>;
 
+const processResult = (before: EmittedResult, after: EmittedResult, eventName: string, payloads: any[]): MatcherResult => {
   let pass: boolean;
   let message: () => string;
 
-  if (arguments.length >= 4) {
+  const emitted = after.slice(before.length, after.length);
+
+  if (payloads.length > 0) {
     const matchesToPayload = (event): boolean => {
       return payloads.length === event.length &&
-        payloads.every((payload, index) => {
-          return (this as jest.MatcherUtils).equals(event[index], payload);
-        });
+        payloads.every((payload, index) => equals(event[index], payload));
     };
     pass = emitted.filter(matchesToPayload).length > 0;
     message = pass ?
@@ -54,7 +48,7 @@ export default function<V extends Vue> (
           } :
           () => `The function did not emit the "${eventName}" event`;
   } else {
-    pass = emitted.length > 0
+    pass = emitted.length > 0;
     message = pass ?
       () => `The function emitted the "${eventName}" event` :
       () => `The function did not emit the "${eventName}" event`;
@@ -64,4 +58,29 @@ export default function<V extends Vue> (
     pass,
     message
   };
+}
+
+const currentlyEmitted = (wrapper: Wrapper<Vue>, eventName: string): EmittedResult => {
+  return wrapper.emitted()[eventName] ?  wrapper.emitted()[eventName].slice(0) : [];
+}
+
+export default function<V extends Vue> (
+  action: () => (void | Promise<unknown>),
+  wrapper: Wrapper<V>,
+  eventName: string,
+  ...payloads: any[]
+): MatcherResult | Promise<MatcherResult> {
+  const before = currentlyEmitted(wrapper, eventName);
+  const trigger = action();
+
+  const processResultAfterTrigger = (): MatcherResult => {
+    const after = currentlyEmitted(wrapper, eventName);
+    return processResult(before, after, eventName, payloads);
+  };
+
+  if (isPromise(trigger)) {
+    return trigger.then(processResultAfterTrigger);
+  } else {
+    return processResultAfterTrigger();
+  }
 }

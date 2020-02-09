@@ -6,6 +6,7 @@ import {
 
 import Component from "./fixtures/event.vue";
 import { createLocalVue, shallowMount } from "@vue/test-utils";
+import { MatcherResult } from '@/utils';
 
 expect.extend({
   toEmit,
@@ -16,15 +17,16 @@ config({
   mountOptions: { localVue: createLocalVue() }
 });
 
-const fakeJestContext = (expect: boolean = true) => {
-  return {
-    equals: (a: any, b: any) => expect
-  };
-};
-
 const emitEvent = (wrapper, eventName, payload) => {
   (wrapper.vm as any).emitEventWithPayload(eventName, payload);
 };
+
+const doAsyncronously = (callback: Function): Promise<any> => {
+  return new Promise((resolve) => {
+    callback();
+    resolve();
+  });
+}
 
 describe("toHaveEmitted", () => {
   describe("as a function which is registered to jest", () => {
@@ -77,7 +79,7 @@ describe("toHaveEmitted with payload", () => {
     it("returns true if the event is emitted with the expected payload", () => {
       const wrapper = shallowMount(Component);
       emitEvent(wrapper, "special", { value: "something" });
-      const result = toHaveEmitted.bind(fakeJestContext(true))(wrapper, "special", "something");
+      const result = toHaveEmitted(wrapper, "special", "something");
       expect(result.pass).toBe(true);
       expect(result.message()).toBe('The "special" event was emitted with the expected payload');
     });
@@ -101,7 +103,7 @@ describe("toHaveEmitted with payload", () => {
       const subject = () => {
         const wrapper = shallowMount(Component);
         emitEvent(wrapper, "special", { value: "anything" });
-        return toHaveEmitted.bind(fakeJestContext(false))(wrapper, "special", "some text", { value: "something" });
+        return toHaveEmitted(wrapper, "special", "some text", { value: "something" });
       };
 
       it("returns false", () => {
@@ -178,36 +180,70 @@ describe("toHaveEmitted with payload", () => {
 
 describe("toEmit", () => {
   describe("as a function which is registered to jest", () => {
-    it("returns true if the event is emitted by the function", () => {
-      const wrapper = shallowMount(Component);
-      const result = toEmit(() => wrapper.trigger("click"), wrapper, "special");
-      expect(result.pass).toBe(true);
-      expect(result.message()).toBe('The function emitted the "special" event');
+    describe("returns true if the event is emitted", () => {
+      it("by the synchronous function", () => {
+        const wrapper = shallowMount(Component);
+        const result = toEmit(() => {
+          wrapper.trigger("click");
+        }, wrapper, "special") as MatcherResult;
+        expect(result.pass).toBe(true);
+        expect(result.message()).toBe('The function emitted the "special" event');
+      });
+
+      it("by the asynchronous function", async () => {
+        const wrapper = shallowMount(Component);
+        const result = await toEmit(async () => {
+          return doAsyncronously(() => {
+            wrapper.trigger("click");
+          });
+        }, wrapper, "special");
+        expect(result.pass).toBe(true);
+        expect(result.message()).toBe('The function emitted the "special" event');
+      });
     });
 
-    it("returns false if the event is not emitted by the function", () => {
-      const wrapper = shallowMount(Component);
-      const result = toEmit(() => "nothing to do", wrapper, "special");
-      expect(result.pass).toBe(false);
-      expect(result.message()).toBe('The function did not emit the "special" event');
+    describe("returns false if the event is not emitted", () => {
+      it("by the synchronous function", () => {
+        const wrapper = shallowMount(Component);
+        const result = toEmit(() => { /* nothing to do */ }, wrapper, "special") as MatcherResult;
+        expect(result.pass).toBe(false);
+        expect(result.message()).toBe('The function did not emit the "special" event');
+      });
+
+      it("by the asynchronous function", async () => {
+        const wrapper = shallowMount(Component);
+        const result = await toEmit(async () => "nothing to do", wrapper, "special");
+        expect(result.pass).toBe(false);
+        expect(result.message()).toBe('The function did not emit the "special" event');
+      });
     });
 
-    it("returns false if the event is emitted before the function", () => {
-      const wrapper = shallowMount(Component);
-      wrapper.trigger("click");
-      const result = toEmit(() => "nothing to do", wrapper, "special");
-      expect(result.pass).toBe(false);
-      expect(result.message()).toBe('The function did not emit the "special" event');
+    describe("returns false if the event is emitted before", () => {
+      it("by the synchronous function", () => {
+        const wrapper = shallowMount(Component);
+        wrapper.trigger("click");
+        const result = toEmit(() => { /* "nothing to do" */ }, wrapper, "special") as MatcherResult;
+        expect(result.pass).toBe(false);
+        expect(result.message()).toBe('The function did not emit the "special" event');
+      });
+
+      it("by the asynchrounous function", async () => {
+        const wrapper = shallowMount(Component);
+        wrapper.trigger("click");
+        const result = await toEmit(async () => "nothing to do", wrapper, "special");
+        expect(result.pass).toBe(false);
+        expect(result.message()).toBe('The function did not emit the "special" event');
+      });
     });
 
     describe("with payload", () => {
       describe("when the event is emitted but the payloads is not matched", () => {
         const subject = () => {
           const wrapper = shallowMount(Component);
-          return toEmit.bind(fakeJestContext(false))(() => {
+          return toEmit(() => {
             emitEvent(wrapper, "special", { value: "actual life" });
             emitEvent(wrapper, "special", { value: "actual second life" });
-          }, wrapper, "special", { value: "expected" });
+          }, wrapper, "special", { value: "expected" }) as MatcherResult;
         };
 
         it("returns false", () => {
@@ -233,80 +269,190 @@ describe("toEmit", () => {
   });
 
   describe("actual use", () => {
-    it("passes positively when the expected event is emitted by the function", () => {
-      const wrapper = shallowMount(Component);
-      expect(() => wrapper.trigger("click")).toEmit(wrapper, "special");
+    describe("passes positively when the expected event is emitted by the function", () => {
+      it("synchronously", () => {
+        const wrapper = shallowMount(Component);
+        expect(() => wrapper.trigger("click")).toEmit(wrapper, "special");
+      });
+
+      it("asynchronously", async () => {
+        const wrapper = shallowMount(Component);
+        return expect(async () => wrapper.trigger("click")).toEmit(wrapper, "special");
+      });
     });
 
-    it("passes negatively when the expected event is not emitted by the function", () => {
-      const wrapper = shallowMount(Component);
-      expect(() => "nothing to do").not.toEmit(wrapper, "special");
+    describe("passes negatively when the expected event is not emitted by the function", () => {
+      it("synchronously", () => {
+        const wrapper = shallowMount(Component);
+        expect(() => { /* nothing to do */ }).not.toEmit(wrapper, "special");
+      });
+
+      it("asynchronously", async () => {
+        const wrapper = shallowMount(Component);
+        return expect(async () => "nothing to do").not.toEmit(wrapper, "special");
+      });
     });
 
-    it("passes negatively when the expected event is emitted before the function", () => {
-      const wrapper = shallowMount(Component);
-      wrapper.trigger("click")
-      expect(() => "nothing to do").not.toEmit(wrapper, "special");
+    describe("passes negatively when the expected event is emitted before the function", () => {
+      it("synchronously", () => {
+        const wrapper = shallowMount(Component);
+        wrapper.trigger("click")
+        expect(() => { /* nothing to do */ }).not.toEmit(wrapper, "special");
+      });
+
+      it("asynchronously", async () => {
+        const wrapper = shallowMount(Component);
+        wrapper.trigger("click")
+        return expect(async () => "nothing to do").not.toEmit(wrapper, "special");
+      });
     });
 
     describe("with payload", () => {
-      it("passes positively when the expected event is emitted with the payload by the function", () => {
-        const wrapper = shallowMount(Component);
-        expect(() => {
+      describe("passes positively when the expected event is emitted with the payload by the function", () => {
+        it("synchronously", () => {
+          const wrapper = shallowMount(Component);
+          expect(() => {
+            emitEvent(wrapper, "special", { value: "actual life" });
+          }).toEmit(wrapper, "special", { value: "actual life" });
+        });
+
+        it("asynchronously", async () => {
+          const wrapper = shallowMount(Component);
+          return expect(async () => {
+            return doAsyncronously(() => {
+              emitEvent(wrapper, "special", { value: "actual life" });
+            });
+          }).toEmit(wrapper, "special", { value: "actual life" });
+        });
+      });
+
+      describe("passes positively when the expected event is emitted with the payload by the function after emitted the same event with another payload", () => {
+        it("synchronously", () => {
+          const wrapper = shallowMount(Component);
+          emitEvent(wrapper, "special", { value: "another life" });
+          expect(() => {
+            emitEvent(wrapper, "special", { value: "actual life" });
+          }).toEmit(wrapper, "special", { value: "actual life" });
+        });
+
+        it("asynchronously", async () => {
+          const wrapper = shallowMount(Component);
+          emitEvent(wrapper, "special", { value: "another life" });
+          return expect(async () => {
+            return doAsyncronously(() => {
+              emitEvent(wrapper, "special", { value: "actual life" });
+            });
+          }).toEmit(wrapper, "special", { value: "actual life" });
+        });
+      });
+
+      describe("passes negatively when the expected event is not emitted by the function", () => {
+        it("synchronously", () => {
+          const wrapper = shallowMount(Component);
           emitEvent(wrapper, "special", { value: "actual life" });
-        }).toEmit(wrapper, "special", { value: "actual life" });
-      });
+          expect(() => {
+            // nothing to do
+          }).not.toEmit(wrapper, "special", { value: "actual life" });
+        });
 
-      it("passes positively when the expected event is emitted with the payload by the function after emitted the same event with another payload", () => {
-        const wrapper = shallowMount(Component);
-        emitEvent(wrapper, "special", { value: "another life" });
-        expect(() => {
+        it("asynchronously", async () => {
+          const wrapper = shallowMount(Component);
           emitEvent(wrapper, "special", { value: "actual life" });
-        }).toEmit(wrapper, "special", { value: "actual life" });
+          return expect(async () => {
+            // nothing to do
+          }).not.toEmit(wrapper, "special", { value: "actual life" });
+        });
       });
 
-      it("passes negatively when the expected event is not emitted by the function", () => {
-        const wrapper = shallowMount(Component);
-        emitEvent(wrapper, "special", { value: "actual life" });
-        expect(() => {
-          return "nothing to do";
-        }).not.toEmit(wrapper, "special", { value: "actual life" });
-      });
+      describe("passes negatively when the expected event is emitted by the function, but the payload is not matched", () => {
+        it("synchronously", () => {
+          const wrapper = shallowMount(Component);
+          expect(() => {
+            emitEvent(wrapper, "special", { value: "unintentional life" });
+          }).not.toEmit(wrapper, "special", { value: "actual life" });
+        });
 
-      it("passes negatively when the expected event is emitted by the function, but the payload is not matched", () => {
-        const wrapper = shallowMount(Component);
-        expect(() => {
-          emitEvent(wrapper, "special", { value: "unintentional life" });
-        }).not.toEmit(wrapper, "special", { value: "actual life" });
+        it("asynchronously", async () => {
+          const wrapper = shallowMount(Component);
+          return expect(async () => {
+            return doAsyncronously(() => {
+              emitEvent(wrapper, "special", { value: "unintentional life" });
+            });
+          }).not.toEmit(wrapper, "special", { value: "actual life" });
+        });
       });
 
       describe("multiple payloads", () => {
-        it("passes positively when the expected event is emitted with the multiple payloads by the function", () => {
-          const wrapper = shallowMount(Component);
-          expect(() => {
-            (wrapper.vm as any).emitEventWithMultiplePayload("multi!");
-          }).toEmit(wrapper, "multi!", "a", 5, ["C"]);
+        describe("passes positively when the expected event is emitted with the multiple payloads by the function", () => {
+          it("synchronously", () => {
+            const wrapper = shallowMount(Component);
+            expect(() => {
+              (wrapper.vm as any).emitEventWithMultiplePayload("multi!");
+            }).toEmit(wrapper, "multi!", "a", 5, ["C"]);
+          });
+
+          it("asynchronously", async () => {
+            const wrapper = shallowMount(Component);
+            return expect(async () => {
+              return doAsyncronously(() => {
+                (wrapper.vm as any).emitEventWithMultiplePayload("multi!");
+              })
+            }).toEmit(wrapper, "multi!", "a", 5, ["C"]);
+          });
         });
 
-        it("passes positively for expect helper to assert with 'anything'", () => {
-          const wrapper = shallowMount(Component);
-          expect(() => {
-            (wrapper.vm as any).emitEventWithMultiplePayload("multi!");
-          }).toEmit(wrapper, "multi!", "a", expect.anything(), expect.arrayContaining(["C"]));
+        describe("passes positively for expect helper to assert with 'anything'", () => {
+          it("synchronously", () => {
+            const wrapper = shallowMount(Component);
+            expect(() => {
+              (wrapper.vm as any).emitEventWithMultiplePayload("multi!");
+            }).toEmit(wrapper, "multi!", "a", expect.anything(), expect.arrayContaining(["C"]));
+          });
+
+          it("asynchronously", async () => {
+            const wrapper = shallowMount(Component);
+            return expect(async () => {
+              return doAsyncronously(() => {
+                (wrapper.vm as any).emitEventWithMultiplePayload("multi!");
+              });
+            }).toEmit(wrapper, "multi!", "a", expect.anything(), expect.arrayContaining(["C"]));
+          });
         });
 
-        it("passes negatively when the number of paylod is shorter than actual (even they are matching)", () => {
-          const wrapper = shallowMount(Component);
-          expect(() => {
-            (wrapper.vm as any).emitEventWithMultiplePayload("multi!");
-          }).not.toEmit(wrapper, "multi!", "a", 5);
+        describe("passes negatively when the number of paylod is shorter than actual (even they are matching)", () => {
+          it("synchronously", () => {
+            const wrapper = shallowMount(Component);
+            expect(() => {
+              (wrapper.vm as any).emitEventWithMultiplePayload("multi!");
+            }).not.toEmit(wrapper, "multi!", "a", 5);
+          });
+
+          it("asynchronously", async () => {
+            const wrapper = shallowMount(Component);
+            return expect(async () => {
+              return doAsyncronously(() => {
+                (wrapper.vm as any).emitEventWithMultiplePayload("multi!");
+              });
+            }).not.toEmit(wrapper, "multi!", "a", 5);
+          });
         });
 
-        it("passes negatively when the number of paylod is longer", () => {
-          const wrapper = shallowMount(Component);
-          expect(() => {
-            (wrapper.vm as any).emitEventWithMultiplePayload("multi!");
-          }).not.toEmit(wrapper, "multi!", "a", 5, ["C"], "e");
+        describe("passes negatively when the number of paylod is longer", () => {
+          it("synchronously", () => {
+            const wrapper = shallowMount(Component);
+            expect(() => {
+              (wrapper.vm as any).emitEventWithMultiplePayload("multi!");
+            }).not.toEmit(wrapper, "multi!", "a", 5, ["C"], "e");
+          });
+
+          it("asynchronously", async () => {
+            const wrapper = shallowMount(Component);
+            return expect(async () => {
+              return doAsyncronously(() => {
+                (wrapper.vm as any).emitEventWithMultiplePayload("multi!");
+              });
+            }).not.toEmit(wrapper, "multi!", "a", 5, ["C"], "e");
+          });
         });
       });
     });
