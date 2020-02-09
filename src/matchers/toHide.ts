@@ -13,6 +13,7 @@ declare global {
        * @param findAgrument - The argument for "wrapper.find" to find the specific content or component
        * @example
        * expect(() => somethingResolvesError()).toHide(wrapper, "p.error")
+       * expect(async () => somethingResolvesErrorAsync()).toHide(wrapper, "p.error")
        */
       toHide (wrapper: Wrapper<Vue>, findAgrument: WrapperFindArgument<Vue>): R;
     }

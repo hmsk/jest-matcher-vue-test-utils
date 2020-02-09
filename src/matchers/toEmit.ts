@@ -18,6 +18,7 @@ declare global {
        * expect(() => somethingGreat()).toEmit(wrapper, "greatEvent")
        * expect(() => somethingGreat()).toEmit(wrapper, "greatEvent", "crazyPayload")
        * expect(() => somethingGreat()).toEmit(wrapper, "greatEvent", "crazyPayload", ["more"], "arguments")
+       * expect(async () => somethingGreatAsync()).toEmit(wrapper, "greatEvent", "crazyPayload", ["more"], "arguments")
        */
       toEmit (wrapper: Wrapper<Vue>, eventName: string, ...payloads: any[]): R;
     }
