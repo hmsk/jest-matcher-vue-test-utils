@@ -43,7 +43,7 @@
     "rollup-plugin-commonjs": "10.1.0",
     "rollup-plugin-json": "4.0.0",
     "rollup-plugin-node-resolve": "5.2.0",
-    "rollup-plugin-typescript2": "0.25.3",
+    "rollup-plugin-typescript2": "0.26.0",
     "ts-jest": "25.2.0",
     "typescript": "3.7.5",
     "vue": "2.6.11",
