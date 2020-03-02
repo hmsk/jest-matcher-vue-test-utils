@@ -1,4 +1,5 @@
 import Vue from "vue";
+import { isPromise } from "jest-util";
 import { Wrapper } from "@vue/test-utils";
 import diff from "jest-diff";
 import { equals } from "expect/build/jasmineUtils";
@@ -15,6 +16,7 @@ declare global {
        * @param payload - The payload for the action (optional)
        * @example
        * expect(() => somethingGreat()).toDispatch(wrapper, "namespace/actionType")
+       * expect(async () => somethingGreatAsync()).toDispatch(wrapper, "namespace/actionType")
        */
       toDispatch (wrapper: Wrapper<Vue>, actionType: string, payload?: any): R;
     }
@@ -22,11 +24,11 @@ declare global {
 }
 
 export default function<V extends Vue> (
-  fun: Function,
+  action: () => (void | Promise<unknown>),
   wrapper: Wrapper<V>,
   actionType: string,
   payload?: any
-): MatcherResult {
+): MatcherResult | Promise<MatcherResult> {
   let pass: boolean = false;
   let message: string = `The function never dispatched the "${actionType}" type on Vuex Store`;
   let unsubscribe = () => {};
@@ -52,11 +54,21 @@ export default function<V extends Vue> (
     });
   }
 
-  fun();
-  unsubscribe();
+  const trigger = action();
 
-  return {
-    pass,
-    message: () => message
-  };
+  if (isPromise(trigger)) {
+    return trigger.then(() => {
+      unsubscribe();
+      return {
+        pass,
+        message: () => message
+      };
+    });
+  } else {
+    unsubscribe();
+    return {
+      pass,
+      message: () => message
+    };
+  }
 }
