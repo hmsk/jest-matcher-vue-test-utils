@@ -244,12 +244,23 @@ module.exports = {
 import Component from "./click-store.vue";
 
 it("Dispatches the action on store by click", () => {
-  const wrapper = shallowMount(Component)  expect(() => {
+  const wrapper = shallowMount(Component);
+  expect(() => {
     wrapper.trigger("click");
   }).toDispatch(wrapper, "awesomeAction"); // Passes
 
   expect(() => {
     wrapper.trigger("click");
+  }).toDispatch(wrapper, "awesomeAction", 'click'); // Passes
+});
+```
+
+Async function is supported as well.
+
+```js
+it("dispatches the action on store by click", async () => {
+  return expect(async () => {
+    dispatchEventAsynchronosly();
   }).toDispatch(wrapper, "awesomeAction", 'click'); // Passes
 });
 ```
