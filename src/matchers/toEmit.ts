@@ -31,7 +31,9 @@ const processResult = (before: EmittedResult, after: EmittedResult, eventName: s
   let pass: boolean;
   let message: () => string;
 
-  const emitted = after.slice(before.length, after.length);
+  const beforeLength = before?.length ?? 0;
+  const afterLength = after?.length ?? 0;
+  const emitted = after?.slice(beforeLength, afterLength) ?? [];
 
   if (payloads.length > 0) {
     const matchesToPayload = (event): boolean => {
@@ -63,7 +65,7 @@ const processResult = (before: EmittedResult, after: EmittedResult, eventName: s
 }
 
 const currentlyEmitted = (wrapper: Wrapper<Vue>, eventName: string): EmittedResult => {
-  return wrapper.emitted()[eventName] ?  wrapper.emitted()[eventName].slice(0) : [];
+  return wrapper.emitted()[eventName]?.slice(0) ?? [];
 }
 
 export default function<V extends Vue> (
