@@ -8,7 +8,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "rollup -c",
+    "build": "rollup -c rollup.config.ts",
     "test": "jest",
     "test:watch": "jest --watch -o",
     "pretest": "rm -rf dist/ && npm run build"
