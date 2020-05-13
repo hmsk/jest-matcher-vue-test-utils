@@ -39,7 +39,7 @@
     "babel-core": "7.0.0-bridge.0",
     "jest": "25.5.4",
     "jest-util": "25.5.0",
-    "rollup": "2.7.6",
+    "rollup": "2.10.0",
     "rollup-plugin-cleanup": "3.1.1",
     "rollup-plugin-commonjs": "10.1.0",
     "rollup-plugin-json": "4.0.0",
