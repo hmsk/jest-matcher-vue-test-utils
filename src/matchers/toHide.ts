@@ -2,7 +2,7 @@ import Vue from "vue";
 import { Wrapper, Selector } from "@vue/test-utils";
 import { isPromise } from "jest-util";
 
-import { MatcherResult, VueTestUtilsFindArgument } from "../utils";
+import { MatcherResult, VueTestUtilsFindArgument, findOrFindComponent } from "../utils";
 
 declare global {
   namespace jest {
@@ -41,17 +41,15 @@ const processResult = (before: boolean, after: boolean): MatcherResult => {
   }
 };
 
-export default function<V extends Vue | null> (
+export default function<V extends Vue> (
   action: () => void | Promise<unknown>,
   wrapper: Wrapper<V>,
   findArgument: VueTestUtilsFindArgument,
 ): MatcherResult | Promise<MatcherResult> {
-  // @ts-ignore: The typedef on @vue/test-utils is wrong
-  const before = wrapper.find(findArgument).exists();
+  const before = findOrFindComponent(wrapper, findArgument).exists();
 
   const processResultAfterTrigger = (): MatcherResult => {
-    // @ts-ignore: The typedef on @vue/test-utils is wrong
-    return processResult(before, wrapper.find(findArgument).exists());
+    return processResult(before, findOrFindComponent(wrapper, findArgument).exists());
   };
 
   const trigger = action();
