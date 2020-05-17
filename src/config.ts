@@ -11,7 +11,7 @@ export let configuration: MatcherDynamicConfig<Vue> = {
   mountOptions: {}
 };
 
-export function setConfig <V extends Vue>(overwrite: MatcherDynamicConfig<V>) {
+export function setConfig (overwrite: MatcherDynamicConfig<Vue>) {
   configuration = overwriteConfiguration(overwrite);
 };
 
