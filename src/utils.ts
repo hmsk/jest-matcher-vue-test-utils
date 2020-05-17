@@ -1,10 +1,11 @@
 import Vue, { ComponentOptions, FunctionalComponentOptions } from "vue";
-import { shallowMount, VueClass, NameSelector, ThisTypedShallowMountOptions, ShallowMountOptions } from "@vue/test-utils";
+import { shallowMount, VueClass, ThisTypedShallowMountOptions, ShallowMountOptions, Selector, NameSelector, RefSelector } from "@vue/test-utils";
 import { overwriteConfiguration, getConfiguration } from "./config";
 
 export declare type MatcherComponent<V extends Vue> = VueClass<V> | ComponentOptions<V> | FunctionalComponentOptions;
 export declare type MatcherComponentOptions<V extends Vue> = ThisTypedShallowMountOptions<V> | ShallowMountOptions<Vue>;
-export declare type WrapperFindArgument<V extends Vue> = string | NameSelector | FunctionalComponentOptions | VueClass<import("vue").default> | MatcherComponentOptions<V>;
+
+export declare type VueTestUtilsFindArgument = Selector | NameSelector | RefSelector;
 
 export type MatcherResult = { message (): string, pass: boolean };
 

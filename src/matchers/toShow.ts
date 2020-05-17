@@ -2,7 +2,7 @@ import Vue from "vue";
 import { Wrapper } from "@vue/test-utils";
 import { isPromise } from "jest-util";
 
-import { MatcherResult, WrapperFindArgument } from "../utils";
+import { MatcherResult, VueTestUtilsFindArgument } from "../utils";
 
 declare global {
   namespace jest {
@@ -15,7 +15,7 @@ declare global {
        * expect(() => somethingMakesError()).toShow(wrapper, "p.error")
        * expect(async () => somethingMakesErrorAsync()).toShow(wrapper, "p.error")
        */
-      toShow (wrapper: Wrapper<Vue>, findArgument: WrapperFindArgument<Vue>): R;
+      toShow (wrapper: Wrapper<Vue>, findArgument: VueTestUtilsFindArgument): R;
     }
   }
 }
@@ -44,12 +44,14 @@ const processResult = (before: boolean, after: boolean): MatcherResult => {
 export default function<V extends Vue> (
   action: () => void | Promise<unknown>,
   wrapper: Wrapper<V>,
-  findArgument: WrapperFindArgument<V>
+  findArgument: VueTestUtilsFindArgument
 ): MatcherResult | Promise<MatcherResult> {
-  const before = wrapper.contains(findArgument);
+  // @ts-ignore: The typedef on @vue/test-utils is wrong
+  const before = wrapper.find(findArgument).exists();
 
   const processResultAfterTrigger = (): MatcherResult => {
-    return processResult(before, wrapper.contains(findArgument));
+    // @ts-ignore: The typedef on @vue/test-utils is wrong
+    return processResult(before, wrapper.find(findArgument).exists());
   };
 
   const trigger = action();
