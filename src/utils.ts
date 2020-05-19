@@ -1,11 +1,15 @@
 import Vue, { ComponentOptions, FunctionalComponentOptions } from "vue";
-import { shallowMount, VueClass, ThisTypedShallowMountOptions, ShallowMountOptions, Selector, NameSelector, RefSelector, Wrapper } from "@vue/test-utils";
+import { DefaultProps, PropsDefinition } from 'vue/types/options'
+import { shallowMount, VueClass, ThisTypedShallowMountOptions, ShallowMountOptions, NameSelector, RefSelector, Wrapper } from "@vue/test-utils";
 import { overwriteConfiguration, getConfiguration } from "./config";
 
 export declare type MatcherComponent<V extends Vue> = VueClass<V> | ComponentOptions<V> | FunctionalComponentOptions;
 export declare type MatcherComponentOptions<V extends Vue> = ThisTypedShallowMountOptions<V> | ShallowMountOptions<Vue>;
 
-export declare type VueTestUtilsFindArgument = Selector | NameSelector | RefSelector;
+export declare type WrapperFindArgument<R, S = never> =
+  R extends Vue ?
+    ComponentOptions<R> | VueClass<R> :
+    string | NameSelector | RefSelector | FunctionalComponentOptions<R, S>;
 
 export type MatcherResult = { message (): string, pass: boolean };
 
@@ -43,8 +47,31 @@ export const corkComponent = <V extends Vue> (
   } as ComponentOptions<V>; // mixins is not compatible actually since that expects ComponentOptions<Vue> unintentionally
 };
 
-export const findOrFindComponent = <V extends Vue>(wrapper: Wrapper<V>,findArgument: VueTestUtilsFindArgument) => {
-  // RefSelector, NameSelector should use `find` probably, but @vue/test-utils expect `findComponent` as its implementation
-  // @ts-ignore: The typedef on @vue/test-utils is wrong, index.d.ts doesn't catch up its actual implementations
-  return typeof findArgument !== 'string' ? wrapper.findComponent(findArgument) : wrapper.find(findArgument);
+const isFunctionalComponentOptions = <X extends {}> (obj: X): obj is X & Record<"functional", boolean> => {
+  return obj.hasOwnProperty("functional");
+};
+
+const isNameSelector = <X extends {}> (obj: X): obj is X & NameSelector => {
+  return Object.keys(obj).length == 1 && obj.hasOwnProperty("name");
+};
+
+const isRefSelector = <X extends {}> (obj: X): obj is X & RefSelector => {
+  return Object.keys(obj).length == 1 && obj.hasOwnProperty("ref");
+};
+
+export function findOrFindComponent  <V extends Vue, R = DefaultProps, S = PropsDefinition<DefaultProps>> (wrapper: Wrapper<V>, findArgument: WrapperFindArgument<R, S>): Wrapper<Vue>;
+export function findOrFindComponent  <V extends Vue, R extends Vue, S = never> (wrapper: Wrapper<V>, findArgument: WrapperFindArgument<R, S>): Wrapper<R>;
+export function findOrFindComponent  <V extends Vue, R = never, S = never> (wrapper: Wrapper<V>, findArgument: WrapperFindArgument<R, S>): Wrapper<Vue> {
+  if (typeof findArgument === 'string') {
+    return wrapper.find(findArgument);
+ } else if (isRefSelector(findArgument)) {
+    return wrapper.find(findArgument);
+  } else if (isNameSelector(findArgument)) {
+    return wrapper.find(findArgument);
+  } else if (isFunctionalComponentOptions(findArgument)) {
+    return wrapper.findComponent<R, S>(findArgument);
+  } else {
+    // @ts-ignore
+    return wrapper.findComponent<R>(findArgument);
+  }
 }
