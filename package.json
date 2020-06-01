@@ -35,7 +35,7 @@
   },
   "devDependencies": {
     "@types/jest": "25.2.3",
-    "@vue/test-utils": "1.0.0-beta.33",
+    "@vue/test-utils": "1.0.3",
     "babel-core": "7.0.0-bridge.0",
     "jest": "26.0.1",
     "jest-util": "26.0.1",
@@ -50,7 +50,7 @@
     "vue": "2.6.11",
     "vue-jest": "3.0.5",
     "vue-template-compiler": "2.6.11",
-    "vuex": "3.3.0"
+    "vuex": "3.4.0"
   },
   "peerDependencies": {
     "@vue/test-utils": "^1.0.0-beta.20",

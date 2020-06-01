@@ -1,8 +1,9 @@
 import Vue from "vue";
+import { DefaultProps, PropsDefinition } from 'vue/types/options';
 import { Wrapper } from "@vue/test-utils";
 import { isPromise } from "jest-util";
 
-import { MatcherResult, WrapperFindArgument } from "../utils";
+import { MatcherResult, WrapperFindArgument, findOrFindComponent } from "../utils";
 
 declare global {
   namespace jest {
@@ -15,7 +16,7 @@ declare global {
        * expect(() => somethingMakesError()).toShow(wrapper, "p.error")
        * expect(async () => somethingMakesErrorAsync()).toShow(wrapper, "p.error")
        */
-      toShow (wrapper: Wrapper<Vue>, findArgument: WrapperFindArgument<Vue>): R;
+      toShow (wrapper: Wrapper<Vue>, findArgument: WrapperFindArgument<Vue | null>): R;
     }
   }
 }
@@ -41,15 +42,15 @@ const processResult = (before: boolean, after: boolean): MatcherResult => {
   }
 };
 
-export default function<V extends Vue> (
+export default function<V extends Vue, R extends Vue | DefaultProps | never, S extends PropsDefinition<DefaultProps> | never> (
   action: () => void | Promise<unknown>,
   wrapper: Wrapper<V>,
-  findArgument: WrapperFindArgument<V>
+  findArgument: WrapperFindArgument<R, S>
 ): MatcherResult | Promise<MatcherResult> {
-  const before = wrapper.contains(findArgument);
+  const before = findOrFindComponent(wrapper, findArgument).exists();
 
   const processResultAfterTrigger = (): MatcherResult => {
-    return processResult(before, wrapper.contains(findArgument));
+    return processResult(before, findOrFindComponent(wrapper, findArgument).exists());
   };
 
   const trigger = action();

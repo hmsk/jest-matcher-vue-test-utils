@@ -46,7 +46,7 @@ describe("toDispatch", () => {
     describe("returns true if the action type is dispatched by the function", () => {
       it("by the synchronous function", () => {
         const wrapper = mountComponent();
-        const result = toDispatch(() => wrapper.trigger("click"), wrapper, "awesomeAction") as MatcherResult;
+        const result = toDispatch(() => { wrapper.trigger("click") }, wrapper, "awesomeAction") as MatcherResult;
         expect(result.pass).toBe(true);
         expect(result.message()).toBe('The function dispatched the "awesomeAction" type on Vuex Store');
       });
@@ -66,7 +66,7 @@ describe("toDispatch", () => {
     describe("returns false if the action type is not dispatched by the function", () => {
       it("by the synchronous function", () => {
         const wrapper = mountComponent();
-        const result = toDispatch(() => wrapper.trigger("click"), wrapper, "notAwesomeAction") as MatcherResult;
+        const result = toDispatch(() => { wrapper.trigger("click") }, wrapper, "notAwesomeAction") as MatcherResult;
         expect(result.pass).toBe(false);
         expect(result.message()).toBe('The function never dispatched the "notAwesomeAction" type on Vuex Store');
       });
@@ -180,24 +180,24 @@ describe("toDispatch", () => {
     describe("passes positively when the expected action type is dispatched by the function", () => {
       it("by the synchronous function", () => {
         const wrapper = mountComponent();
-        expect(() => wrapper.trigger("click")).toDispatch(wrapper, "awesomeAction");
+        expect(() => { wrapper.trigger("click") }).toDispatch(wrapper, "awesomeAction");
       });
 
       it("by the asynchronous function", async () => {
         const wrapper = mountComponent();
-        return expect(async () => wrapper.trigger("click")).toDispatch(wrapper, "awesomeAction");
+        return expect(async () => { wrapper.trigger("click") }).toDispatch(wrapper, "awesomeAction");
       });
     });
 
     describe("passes negatively when the expected action type is dispatched by the function", () => {
       it("by the synchronous function", () => {
         const wrapper = mountComponent();
-        expect(() => wrapper.trigger("click")).not.toDispatch(wrapper, "notAwesomeAction");
+        expect(() => { wrapper.trigger("click") }).not.toDispatch(wrapper, "notAwesomeAction");
       });
 
       it("by the asynchronous function", async () => {
         const wrapper = mountComponent();
-        return expect(async () => wrapper.trigger("click")).not.toDispatch(wrapper, "notAwesomeAction");
+        return expect(async () => { wrapper.trigger("click") }).not.toDispatch(wrapper, "notAwesomeAction");
       });
     });
 
