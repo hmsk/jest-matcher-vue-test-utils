@@ -34,7 +34,7 @@
     "jest-diff": ">=23.0"
   },
   "devDependencies": {
-    "@types/jest": "26.0.3",
+    "@types/jest": "26.0.5",
     "@vue/test-utils": "1.0.3",
     "babel-core": "7.0.0-bridge.0",
     "jest": "26.1.0",
