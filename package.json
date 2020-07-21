@@ -48,9 +48,9 @@
     "ts-jest": "26.1.1",
     "typescript": "3.9.7",
     "vue": "2.6.11",
-    "vue-jest": "3.0.5",
+    "vue-jest": "3.0.6",
     "vue-template-compiler": "2.6.11",
-    "vuex": "3.4.0"
+    "vuex": "3.5.1"
   },
   "peerDependencies": {
     "@vue/test-utils": "^1.0.0-beta.20",
