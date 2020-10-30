@@ -5,6 +5,7 @@ import toShow from "./matchers/toShow";
 import toHide from "./matchers/toHide";
 import toEmit from "./matchers/toEmit";
 import toHaveEmitted from "./matchers/toHaveEmitted";
+import toHaveEmittedOnRoot from "./matchers/toHaveEmittedOnRoot";
 import toDispatch from "./matchers/toDispatch";
 import toHaveDispatched from "./matchers/toHaveDispatched";
 import toRequireProp from "./matchers/toRequireProp";
@@ -19,6 +20,7 @@ const matchers = {
   toHide,
   toEmit,
   toHaveEmitted,
+  toHaveEmittedOnRoot,
   toDispatch,
   toHaveDispatched,
   toBeValidProp,
@@ -34,6 +36,7 @@ export {
   toHide,
   toEmit,
   toHaveEmitted,
+  toHaveEmittedOnRoot,
   toDispatch,
   toHaveDispatched,
   toBeValidProp,

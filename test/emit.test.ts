@@ -1,7 +1,8 @@
 import {
   config,
   toEmit,
-  toHaveEmitted
+  toHaveEmitted,
+  toHaveEmittedOnRoot
 } from "@/index";
 
 import Component from "./fixtures/event.vue";
@@ -10,7 +11,8 @@ import { MatcherResult } from '@/utils';
 
 expect.extend({
   toEmit,
-  toHaveEmitted
+  toHaveEmitted,
+  toHaveEmittedOnRoot
 });
 
 config({
@@ -19,6 +21,10 @@ config({
 
 const emitEvent = (wrapper, eventName, payload) => {
   (wrapper.vm as any).emitEventWithPayload(eventName, payload);
+};
+
+const emitEventOnRoot = (wrapper, eventName, payload) => {
+  (wrapper.vm as any).emitEventOnRootWithPayload(eventName, payload);
 };
 
 const doAsyncronously = (callback: Function): Promise<any> => {
@@ -173,6 +179,156 @@ describe("toHaveEmitted with payload", () => {
         const wrapper = shallowMount(Component);
         (wrapper.vm as any).emitEventWithMultiplePayload("multi!");
         expect(wrapper).not.toHaveEmitted("multi!", "a", 5, ["C"], "e");
+      });
+    });
+  });
+});
+
+describe("toHaveEmittedOnRoot", () => {
+  describe("as a function which is registered to jest", () => {
+    it("returns true if the event is emitted on $root", () => {
+      const wrapper = shallowMount(Component);
+      wrapper.trigger("blur");
+      const result = toHaveEmittedOnRoot(wrapper, "blured");
+      expect(result.pass).toBe(true);
+      expect(result.message()).toBe('The "blured" event was emitted on $root');
+    });
+
+    it("returns false if the event is not emitted on $root", () => {
+      const wrapper = shallowMount(Component);
+      const result = toHaveEmittedOnRoot(wrapper, "blured");
+      expect(result.pass).toBe(false);
+      expect(result.message()).toBe('The "blured" event was never emitted on $root');
+    });
+
+    it("returns false if the another event is emitted on $root", () => {
+      const wrapper = shallowMount(Component);
+      wrapper.vm.$root.$emit("another");
+      const result = toHaveEmittedOnRoot(wrapper, "blured");
+      expect(result.pass).toBe(false);
+      expect(result.message()).toBe('The "blured" event was never emitted on $root');
+    });
+  });
+
+  describe("actual use", () => {
+    it("doesn't claim for positive expectation when expected event happens", () => {
+      const wrapper = shallowMount(Component);
+      wrapper.trigger("blur");
+      expect(wrapper).toHaveEmittedOnRoot("blured");
+    });
+
+    it("doesn't claim for negative expectation when expected event doesn't happen", () => {
+      const wrapper = shallowMount(Component);
+      expect(wrapper).not.toHaveEmittedOnRoot("blured");
+    });
+
+    it("doesn't claim for negative expectation when unintentional event happens", () => {
+      const wrapper = shallowMount(Component);
+      wrapper.vm.$root.$emit("another");
+      expect(wrapper).not.toHaveEmittedOnRoot("blured");
+    });
+  });
+});
+
+describe("toHaveEmittedOnRoot with payload", () => {
+  describe("as a function which is registered to jest", () => {
+    it("returns true if the event is emitted with the expected payload", () => {
+      const wrapper = shallowMount(Component);
+      emitEventOnRoot(wrapper, "rooty", { value: "something" });
+      const result = toHaveEmittedOnRoot(wrapper, "rooty", { value: "something" });
+      expect(result.pass).toBe(true);
+      expect(result.message()).toBe('The "rooty" event was emitted on $root with the expected payload');
+    });
+
+    it("returns false if the event is not emitted", () => {
+      const wrapper = shallowMount(Component);
+      const result = toHaveEmittedOnRoot(wrapper, "rooty", "something");
+      expect(result.pass).toBe(false);
+      expect(result.message()).toBe('The "rooty" event was never emitted on $root');
+    });
+
+    it("returns false if the another event is emitted", () => {
+      const wrapper = shallowMount(Component);
+      emitEventOnRoot(wrapper, "another", { value: "something" });
+      const result = toHaveEmittedOnRoot(wrapper, "rooty", { value: "something" });
+      expect(result.pass).toBe(false);
+      expect(result.message()).toBe('The "rooty" event was never emitted on $root');
+    });
+
+    describe("when the event is emitted but the payload is not matched", () => {
+      const subject = () => {
+        const wrapper = shallowMount(Component);
+        emitEventOnRoot(wrapper, "rooty", { value: "anything" });
+        return toHaveEmittedOnRoot(wrapper, "rooty", "some text", { value: "something" });
+      };
+
+      it("returns false", () => {
+        expect(subject().pass).toBe(false);
+      });
+
+      it("tells the reason", () => {
+        expect(subject().message()).toContain('The "rooty" event was emitted on $root but the payload is not matched');
+      });
+
+      it("shows the diff of payloads", () => {
+        const message = subject().message();
+        expect(message).toContain("'rooty' event #0 payloads:");
+        expect(message).toContain("- Expected");
+        expect(message).toContain("+ Emitted");
+        expect(message).toContain('-   "some text"');
+        expect(message).toContain('-     "value": "something"');
+        expect(message).toContain('+     "value": "anything"');
+      });
+    });
+  });
+
+  describe("actual use", () => {
+    it("passes for expected case positively", () => {
+      const wrapper = shallowMount(Component);
+      emitEventOnRoot(wrapper, "rooty", { value: "actual life" });
+      expect(wrapper).toHaveEmittedOnRoot("rooty", { value: "actual life" });
+    });
+
+    it("passes negatively when any event was not emitted", () => {
+      const wrapper = shallowMount(Component);
+      expect(wrapper).not.toHaveEmittedOnRoot("rooty", { value: "unusual life" });
+    });
+
+    it("passes negatively when unintentional event was emitted", () => {
+      const wrapper = shallowMount(Component);
+      emitEventOnRoot(wrapper, "another", { value: "actual life" });
+      expect(wrapper).not.toHaveEmittedOnRoot("rooty", { value: "unusual life" });
+    });
+
+    it("passes negatively when the expected event is emitted but the payload is not matched", () => {
+      const wrapper = shallowMount(Component);
+      emitEventOnRoot(wrapper, "rooty", { value: "actual life" });
+      expect(wrapper).not.toHaveEmitted("rooty", { value: "exciting life" });
+    });
+
+    describe("multiple payloads", () => {
+      it("passes positively when the expected event is emitted with the multiple payloads by the function", () => {
+        const wrapper = shallowMount(Component);
+        (wrapper.vm as any).emitEventOnRootWithMultiplePayload("multiOnRoot!");
+        expect(wrapper).toHaveEmittedOnRoot("multiOnRoot!", ["D"], 3, "e");
+      });
+
+      it("passes positively for expect helper to assert with 'anything'", () => {
+        const wrapper = shallowMount(Component);
+        (wrapper.vm as any).emitEventOnRootWithMultiplePayload("multiOnRoot!!");
+        expect(wrapper).toHaveEmittedOnRoot("multiOnRoot!!", expect.arrayContaining(["D"]), expect.anything(), "e");
+      });
+
+      it("passes negatively when the number of paylod is shorter than actual (even they are matching)", () => {
+        const wrapper = shallowMount(Component);
+        (wrapper.vm as any).emitEventOnRootWithMultiplePayload("multiOnRoot!");
+        expect(wrapper).not.toHaveEmittedOnRoot("multiOnRoot!", ["D"], 3);
+      });
+
+      it("passes negatively when the number of paylod is longer", () => {
+        const wrapper = shallowMount(Component);
+        (wrapper.vm as any).emitEventOnRootWithMultiplePayload("multiOnRoot!");
+        expect(wrapper).not.toHaveEmittedOnRoot("multiOnRoot!", ["D"], 3, "e", "additional");
       });
     });
   });
