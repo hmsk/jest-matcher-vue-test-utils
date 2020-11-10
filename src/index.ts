@@ -3,7 +3,7 @@ export { default as vuexPlugin } from "./vuex-plugin";
 
 import toShow from "./matchers/toShow";
 import toHide from "./matchers/toHide";
-import toEmit from "./matchers/toEmit";
+import { toEmit } from "./matchers/toEmit";
 import toHaveEmitted from "./matchers/toHaveEmitted";
 import toHaveEmittedOnRoot from "./matchers/toHaveEmittedOnRoot";
 import toDispatch from "./matchers/toDispatch";

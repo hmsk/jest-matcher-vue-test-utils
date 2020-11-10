@@ -68,7 +68,7 @@ const currentlyEmitted = (wrapper: Wrapper<Vue>, eventName: string): EmittedResu
   return wrapper.emitted()[eventName]?.slice(0) ?? [];
 }
 
-export default function<V extends Vue> (
+export function toEmit <V extends Vue> (
   action: () => (void | Promise<unknown>),
   wrapper: Wrapper<V>,
   eventName: string,
