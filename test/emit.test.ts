@@ -1,6 +1,7 @@
 import {
   config,
   toEmit,
+  toEmitOnRoot,
   toHaveEmitted,
   toHaveEmittedOnRoot
 } from "@/index";
@@ -11,6 +12,7 @@ import { MatcherResult } from '@/utils';
 
 expect.extend({
   toEmit,
+  toEmitOnRoot,
   toHaveEmitted,
   toHaveEmittedOnRoot
 });
@@ -608,6 +610,287 @@ describe("toEmit", () => {
                 (wrapper.vm as any).emitEventWithMultiplePayload("multi!");
               });
             }).not.toEmit(wrapper, "multi!", "a", 5, ["C"], "e");
+          });
+        });
+      });
+    });
+  });
+});
+
+describe("toEmitOnRoot", () => {
+  describe("as a function which is registered to jest", () => {
+    describe("returns true if the event is emitted", () => {
+      it("by the synchronous function", () => {
+        const wrapper = shallowMount(Component);
+        const result = toEmitOnRoot(() => {
+          wrapper.trigger("blur");
+        }, wrapper, "blured") as MatcherResult;
+        expect(result.pass).toBe(true);
+        expect(result.message()).toBe('The function emitted the "blured" event on $root');
+      });
+
+      it("by the asynchronous function", async () => {
+        const wrapper = shallowMount(Component);
+        const result = await toEmitOnRoot(async () => {
+          return doAsyncronously(() => {
+            wrapper.trigger("blur");
+          });
+        }, wrapper, "blured");
+        expect(result.pass).toBe(true);
+        expect(result.message()).toBe('The function emitted the "blured" event on $root');
+      });
+    });
+
+    describe("returns false if the event is not emitted", () => {
+      it("by the synchronous function", () => {
+        const wrapper = shallowMount(Component);
+        const result = toEmitOnRoot(() => { /* nothing to do */ }, wrapper, "blured") as MatcherResult;
+        expect(result.pass).toBe(false);
+        expect(result.message()).toBe('The function did not emit the "blured" event on $root');
+      });
+
+      it("by the asynchronous function", async () => {
+        const wrapper = shallowMount(Component);
+        const result = await toEmitOnRoot(async () => "nothing to do", wrapper, "blured");
+        expect(result.pass).toBe(false);
+        expect(result.message()).toBe('The function did not emit the "blured" event on $root');
+      });
+    });
+
+    describe("returns false if the event is emitted before", () => {
+      it("by the synchronous function", () => {
+        const wrapper = shallowMount(Component);
+        wrapper.trigger("blur");
+        const result = toEmitOnRoot(() => { /* "nothing to do" */ }, wrapper, "blured") as MatcherResult;
+        expect(result.pass).toBe(false);
+        expect(result.message()).toBe('The function did not emit the "blured" event on $root');
+      });
+
+      it("by the asynchrounous function", async () => {
+        const wrapper = shallowMount(Component);
+        wrapper.trigger("blur");
+        const result = await toEmitOnRoot(async () => "nothing to do", wrapper, "blured");
+        expect(result.pass).toBe(false);
+        expect(result.message()).toBe('The function did not emit the "blured" event on $root');
+      });
+    });
+
+    describe("with payload", () => {
+      describe("when the event is emitted but the payloads is not matched", () => {
+        const subject = () => {
+          const wrapper = shallowMount(Component);
+          return toEmitOnRoot(() => {
+            emitEventOnRoot(wrapper, "rooty", { value: "something" });
+            emitEventOnRoot(wrapper, "rooty", { value: "another something" });
+          }, wrapper, "rooty", { value: "expected" }) as MatcherResult;
+        };
+
+        it("returns false", () => {
+          expect(subject().pass).toBe(false);
+        });
+
+        it("tells the reason", () => {
+          expect(subject().message()).toContain('The function emitted the \"rooty\" event on $root, but the payload is not matched');
+        });
+
+        it("shows the diff of payloads", () => {
+          const message = subject().message();
+          expect(message).toContain("'rooty' event #0 payloads:");
+          expect(message).toContain('+     "value": "something"');
+          expect(message).toContain("'rooty' event #1 payloads:");
+          expect(message).toContain('+     "value": "another something"');
+          expect(message.match(/- Expected/g)).toHaveLength(2);
+          expect(message.match(/\+ Emitted/g)).toHaveLength(2);
+          expect(message.match(/-     "value": "expected"/g)).toHaveLength(2);
+        });
+      });
+    });
+  });
+
+  describe("actual use", () => {
+    describe("passes positively when the expected event is emitted by the function", () => {
+      it("synchronously", () => {
+        const wrapper = shallowMount(Component);
+        expect(() => wrapper.trigger("blur")).toEmitOnRoot(wrapper, "blured");
+      });
+
+      it("asynchronously", async () => {
+        const wrapper = shallowMount(Component);
+        return expect(async () => wrapper.trigger("blur")).toEmitOnRoot(wrapper, "blured");
+      });
+    });
+
+    describe("passes negatively when the expected event is not emitted by the function", () => {
+      it("synchronously", () => {
+        const wrapper = shallowMount(Component);
+        expect(() => { /* nothing to do */ }).not.toEmitOnRoot(wrapper, "blured");
+      });
+
+      it("asynchronously", async () => {
+        const wrapper = shallowMount(Component);
+        return expect(async () => "nothing to do").not.toEmitOnRoot(wrapper, "blured");
+      });
+    });
+
+    describe("passes negatively when the expected event is emitted before the function", () => {
+      it("synchronously", () => {
+        const wrapper = shallowMount(Component);
+        wrapper.trigger("blur")
+        expect(() => { /* nothing to do */ }).not.toEmitOnRoot(wrapper, "blured");
+      });
+
+      it("asynchronously", async () => {
+        const wrapper = shallowMount(Component);
+        wrapper.trigger("blur")
+        return expect(async () => "nothing to do").not.toEmitOnRoot(wrapper, "blured");
+      });
+    });
+
+    describe("with payload", () => {
+      describe("passes positively when the expected event is emitted with the payload by the function", () => {
+        it("synchronously", () => {
+          const wrapper = shallowMount(Component);
+          expect(() => {
+            emitEventOnRoot(wrapper, "rooty", { value: "something" });
+          }).toEmitOnRoot(wrapper, "rooty", { value: "something" });
+        });
+
+        it("asynchronously", async () => {
+          const wrapper = shallowMount(Component);
+          return expect(async () => {
+            return doAsyncronously(() => {
+              emitEventOnRoot(wrapper, "rooty", { value: "something" });
+            });
+          }).toEmitOnRoot(wrapper, "rooty", { value: "something" });
+        });
+      });
+
+      describe("passes positively when the expected event is emitted with the payload by the function after emitted the same event with another payload", () => {
+        it("synchronously", () => {
+          const wrapper = shallowMount(Component);
+          emitEventOnRoot(wrapper, "rooty", { value: "something" });
+          expect(() => {
+            emitEventOnRoot(wrapper, "rooty", { value: "something" });
+          }).toEmitOnRoot(wrapper, "rooty", { value: "something" });
+        });
+
+        it("asynchronously", async () => {
+          const wrapper = shallowMount(Component);
+          emitEventOnRoot(wrapper, "rooty", { value: "something" });
+          return expect(async () => {
+            return doAsyncronously(() => {
+              emitEventOnRoot(wrapper, "rooty", { value: "something" });
+            });
+          }).toEmitOnRoot(wrapper, "rooty", { value: "something" });
+        });
+      });
+
+      describe("passes negatively when the expected event is not emitted by the function", () => {
+        it("synchronously", () => {
+          const wrapper = shallowMount(Component);
+          emitEventOnRoot(wrapper, "rooty", { value: "something" });
+          expect(() => {
+            // nothing to do
+          }).not.toEmitOnRoot(wrapper, "rooty", { value: "something" });
+        });
+
+        it("asynchronously", async () => {
+          const wrapper = shallowMount(Component);
+          emitEventOnRoot(wrapper, "rooty", { value: "something" });
+          return expect(async () => {
+            // nothing to do
+          }).not.toEmitOnRoot(wrapper, "rooty", { value: "something" });
+        });
+      });
+
+      describe("passes negatively when the expected event is emitted by the function, but the payload is not matched", () => {
+        it("synchronously", () => {
+          const wrapper = shallowMount(Component);
+          expect(() => {
+            emitEventOnRoot(wrapper, "rooty", { value: "another something" });
+          }).not.toEmitOnRoot(wrapper, "rooty", { value: "something" });
+        });
+
+        it("asynchronously", async () => {
+          const wrapper = shallowMount(Component);
+          return expect(async () => {
+            return doAsyncronously(() => {
+              emitEventOnRoot(wrapper, "rooty", { value: "another something" });
+            });
+          }).not.toEmitOnRoot(wrapper, "rooty", { value: "something" });
+        });
+      });
+
+      describe("multiple payloads", () => {
+        describe("passes positively when the expected event is emitted with the multiple payloads by the function", () => {
+          it("synchronously", () => {
+            const wrapper = shallowMount(Component);
+            expect(() => {
+              (wrapper.vm as any).emitEventOnRootWithMultiplePayload("multiOnRoot!");
+            }).toEmitOnRoot(wrapper, "multiOnRoot!", ["D"], 3, "e");
+          });
+
+          it("asynchronously", async () => {
+            const wrapper = shallowMount(Component);
+            return expect(async () => {
+              return doAsyncronously(() => {
+                (wrapper.vm as any).emitEventOnRootWithMultiplePayload("multiOnRoot!");
+              })
+            }).toEmitOnRoot(wrapper, "multiOnRoot!", ["D"], 3, "e");
+          });
+        });
+
+        describe("passes positively for expect helper to assert with 'anything'", () => {
+          it("synchronously", () => {
+            const wrapper = shallowMount(Component);
+            expect(() => {
+              (wrapper.vm as any).emitEventOnRootWithMultiplePayload("multiOnRoot!");
+            }).toEmitOnRoot(wrapper, "multiOnRoot!", expect.arrayContaining(["D"]), expect.anything(), "e");
+          });
+
+          it("asynchronously", async () => {
+            const wrapper = shallowMount(Component);
+            return expect(async () => {
+              return doAsyncronously(() => {
+                (wrapper.vm as any).emitEventOnRootWithMultiplePayload("multiOnRoot!");
+              });
+            }).toEmitOnRoot(wrapper, "multiOnRoot!", expect.arrayContaining(["D"]), expect.anything(), "e");
+          });
+        });
+
+        describe("passes negatively when the number of paylod is shorter than actual (even they are matching)", () => {
+          it("synchronously", () => {
+            const wrapper = shallowMount(Component);
+            expect(() => {
+              (wrapper.vm as any).emitEventOnRootWithMultiplePayload("multiOnRoot!");
+            }).not.toEmitOnRoot(wrapper, "multiOnRoot!", ["D"], 3);
+          });
+
+          it("asynchronously", async () => {
+            const wrapper = shallowMount(Component);
+            return expect(async () => {
+              return doAsyncronously(() => {
+                (wrapper.vm as any).emitEventOnRootWithMultiplePayload("multiOnRoot!");
+              });
+            }).not.toEmitOnRoot(wrapper, "multiOnRoot!", ["D"], 3);
+          });
+        });
+
+        describe("passes negatively when the number of paylod is longer", () => {
+          it("synchronously", () => {
+            const wrapper = shallowMount(Component);
+            expect(() => {
+              (wrapper.vm as any).emitEventOnRootWithMultiplePayload("multiOnRoot!");
+            }).not.toEmitOnRoot(wrapper, "multiOnRoot!", ["D"], 3, "e", "extra");
+          });
+
+          it("asynchronously", async () => {
+            const wrapper = shallowMount(Component);
+            return expect(async () => {
+              return doAsyncronously(() => {
+                (wrapper.vm as any).emitEventOnRootWithMultiplePayload("multiOnRoot!");
+              });
+            }).not.toEmitOnRoot(wrapper, "multiOnRoot!", ["D"], 3, "e", "extra");
           });
         });
       });
