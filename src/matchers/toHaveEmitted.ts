@@ -1,5 +1,5 @@
 import Vue from "vue";
-import { Wrapper } from "@vue/test-utils";
+import { createWrapper, Wrapper } from "@vue/test-utils";
 import diff from "jest-diff";
 import { equals } from "expect/build/jasmineUtils";
 
@@ -18,11 +18,22 @@ declare global {
        * expect(wrapper).toHaveEmitted("input", "value", ["more"], "arguments")
        */
       toHaveEmitted (eventName: string, ...payloads: any[]): R;
+
+      /**
+       * Asserts that the emitted event on $root with payload
+       * @param {string} eventName - The event's name
+       * @param payload - The payload of the event (optional)
+       * @example
+       * expect(wrapper).toHaveEmittedOnRoot("input")
+       * expect(wrapper).toHaveEmittedOnRoot("input", "value")
+       * expect(wrapper).toHaveEmittedOnRoot("input", "value", ["more"], "arguments")
+       */
+      toHaveEmittedOnRoot (eventName: string, ...payloads: any[]): R;
     }
   }
 }
 
-export default function<V extends Vue> (
+export function toHaveEmitted <V extends Vue> (
   wrapper: Wrapper<V>,
   eventName: string,
   ...payloads: any[]
@@ -32,6 +43,8 @@ export default function<V extends Vue> (
   let pass: boolean;
   let message: () => string;
 
+  const onRootSuffix = wrapper.vm === wrapper.vm.$root ? " on $root" : "";
+
   if (arguments.length >= 3) {
     pass = emitted.some((event) => {
       return payloads.length === event.length &&
@@ -40,24 +53,33 @@ export default function<V extends Vue> (
         });
     });
     message = pass ?
-      () => `The "${eventName}" event was emitted with the expected payload` :
+      () => `The "${eventName}" event was emitted${onRootSuffix} with the expected payload` :
         emitted.length > 0 ?
           () => {
             const diffs = emitted.map((event, i): string | null => {
               return `'${eventName}' event #${i} payloads:\n\n${diff(payloads, event, { bAnnotation: "Emitted" })}`;
             }).join("\n\n");
-            return `The "${eventName}" event was emitted but the payload is not matched\n\n${diffs}`
+            return `The "${eventName}" event was emitted${onRootSuffix} but the payload is not matched\n\n${diffs}`
           } :
-          () => `The "${eventName}" event was never emitted`;
+          () => `The "${eventName}" event was never emitted${onRootSuffix}`;
   } else {
     pass = emitted.length > 0;
     message = pass ?
-      () => `The "${eventName}" event was emitted` :
-      () => `The "${eventName}" event was never emitted`;
+      () => `The "${eventName}" event was emitted${onRootSuffix}` :
+      () => `The "${eventName}" event was never emitted${onRootSuffix}`;
   }
 
   return {
     message,
     pass
   }
+}
+
+export function toHaveEmittedOnRoot <V extends Vue> (
+  wrapper: Wrapper<V>,
+  eventName: string,
+  ...payloads: any[]
+): MatcherResult {
+  const rootWrapper = createWrapper(wrapper.vm.$root);
+  return toHaveEmitted(rootWrapper, eventName, ...payloads);
 }
