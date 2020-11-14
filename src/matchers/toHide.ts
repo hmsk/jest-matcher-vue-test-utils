@@ -42,7 +42,7 @@ const processResult = (before: boolean, after: boolean): MatcherResult => {
   }
 };
 
-export default function<V extends Vue, R extends Vue | DefaultProps | never, S extends PropsDefinition<DefaultProps> | never> (
+export function toHide <V extends Vue, R extends Vue | DefaultProps | never, S extends PropsDefinition<DefaultProps> | never> (
   action: () => void | Promise<unknown>,
   wrapper: Wrapper<V>,
   findArgument: WrapperFindArgument<R, S>,

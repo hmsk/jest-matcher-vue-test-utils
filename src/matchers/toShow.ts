@@ -17,7 +17,7 @@ declare global {
        * expect(async () => somethingMakesErrorAsync()).toShow(wrapper, "p.error")
        */
       toShow (wrapper: Wrapper<Vue>, findArgument: WrapperFindArgument<Vue | null>): R;
-    }
+   }
   }
 }
 
@@ -42,7 +42,7 @@ const processResult = (before: boolean, after: boolean): MatcherResult => {
   }
 };
 
-export default function<V extends Vue, R extends Vue | DefaultProps | never, S extends PropsDefinition<DefaultProps> | never> (
+export function toShow <V extends Vue, R extends Vue | DefaultProps | never, S extends PropsDefinition<DefaultProps> | never> (
   action: () => void | Promise<unknown>,
   wrapper: Wrapper<V>,
   findArgument: WrapperFindArgument<R, S>
