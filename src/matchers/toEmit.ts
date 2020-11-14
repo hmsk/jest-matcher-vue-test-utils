@@ -35,7 +35,6 @@ declare global {
        */
       toEmitOnRoot (wrapper: Wrapper<Vue>, eventName: string, ...payloads: any[]): R;
     }
-
   }
 }
 
