@@ -133,7 +133,7 @@ it("show error by showError", async () => {
 
 ### Events on Wrapper
 
-#### `toEmit`
+#### `toEmit` / `toEmitOnRoot`
 
 <details>
   <summary>Assert the action emits the event (with the payload optionally) on Wrapper of vue-test-utils</summary>
@@ -176,9 +176,11 @@ it("emits special event by click", async () => {
 });
 ```
 
+`toEmitOnRoot` inspects whether the event is emitted on `$root` of Vue instance.
+
 </details>
 
-#### `toHaveEmitted`
+#### `toHaveEmitted` / `toHaveEmittedOnRoot`
 
 <details>
   <summary>Assert the event is emitted (with the payload optionally) on Wrapper of vue-test-utils</summary>
@@ -212,6 +214,8 @@ it("emits special event by click", () => {
   expect(wrapper).toHaveEmitted("special", "clicked"); // Passes
 });
 ```
+
+`toHaveEmittedOnRoot` inspects whether the event is emitted on `$root` of Vue instance.
 </details>
 
 ### Vuex actions/mutations
