@@ -17,7 +17,16 @@ declare global {
        * expect(async () => somethingMakesErrorAsync()).toShow(wrapper, "p.error")
        */
       toShow (wrapper: Wrapper<Vue>, findArgument: WrapperFindArgument<Vue | null>): R;
-   }
+
+      /**
+       * Asserts that the asynchronous action shows the specific content in the next tick
+       * @param wrapper - The wrapper of vue-test-utils
+       * @param findAgrument - The argument for "wrapper.find" to find the specific element or component
+       * @example
+       * expect(async () => somethingMakesErrorAsync()).toShowInNextTick(wrapper, "p.error")
+       */
+      toShowInNextTick (wrapper: Wrapper<Vue>, findArgument: WrapperFindArgument<Vue | null>): R;
+    }
   }
 }
 
@@ -59,4 +68,16 @@ export function toShow <V extends Vue, R extends Vue | DefaultProps | never, S e
   } else {
     return processResultAfterTrigger();
   }
+}
+
+export function toShowInNextTick <V extends Vue, R extends Vue | DefaultProps | never, S extends PropsDefinition<DefaultProps> | never> (
+  action: () => Promise<unknown>,
+  wrapper: Wrapper<V>,
+  findArgument: WrapperFindArgument<R, S>
+): MatcherResult | Promise<MatcherResult> {
+  const wrappedAction = () => new Promise((resolve) => {
+    action();
+    wrapper.vm.$nextTick(() => { resolve(); });
+  });
+  return toShow(wrappedAction, wrapper, findArgument);
 }

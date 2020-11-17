@@ -1,5 +1,6 @@
 import {
   toShow,
+  toShowInNextTick,
   toHide,
   config
 } from "@/index";
@@ -10,6 +11,7 @@ import { MatcherResult } from '@/utils';
 
 expect.extend({
   toShow,
+  toShowInNextTick,
   toHide
 });
 
@@ -23,7 +25,6 @@ describe("toShow", () => {
       const wrapper = shallowMount(Component, { propsData: { initialError: false }});
       const result = await toShow(async () => {
         (wrapper.vm as any).showError();
-        await wrapper.vm.$nextTick();
       }, wrapper, ".error");
       expect(result.pass).toBe(true);
       expect(result.message()).toBe("The action shows the target");
@@ -33,7 +34,6 @@ describe("toShow", () => {
       const wrapper = shallowMount(Component, { propsData: { initialError: true }});
       const result = await toShow(async () => {
         (wrapper.vm as any).showError();
-        await wrapper.vm.$nextTick();
       }, wrapper, ".error");
       expect(result.pass).toBe(false);
       expect(result.message()).toBe("The target has been showing from the beginning");
@@ -43,10 +43,29 @@ describe("toShow", () => {
       const wrapper = shallowMount(Component, { propsData: { initialError: false }});
       const result = await toShow(async () => {
         // Don't do nothing
-        await wrapper.vm.$nextTick();
       }, wrapper, ".error");
       expect(result.pass).toBe(false);
       expect(result.message()).toBe("The action doesn't show the target");
+    });
+
+    describe("for asynchronous action", () => {
+      it("returns false if the target will be shown in the next tick", async () => {
+        const wrapper = shallowMount(Component, { propsData: { initialError: false }});
+        const result = await toShow(async () => {
+          (wrapper.vm as any).showErrorAsync();
+        }, wrapper, ".error");
+        expect(result.pass).toBe(false);
+        expect(result.message()).toBe("The action doesn't show the target");
+      });
+
+      it("toShowInNextTick returns true if the target will be shown in the next tick", async () => {
+        const wrapper = shallowMount(Component, { propsData: { initialError: false }});
+        const result = await toShowInNextTick(async () => {
+          (wrapper.vm as any).showErrorAsync();
+        }, wrapper, ".error");
+        expect(result.pass).toBe(true);
+        expect(result.message()).toBe("The action shows the target");
+      });
     });
 
     it("returns false synchronously before nextTick", () => {
@@ -65,7 +84,6 @@ describe("toShow", () => {
       const wrapper = shallowMount(Component, { propsData: { initialError: false }});
       return expect(async () => {
         (wrapper.vm as any).showError();
-        await wrapper.vm.$nextTick();
       }).toShow(wrapper, ".error");
     });
 
@@ -73,7 +91,6 @@ describe("toShow", () => {
       const wrapper = shallowMount(Component, { propsData: { initialError: true }});
       return expect(async () => {
         (wrapper.vm as any).showError();
-        await wrapper.vm.$nextTick();
       }).not.toShow(wrapper, ".error");
     });
 
@@ -81,8 +98,23 @@ describe("toShow", () => {
       const wrapper = shallowMount(Component, { propsData: { initialError: false }});
       return expect(async () => {
         // Don't do nothing
-        await wrapper.vm.$nextTick();
       }).not.toShow(wrapper, ".error");
+    });
+
+    describe("for asynchronous action", () => {
+      it("doesn't complain about the correct negative expectation: hidden -> not yet shown (asynchronously shown)", async () => {
+        const wrapper = shallowMount(Component, { propsData: { initialError: false }});
+        return expect(async () => {
+          (wrapper.vm as any).showErrorAsync();
+        }).not.toShow(wrapper, ".error");
+      });
+
+      it("toShowInNextTick doesn't complain about the correct expectation: hidden -> not yet shown (asynchronously shown)", async () => {
+        const wrapper = shallowMount(Component, { propsData: { initialError: false }});
+        return expect(async () => {
+          (wrapper.vm as any).showErrorAsync();
+        }).toShowInNextTick(wrapper, ".error");
+      });
     });
 
     it("doesn't complain about the correct negative expectation synchronously", () => {

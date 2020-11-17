@@ -1,7 +1,7 @@
 export { setConfig as config } from "./config";
 export { default as vuexPlugin } from "./vuex-plugin";
 
-import { toShow } from "./matchers/toShow";
+import { toShow, toShowInNextTick } from "./matchers/toShow";
 import { toHide } from "./matchers/toHide";
 import { toEmit, toEmitOnRoot } from "./matchers/toEmit";
 import { toHaveEmitted, toHaveEmittedOnRoot } from "./matchers/toHaveEmitted";
@@ -16,6 +16,7 @@ import toBeValidPropWithCustomValidator from "./matchers/toBeValidPropWithCustom
 
 const matchers = {
   toShow,
+  toShowInNextTick,
   toHide,
   toEmit,
   toEmitOnRoot,
@@ -33,6 +34,7 @@ const matchers = {
 
 export {
   toShow,
+  toShowInNextTick,
   toHide,
   toEmit,
   toEmitOnRoot,

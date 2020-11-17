@@ -26,6 +26,10 @@ module.exports = {
     },
     hideError () {
       this.isError = false;
+    },
+    async showErrorAsync () {
+      const wait = Promise.resolve()
+      await wait.then(() => { this.isError = true; });
     }
   }
 }
