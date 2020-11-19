@@ -2,7 +2,7 @@ export { setConfig as config } from "./config";
 export { default as vuexPlugin } from "./vuex-plugin";
 
 import { toShow, toShowInNextTick } from "./matchers/toShow";
-import { toHide } from "./matchers/toHide";
+import { toHide, toHideInNextTick } from "./matchers/toHide";
 import { toEmit, toEmitOnRoot } from "./matchers/toEmit";
 import { toHaveEmitted, toHaveEmittedOnRoot } from "./matchers/toHaveEmitted";
 import toDispatch from "./matchers/toDispatch";
@@ -18,6 +18,7 @@ const matchers = {
   toShow,
   toShowInNextTick,
   toHide,
+  toHideInNextTick,
   toEmit,
   toEmitOnRoot,
   toHaveEmitted,
@@ -36,6 +37,7 @@ export {
   toShow,
   toShowInNextTick,
   toHide,
+  toHideInNextTick,
   toEmit,
   toEmitOnRoot,
   toHaveEmitted,

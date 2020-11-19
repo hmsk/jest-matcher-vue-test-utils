@@ -17,6 +17,15 @@ declare global {
        * expect(async () => somethingResolvesErrorAsync()).toHide(wrapper, "p.error")
        */
       toHide (wrapper: Wrapper<Vue>, findAgrument: WrapperFindArgument<Vue | null>): R;
+
+      /**
+       * Asserts that the action hides the specific content
+       * @param wrapper - The wrapper of vue-test-utils
+       * @param findAgrument - The argument for "wrapper.find" to find the specific content or component
+       * @example
+       * expect(async () => somethingResolvesErrorAsync()).toHide(wrapper, "p.error")
+       */
+      toHideInNextTick (wrapper: Wrapper<Vue>, findAgrument: WrapperFindArgument<Vue | null>): R;
     }
   }
 }
@@ -59,4 +68,16 @@ export function toHide <V extends Vue, R extends Vue | DefaultProps | never, S e
   } else {
     return processResultAfterTrigger();
   }
+}
+
+export function toHideInNextTick <V extends Vue, R extends Vue | DefaultProps | never, S extends PropsDefinition<DefaultProps> | never> (
+  action: () => Promise<unknown>,
+  wrapper: Wrapper<V>,
+  findArgument: WrapperFindArgument<R, S>
+): MatcherResult | Promise<MatcherResult> {
+  const wrappedAction = () => new Promise((resolve) => {
+    action();
+    wrapper.vm.$nextTick(() => { resolve(); });
+  });
+  return toHide(wrappedAction, wrapper, findArgument);
 }

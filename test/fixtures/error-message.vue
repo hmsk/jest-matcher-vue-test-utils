@@ -29,7 +29,11 @@ module.exports = {
     },
     async showErrorAsync () {
       const wait = Promise.resolve()
-      await wait.then(() => { this.isError = true; });
+      await wait.then(() => { this.showError(); });
+    },
+    async hideErrorAsync () {
+      const wait = Promise.resolve()
+      await wait.then(() => { this.hideError(); });
     }
   }
 }

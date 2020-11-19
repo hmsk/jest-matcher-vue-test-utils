@@ -2,6 +2,7 @@ import {
   toShow,
   toShowInNextTick,
   toHide,
+  toHideInNextTick,
   config
 } from "@/index";
 
@@ -12,7 +13,8 @@ import { MatcherResult } from '@/utils';
 expect.extend({
   toShow,
   toShowInNextTick,
-  toHide
+  toHide,
+  toHideInNextTick
 });
 
 config({
@@ -159,6 +161,26 @@ describe("toHide", () => {
       expect(result.message()).toBe("The action doesn't hide the target");
     });
 
+    describe("for asynchronous action", () => {
+      it("returns false if the target is hidden in the next tick", async () => {
+        const wrapper = shallowMount(Component, { propsData: { initialError: true }});
+        const result = await toHide(async () => {
+          (wrapper.vm as any).hideErrorAsync();
+        }, wrapper, ".error");
+        expect(result.pass).toBe(false);
+        expect(result.message()).toBe("The action doesn't hide the target");
+      });
+
+      it("toHideInNextTick returns true if the target is hidden in the next tick", async () => {
+        const wrapper = shallowMount(Component, { propsData: { initialError: true }});
+        const result = await toHideInNextTick(async () => {
+          (wrapper.vm as any).hideErrorAsync();
+        }, wrapper, ".error");
+        expect(result.pass).toBe(true);
+        expect(result.message()).toBe("The action hides the target");
+      });
+    });
+
     it("returns false synchronously before nextTick", () => {
       const wrapper = shallowMount(Component, { propsData: { initialError: true }});
       // Doesn't wait for nextTick with synchronous expectation, Passes from @vue/test-utils@beta.30
@@ -193,6 +215,22 @@ describe("toHide", () => {
         // Don't do nothing
         wrapper.vm.$nextTick();
       }).not.toHide(wrapper, ".error");
+    });
+
+    describe("for asynchronous action", () => {
+      it("doesn't complain about the correct negative expectation: shown -> hidden (asynchronously hidden)", async () => {
+        const wrapper = shallowMount(Component, { propsData: { initialError: true }});
+        return expect(async () => {
+          (wrapper.vm as any).hideErrorAsync();
+        }).not.toHide(wrapper, ".error");
+      });
+
+      it("toHideInNextTick doesn't complain about the correct expectation: shown -> not yet hidden (asynchronously hidden)", async () => {
+        const wrapper = shallowMount(Component, { propsData: { initialError: true }});
+        return expect(async () => {
+          (wrapper.vm as any).hideErrorAsync();
+        }).toHideInNextTick(wrapper, ".error");
+      });
     });
 
     it("doesn't complain about the correct negative expectation synchronously", () => {
