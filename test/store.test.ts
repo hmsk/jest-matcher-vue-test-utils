@@ -22,7 +22,7 @@ config({
 const doAsyncronously = (callback: Function): Promise<any> => {
   return new Promise((resolve) => {
     callback();
-    resolve();
+    resolve(null);
   });
 }
 
