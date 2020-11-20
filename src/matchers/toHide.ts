@@ -77,7 +77,7 @@ export function toHideInNextTick <V extends Vue, R extends Vue | DefaultProps | 
 ): MatcherResult | Promise<MatcherResult> {
   const wrappedAction = () => new Promise((resolve) => {
     action();
-    wrapper.vm.$nextTick(() => { resolve(); });
+    wrapper.vm.$nextTick(() => { resolve(null); });
   });
   return toHide(wrappedAction, wrapper, findArgument);
 }
