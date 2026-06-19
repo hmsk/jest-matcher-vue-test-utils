@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/hmsk/jest-matcher-vue-test-utils.git"
+    "url": "git+https://github.com/hmsk/jest-matcher-vue-test-utils.git"
   },
   "keywords": [
     "vue",
